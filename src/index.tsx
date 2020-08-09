@@ -63,7 +63,7 @@ function App() {
               <LoginPage/>
             </Route>
             <Redirect to="/index" />
-            <Redirect from="/" to="/index" />
+            <Redirect from="/" to="/" />
           </Switch>
         </Switch>
       </BrowserRouter>
