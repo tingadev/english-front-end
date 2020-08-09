@@ -47,7 +47,7 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Switch>
-            <Route path="/index">
+            <Route path="/">
               <Index />
             </Route>
             <Route path="/nucleo-icons">
@@ -63,7 +63,7 @@ function App() {
               <LoginPage/>
             </Route>
             <Redirect to="/index" />
-            <Redirect from="/" to="/" />
+            <Redirect from="/" to="/index" />
           </Switch>
         </Switch>
       </BrowserRouter>
