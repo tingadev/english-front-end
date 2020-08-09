@@ -1,0 +1,16 @@
+$number: 20;
+$unit: em;
+
+@for $i from 1 through $number {
+  .font-#{$i} {
+    font-size: $i/10 + em !important;
+  }
+}
+
+$sizes: 100px, 200px;
+
+@each $size in $sizes {
+  .font-#{$size} {
+    font-size: $size !important;
+  }
+}

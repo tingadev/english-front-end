@@ -1,0 +1,30 @@
+$number: 20;
+$unit: rem;
+
+@for $i from 1 through $number {
+  .width-#{$i}#{$unit} {
+    font-size: $i/10 + rem !important;
+  }
+}
+@for $i from 1 through $number {
+    .min-width-#{$i}#{$unit} {
+      font-size: $i/10 + rem !important;
+    }
+  }
+
+  @for $i from 1 through $number {
+    .max-width-#{$i}#{$unit} {
+      font-size: $i/10 + rem !important;
+    }
+  }
+$min-widths: 5rem, 6rem, 7rem;
+
+@each $min-width in $min-widths {
+  .min-w-#{$min-width} {
+    min-width: $min-width !important;
+  }
+}
+
+.min-w-full{
+  min-width: 100% !important;
+}
