@@ -49,7 +49,7 @@ const ExamplesNavbar = () => {
           }}
         />
       ) : null}
-      <Navbar className={"fixed-top " + navbarColor} color="info" expand="lg">
+      <Navbar className={"fixed-top " + navbarColor} color="primary" expand="lg">
         <Container>
           <UncontrolledDropdown className="button-dropdown">
             <DropdownToggle

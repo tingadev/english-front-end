@@ -2,7 +2,7 @@
 import React from "react";
 
 // reactstrap components
-import { Container, Button } from "reactstrap";
+import { Container, Button, Row, Col } from "reactstrap";
 import { css } from "@emotion/core";
 // core components
 
@@ -13,10 +13,10 @@ const IndexHeader = () => {
     if (window.innerWidth > 991) {
       const updateScroll = () => {
         let windowScrollTop = window.pageYOffset / 3;
-        if(pageHeader.current){
+        if (pageHeader.current) {
           pageHeader.current.style.transform =
-          "translate3d(0," + windowScrollTop + "px,0)";
-        }  
+            "translate3d(0," + windowScrollTop + "px,0)";
+        }
       };
       window.addEventListener("scroll", updateScroll);
       return function cleanup() {
@@ -31,50 +31,57 @@ const IndexHeader = () => {
         <div
           className="page-header-image"
           style={{
-            backgroundImage: "url(" + require("../../assets/img/header-3.jpg") + ")",
+            backgroundImage:
+              "url(" + require("../../assets/img/header-m.jpg") + ")",
           }}
           ref={pageHeader}
         ></div>
         <Container>
-          <div className="content-center brand">
-            <img
-              alt="..."
-              className="n-logo"
-              src={require("../../assets/img/now-logo.png")}
-            ></img>
-            <h1 className="h1-seo mb-0">OMEGA ENGLISH</h1>
-            <h5 className="mt-0 p-0">Since 2013</h5>
-            <Button className="rounded-pill bg-green font-12 px-5 mb-10">Giới Thiệu</Button>
-          </div>
-          <div
-          style={{
-              position: 'absolute',
-              left: '50%',
-              bottom: '14%',
-              transform: 'translate(-50%, -50%)',
-          }}
-        >
-
-
-          <div className="d-flex items-center justify-content-center">
-              <div className="mr-2">
-                <h2 className="mb-2">180.900</h2>
-                <p>TỔNG LƯỢT ĐĂNG KÝ</p>
+          <Row>
+            <Col className="mr-auto text-left pt-5" md="7">
+              <h1 className="title">OMEGA ENGLISH</h1>
+              <h4 className="description">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book
+              </h4>
+              <br></br>
+              <div className="buttons">
+              <Button
+                  className="mr-3 font-12 border border-white bg-transparent"
+                  color=""
+                  href="#pablo"
+                  onClick={(e) => e.preventDefault()}
+                  size="lg"
+                >
+                  About me
+                </Button>
+                <Button
+                  className="mr-3 font-12"
+                  color="primary"
+                  href="#pablo"
+                  onClick={(e) => e.preventDefault()}
+                  size="lg"
+                >
+                  Testing Online
+                </Button>
               </div>
-              <div className="ml-2">
-                <h2 className="mb-2">1800</h2>
-                <p>ĐĂNG KÝ HÔM NAY</p>
+              <div>
+                <div className="d-flex items-center mt-5">
+                  <div className="mr-2">
+                    <h2 className="mb-2">180.900</h2>
+                    <p>TỔNG LƯỢT ĐĂNG KÝ</p>
+                  </div>
+                  <div className="ml-2">
+                    <h2 className="mb-2">1800</h2>
+                    <p>ĐĂNG KÝ HÔM NAY</p>
+                  </div>
+                </div>
               </div>
-            </div>
-
-
-          </div>
-            
-          
+            </Col>
+          </Row>
         </Container>
       </div>
     </>
   );
-}
+};
 
 export default IndexHeader;

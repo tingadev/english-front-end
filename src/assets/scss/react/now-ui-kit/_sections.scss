@@ -1,13 +1,11 @@
-.clear-filter[filter-color="blue"] {
+[filter-color="blue"],.clear-filter[filter-color="blue"] {
   @include linear-gradient(rgba($black-color,.20), rgba(3, 161, 224, 0.6));
 }
-
-.clear-filter[filter-color="purple"] {
-  @include linear-gradient(rgba($black-color,.10), rgba(102, 16, 242, 0.4));
-}
-
 [data-background-color="blue"]{
     background-color: $info-color;
+}
+[data-background-color="success"]{
+  background-color: rgba($success-color, 0.8);
 }
 .section-nucleo-icons .icons-container i:nth-child(6) {
   color: $info-color;
@@ -17,4 +15,21 @@
     min-height: 60vh;
     max-height: 640px;
   }
+  > .content {
+    margin: 80px 0;
+  }
+}
+.signup-page .page-header {
+  display: flex;
+  align-items: center;
+}
+.login-page .page-header > .content, .signup-page .page-header > .content {
+  width: 100%;
+}
+.signup-page .card-signup {
+  margin-bottom: 0;
+}
+.login-page .page-header {
+  display: flex;
+  align-items: center;
 }

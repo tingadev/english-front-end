@@ -104,7 +104,7 @@ function Navbars() {
             </Col>
             <Col md="6">
               <h4>Menu with Icons</h4>
-              <Navbar className="bg-info" expand="lg">
+              <Navbar className="bg-primary" expand="lg">
                 <Container>
                   <NavbarBrand
                     href="#pablo"
@@ -271,7 +271,7 @@ function Navbars() {
                 </Collapse>
               </Container>
             </Navbar>
-            <Navbar className="bg-info" expand="lg">
+            <Navbar className="bg-primary" expand="lg">
               <Container>
                 <div className="navbar-translate">
                   <NavbarBrand

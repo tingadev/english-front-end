@@ -152,7 +152,7 @@ const IndexNavbar = () => {
           }}
         />
       ) : null}
-      <Navbar className={"fixed-top " + navbarColor} expand="lg" color="info">
+      <Navbar className={"fixed-top " + navbarColor} expand="lg" color="primary">
         <Container>
           <div className="navbar-translate">
             {/* <UncontrolledTooltip target="#navbar-brand">

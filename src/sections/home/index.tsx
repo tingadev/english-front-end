@@ -4,6 +4,10 @@ import TestingTrial from "./TestingTrial";
 import {
   Container,
 } from "reactstrap";
+import Features from "./Features";
+import Testimonials from "./Testimonials";
+import Pricing from "./Pricing";
+import ContactUs from "./ContactUs";
 
 // core components
 interface  HomePageProps{
@@ -16,9 +20,11 @@ const HomePage : React.FC<HomePageProps> = ({
     return (
         <>
           <div className="section section-basic" id="home-page">
-            <Container>
                 <TestingTrial/>
-            </Container>
+                <Testimonials/>
+                <Features/>
+                <Pricing/>
+                <ContactUs/>
           </div>
         </>
       );
