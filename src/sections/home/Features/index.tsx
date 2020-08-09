@@ -6,7 +6,7 @@ import {
 
 // core components
 interface  FeaturesProps{
-
+  data?: any;
 }
 const Features : React.FC<FeaturesProps> = ({
 

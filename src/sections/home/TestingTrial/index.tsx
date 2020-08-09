@@ -6,7 +6,7 @@ import {
 
 // core components
 interface  TestingTrialProps{
-
+  data?: any;
 }
 const TestingTrial : React.FC<TestingTrialProps> = ({
 

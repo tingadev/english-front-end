@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { css } from '@emotion/core';
 // reactstrap components
 import {
   // Button,
@@ -9,13 +8,10 @@ import {
   DropdownMenu,
   DropdownItem,
   UncontrolledDropdown,
-  NavbarBrand,
   Navbar,
-  NavItem,
-  NavLink,
   Nav,
   Container,
-  UncontrolledTooltip,
+  // UncontrolledTooltip,
 } from "reactstrap";
 
 const elementsNav = [
@@ -118,9 +114,9 @@ const IndexNavbar = () => {
   const [navbarColor, setNavbarColor] = React.useState("navbar-transparent");
   const [collapseOpen, setCollapseOpen] = React.useState(false);
 
-  const scrollToElement = () => {
-    document.getElementById("download-section")?.scrollIntoView();
-  };
+  // const scrollToElement = () => {
+  //   document.getElementById("download-section")?.scrollIntoView();
+  // };
 
   React.useEffect(() => {
     const updateNavbarColor = () => {
