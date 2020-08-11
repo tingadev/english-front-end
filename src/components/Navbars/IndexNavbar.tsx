@@ -38,7 +38,7 @@ const elementsNav = [
     id: "ielts",
   },
   {
-    title: "Luyện thi đang học",
+    title: "Luyện thi đại học",
     link: "#ltdh",
     id: "ltdh",
   },
@@ -98,10 +98,10 @@ interface DropdownMenuChildProps {
 
 const DropdownMenuChild: React.FC<DropdownMenuChildProps> = ({ elements }) => {
   return (
-    <DropdownMenu className={'bg-black-opacity border border-white rounded min-w-6rem text-center mt-3 min-w-full'}>
+    <DropdownMenu className={'bg-primary border border-white rounded min-w-6rem text-center mt-3 min-w-full'}>
       {elements.map((eleChild) => {
         return (
-          <DropdownItem to={eleChild.link} tag={Link} className={'font-10 text-white text-bold'}>
+          <DropdownItem to={eleChild.link} tag={Link} className={'font-12 text-white font-weight-bold'}>
             {eleChild.title.toUpperCase()}
           </DropdownItem>
         );
@@ -109,34 +109,21 @@ const DropdownMenuChild: React.FC<DropdownMenuChildProps> = ({ elements }) => {
     </DropdownMenu>
   );
 };
-
-const IndexNavbar = () => {
-  const [navbarColor, setNavbarColor] = React.useState("navbar-transparent");
+interface IndexNavbarProps {
+  navbarColor?: string;
+  topFixed?: string;
+}
+const IndexNavbar : React.FC<IndexNavbarProps> = ({
+  navbarColor,
+  topFixed
+}) => {
+  
   const [collapseOpen, setCollapseOpen] = React.useState(false);
 
   // const scrollToElement = () => {
   //   document.getElementById("download-section")?.scrollIntoView();
   // };
 
-  React.useEffect(() => {
-    const updateNavbarColor = () => {
-      if (
-        document.documentElement.scrollTop > 399 ||
-        document.body.scrollTop > 399
-      ) {
-        setNavbarColor("");
-      } else if (
-        document.documentElement.scrollTop < 400 ||
-        document.body.scrollTop < 400
-      ) {
-        setNavbarColor("navbar-transparent");
-      }
-    };
-    window.addEventListener("scroll", updateNavbarColor);
-    return function cleanup() {
-      window.removeEventListener("scroll", updateNavbarColor);
-    };
-  });
   return (
     <>
       {collapseOpen ? (
@@ -148,7 +135,7 @@ const IndexNavbar = () => {
           }}
         />
       ) : null}
-      <Navbar className={"fixed-top " + navbarColor} expand="lg" color="primary">
+      <Navbar className={"fixed-top " + navbarColor} expand="lg" color="primary" style={{top: topFixed}}>
         <Container>
           <div className="navbar-translate">
             {/* <UncontrolledTooltip target="#navbar-brand">
@@ -183,9 +170,9 @@ const IndexNavbar = () => {
                       href="#pablo"
                       nav
                       onClick={(e) => e.preventDefault()}
-                      className="border border-white rounded-pill min-w-6rem text-center font-10 px-3"
+                      className="border border-white rounded-pill min-w-6rem text-center font-12 px-3"
                     >
-                      <p>{ele.title}</p>
+                      <p className="font-weight-bold">{ele.title}</p>
                     </DropdownToggle>
                     {ele.dropdown && <DropdownMenuChild elements={ele.dropdown!}/>}
                   </UncontrolledDropdown>

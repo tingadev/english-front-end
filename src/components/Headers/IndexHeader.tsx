@@ -37,8 +37,10 @@ const IndexHeader = () => {
           ref={pageHeader}
         ></div>
         <Container>
-          <Row>
-            <Col className="mr-auto text-left pt-5" md="7">
+          <Row style={{
+            marginTop: '8rem',
+          }}>
+            <Col className="mr-auto text-left" md="7">
               <h1 className="title">OMEGA ENGLISH</h1>
               <h4 className="description">
               Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book
@@ -63,18 +65,6 @@ const IndexHeader = () => {
                 >
                   Testing Online
                 </Button>
-              </div>
-              <div>
-                <div className="d-flex items-center mt-5">
-                  <div className="mr-2">
-                    <h2 className="mb-2">180.900</h2>
-                    <p>TỔNG LƯỢT ĐĂNG KÝ</p>
-                  </div>
-                  <div className="ml-2">
-                    <h2 className="mb-2">1800</h2>
-                    <p>ĐĂNG KÝ HÔM NAY</p>
-                  </div>
-                </div>
               </div>
             </Col>
           </Row>

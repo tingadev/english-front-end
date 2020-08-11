@@ -53,7 +53,8 @@
     }
 
     &:before{
-        display: inline-block;
+        // display: inline-block;
+        display: none;
         position: absolute;
         width: 0;
         height: 0;

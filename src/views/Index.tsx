@@ -25,24 +25,55 @@ import IndexHeader from "../components/Headers/IndexHeader";
 // import Download from "./index-sections/Download.js";
 import HomePage from "../sections/home";
 import DefaultFooter from "../components/Footers/DefaultFooter";
+import Brand from "../components/Brand/";
 
-function Index() {
+const Index = () => {
+  const [navbarColor, setNavbarColor] = React.useState("navbar-transparent");
+  const [topFixed, setTopFixed] = React.useState("120px");
+  const [hiddenBrand, setHiddenBrand] = React.useState(false);
+
   React.useEffect(() => {
     document.body.classList.add("index-page");
     document.body.classList.add("sidebar-collapse");
     document.documentElement.classList.remove("nav-open");
-    window.scrollTo(0, 0);
-    document.body.scrollTop = 0;
+    // window.scrollTo(0, 0);
+    // document.body.scrollTop = 0;
     return function cleanup() {
       document.body.classList.remove("index-page");
       document.body.classList.remove("sidebar-collapse");
     };
   });
+
+  React.useEffect(() => {
+    const updateNavbarColor = () => {
+      if (
+        document.documentElement.scrollTop > 179 ||
+        document.body.scrollTop > 179
+      ) {
+        setNavbarColor("");
+        setTopFixed("0px")
+        setHiddenBrand(true);
+      } else if (
+        document.documentElement.scrollTop < 200 ||
+        document.body.scrollTop < 200
+      ) {
+        setNavbarColor("navbar-transparent");
+        setTopFixed("120px")
+        setHiddenBrand(false);
+      }
+    };
+    window.addEventListener("scroll", updateNavbarColor);
+    return function cleanup() {
+      window.removeEventListener("scroll", updateNavbarColor);
+    };
+  });
+
   return (
     <>
-      <IndexNavbar />
+      <Brand hiddenBrand={hiddenBrand}/>
+      <IndexNavbar navbarColor={navbarColor} topFixed={topFixed}/>
       <div className="wrapper">
-        <IndexHeader />
+        <IndexHeader/>
         <div className="main">
           <HomePage/>
         </div>
