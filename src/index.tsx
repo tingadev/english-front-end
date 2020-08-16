@@ -14,6 +14,7 @@ import {
   Switch,
   Redirect,
   Route,
+  HashRouter,
 } from "react-router-dom";
 
 // styles for this kit
@@ -44,27 +45,27 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-      <BrowserRouter>
+      <HashRouter basename='/'>
           <Switch>
-            <Route path="english-front-end/home">
+            <Route path="/home">
               <Index/>
             </Route>
-            <Route path="english-front-end/nucleo-icons">
+            <Route path="/nucleo-icons">
               <NucleoIcons />
             </Route>
-            <Route path="english-front-end/landing-page">
+            <Route path="/landing-page">
               <LandingPage/>
             </Route>
-            <Route path="english-front-end/profile-page">
+            <Route path="/profile-page">
               <ProfilePage/>
             </Route>
-            <Route path="english-front-end/login-page">
+            <Route path="/login-page">
               <LoginPage/>
             </Route>
-            <Redirect to="english-front-end/home" />
-            <Redirect from="/" to="english-front-end/home" />
+            <Redirect to="/home" />
+            <Redirect from="/" to="/home" />
           </Switch>
-      </BrowserRouter>
+      </HashRouter>
       ,
     </ApolloProvider>
   );
