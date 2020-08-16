@@ -10,10 +10,10 @@ import {
   ApolloLink,
 } from "@apollo/client";
 import {
-  BrowserRouter,
   Switch,
   Redirect,
   Route,
+  HashRouter,
 } from "react-router-dom";
 
 // styles for this kit
@@ -44,7 +44,7 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-      <BrowserRouter basename="/">
+      <HashRouter basename='/'>
           <Switch>
             <Route path="/home">
               <Index/>
@@ -64,7 +64,7 @@ function App() {
             <Redirect to="/home" />
             <Redirect from="/" to="/home" />
           </Switch>
-      </BrowserRouter>
+      </HashRouter>
       ,
     </ApolloProvider>
   );
