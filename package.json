@@ -19,6 +19,7 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
     "graphql": "^15.3.0",
+    "lodash": "^4.17.20",
     "moment": "^2.27.0",
     "node-sass": "^4.14.1",
     "nouislider": "^14.6.0",

@@ -99,9 +99,9 @@ interface DropdownMenuChildProps {
 const DropdownMenuChild: React.FC<DropdownMenuChildProps> = ({ elements }) => {
   return (
     <DropdownMenu className={'bg-primary border border-white rounded min-w-6rem text-center mt-3 min-w-full'}>
-      {elements.map((eleChild) => {
+      {elements.map((eleChild, index) => {
         return (
-          <DropdownItem to={eleChild.link} tag={Link} className={'font-12 text-white font-weight-bold'}>
+          <DropdownItem key={index} to={eleChild.link} tag={Link} className={'font-12 text-white font-weight-bold'}>
             {eleChild.title.toUpperCase()}
           </DropdownItem>
         );
@@ -136,7 +136,7 @@ const IndexNavbar : React.FC<IndexNavbarProps> = ({
         />
       ) : null}
       <Navbar className={"fixed-top " + navbarColor} expand="lg" color="primary" style={{top: topFixed}}>
-        <Container>
+        
           <div className="navbar-translate">
             {/* <UncontrolledTooltip target="#navbar-brand">
               Designed by Invision. Coded by Creative Tim
@@ -161,9 +161,9 @@ const IndexNavbar : React.FC<IndexNavbarProps> = ({
             navbar
           >
             <Nav navbar>
-              {elementsNav.map((ele) => {
+              {elementsNav.map((ele, index) => {
                 return (
-                  <UncontrolledDropdown nav>
+                  <UncontrolledDropdown key={index} nav>
                     <DropdownToggle
                       caret={ele.dropdown ? true : false}
                       color="default"
@@ -180,7 +180,6 @@ const IndexNavbar : React.FC<IndexNavbarProps> = ({
               })}
             </Nav>
           </Collapse>
-        </Container>
       </Navbar>
     </>
   );

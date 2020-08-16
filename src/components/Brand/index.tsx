@@ -5,13 +5,15 @@ import React from "react";
 import { Container, Navbar, Row, Col } from "reactstrap";
 interface BrandProps {
   hiddenBrand?: boolean;
+  navbarColor?: string;
 }
 const Brand: React.FC<BrandProps> = ({
-  hiddenBrand
+  hiddenBrand,
+  navbarColor
 }) => {
   return (
     <>
-      <Navbar className={`fixed-top ${hiddenBrand ? 'd-none' : ''}`}>
+      <Navbar className={`fixed-top ${hiddenBrand ? 'd-none ' : ''}` + navbarColor}>
         <Container>
           <Row className="w-100">
             <Col md="2">

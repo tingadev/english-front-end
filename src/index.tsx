@@ -45,10 +45,9 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <BrowserRouter>
-        <Switch>
           <Switch>
-            <Route path="/">
-              <Index />
+            <Route path="/home">
+              <Index/>
             </Route>
             <Route path="/nucleo-icons">
               <NucleoIcons />
@@ -62,10 +61,9 @@ function App() {
             <Route path="/login-page">
               <LoginPage/>
             </Route>
-            <Redirect to="/index" />
-            <Redirect from="/" to="/index" />
+            <Redirect to="/home" />
+            <Redirect from="/" to="/home" />
           </Switch>
-        </Switch>
       </BrowserRouter>
       ,
     </ApolloProvider>

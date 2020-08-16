@@ -4,6 +4,9 @@ $unit: em;
 @for $i from 1 through $number {
   .font-#{$i} {
     font-size: $i/10 + em !important;
+    > * {
+      font-size: ($i/10 - $i/100) + em !important;
+    }
   }
 }
 
@@ -12,18 +15,33 @@ $sizes: 100px, 200px;
 @each $size in $sizes {
   .font-#{$size} {
     font-size: $size !important;
+    > * {
+      font-size: $size !important;
+    }
   }
 }
 
 .font-weight-light{
-  font-weight: 300 !important;;
+  font-weight: 300 !important;
+  > * {
+    font-weight: 300 !important;
+  }
 }
 .font-weight-normal{
-  font-weight: 400 !important;;
+  font-weight: 400 !important;
+  > * {
+    font-weight: 400 !important;
+  }
 }
 .font-weight-semi{
-  font-weight: 600 !important;;
+  font-weight: 600 !important;
+  > * {
+    font-weight: 600 !important;
+  }
 }
 .font-weight-bold{
-  font-weight: 700 !important;;
+  font-weight: 700 !important;
+  > * {
+    font-weight: 700 !important;
+  }
 }

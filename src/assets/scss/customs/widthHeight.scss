@@ -3,18 +3,18 @@ $unit: rem;
 
 @for $i from 1 through $number {
   .width-#{$i}#{$unit} {
-    font-size: $i/10 + rem !important;
+    width: $i + rem !important;
   }
 }
 @for $i from 1 through $number {
     .min-width-#{$i}#{$unit} {
-      font-size: $i/10 + rem !important;
+      width: 10 + rem !important;
     }
   }
 
   @for $i from 1 through $number {
     .max-width-#{$i}#{$unit} {
-      font-size: $i/10 + rem !important;
+      width: 10 + rem !important;
     }
   }
 $min-widths: 5rem, 6rem, 7rem;

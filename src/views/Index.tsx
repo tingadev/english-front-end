@@ -6,7 +6,6 @@ import React from "react";
 
 // core components
 import IndexNavbar from "../components/Navbars/IndexNavbar";
-import IndexHeader from "../components/Headers/IndexHeader";
 
 // sections for this page
 // import Images from "./index-sections/Images.js";
@@ -26,8 +25,14 @@ import IndexHeader from "../components/Headers/IndexHeader";
 import HomePage from "../sections/home";
 import DefaultFooter from "../components/Footers/DefaultFooter";
 import Brand from "../components/Brand/";
+import { Route, Switch, useRouteMatch, match } from "react-router-dom";
+import Test from "../sections/Test";
+import IndexHeader from "../components/Headers/IndexHeader";
+interface LayoutProps {
+  children?: any;
+}
 
-const Index = () => {
+const Index: React.FC<LayoutProps> = ({ children }) => {
   const [navbarColor, setNavbarColor] = React.useState("navbar-transparent");
   const [topFixed, setTopFixed] = React.useState("120px");
   const [hiddenBrand, setHiddenBrand] = React.useState(false);
@@ -47,18 +52,18 @@ const Index = () => {
   React.useEffect(() => {
     const updateNavbarColor = () => {
       if (
-        document.documentElement.scrollTop > 179 ||
-        document.body.scrollTop > 179
+        document.documentElement.scrollTop > 109 ||
+        document.body.scrollTop > 109
       ) {
-        setNavbarColor("");
-        setTopFixed("0px")
+        setNavbarColor("bg-brand")
+        setTopFixed("0px");
         setHiddenBrand(true);
       } else if (
-        document.documentElement.scrollTop < 200 ||
-        document.body.scrollTop < 200
+        document.documentElement.scrollTop < 110 ||
+        document.body.scrollTop < 110
       ) {
-        setNavbarColor("navbar-transparent");
-        setTopFixed("120px")
+        // setNavbarColor("navbar-transparent")
+        setTopFixed("120px");
         setHiddenBrand(false);
       }
     };
@@ -67,20 +72,25 @@ const Index = () => {
       window.removeEventListener("scroll", updateNavbarColor);
     };
   });
-
+  const match = useRouteMatch();
   return (
     <>
-      <Brand hiddenBrand={hiddenBrand}/>
-      <IndexNavbar navbarColor={navbarColor} topFixed={topFixed}/>
+      <Brand hiddenBrand={hiddenBrand} navbarColor={navbarColor}/>
+      <IndexNavbar navbarColor={navbarColor} topFixed={topFixed} />
       <div className="wrapper">
-        <IndexHeader/>
-        <div className="main">
-          <HomePage/>
+          <Switch>
+            <Route path={`${match.path}/toiec`}>
+              <Test setNavbarColor={setNavbarColor}/>
+            </Route>
+            <Route path={match.path}>
+              <IndexHeader />
+              <HomePage />
+            </Route>
+          </Switch>
         </div>
         <DefaultFooter />
-      </div>
     </>
   );
-}
+};
 
 export default Index;
