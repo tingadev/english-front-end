@@ -57,7 +57,7 @@ const LeaderBoard: React.FC<LeaderBoardProps> = ({}) => {
           {data.map((ele, index) => {
             
             return (
-              <li className={`w-100 list-none d-flex justify-content-between mb-2 font-weight-semi ` + colorBoard[index]} style={{ listStyle: 'none' }}>
+              <li key={index} className={`w-100 list-none d-flex justify-content-between mb-2 font-weight-semi ` + colorBoard[index]} style={{ listStyle: 'none' }}>
                   <div>
                   <b>{index + 1}</b> .{ele.name}{" "}
                   </div>

@@ -34,7 +34,7 @@ const TestSkills: React.FC<TestSkillsProps> = ({ setIsTaken }) => {
     <Container>
       <Switch>
       <Route path={`${match.path}/take`}>
-          <TestTaken setIsTaken={setIsTaken}/>
+          <TestTaken testDetail={testDetail} setIsTaken={setIsTaken}/>
         </Route>
       <Route path={`${match.path}`}>
       <section>
@@ -128,6 +128,7 @@ const TestSkills: React.FC<TestSkillsProps> = ({ setIsTaken }) => {
           </Table>
         </div>
           </Col>
+          
           <Col md="4">
             <LeaderBoard/>
           </Col>

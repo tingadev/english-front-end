@@ -17,8 +17,8 @@ const BreadcrumbMain: React.FC<BreadcrumbProps> = ({}) => {
   ]
   return (
       <Breadcrumb>
-          {data && data.map((ele) => {
-             return <BreadcrumbItem><Link to={ele.link}>{ele.title}</Link></BreadcrumbItem>
+          {data && data.map((ele, index) => {
+             return <BreadcrumbItem key={index}><Link to={ele.link}>{ele.title}</Link></BreadcrumbItem>
           })}
       </Breadcrumb>
   );

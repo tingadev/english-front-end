@@ -1,16 +1,23 @@
 /*eslint-disable*/
 import React from "react";
-import { Button } from "reactstrap";
+import { Button, Modal, ModalBody } from "reactstrap";
+import { Link, useRouteMatch } from "react-router-dom";
 
 // reactstrap components;
 interface QuestionPaletteProps {
   questions: any;
   answered: any;
+  setIsSubmit: (value: boolean) => void;
 }
 const QuestionPalette: React.FC<QuestionPaletteProps> = ({
   questions,
   answered,
+  setIsSubmit,
 }) => {
+  const match = useRouteMatch()
+  const [modal1, setModal1] = React.useState(false);
+  const [modal2, setModal2] = React.useState(false);
+  answered.sort((a: any, b: any) => a.id - b.id);
   return (
     <section
       className="rounded bg-brand text-white text-center p-4 d-flex flex-wrap"
@@ -82,12 +89,89 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
         </div>
       </div>
       <div className="mt-auto">
-        <Button className="bg-primary mx-auto font-weight-bold d-block">
+        <Button
+          className="bg-primary mx-auto font-weight-bold d-block"
+          onClick={() => setModal1(true)}
+        >
           Review
         </Button>
-        <Button className="bg-primary mx-auto font-weight-bold d-block">
+        <Modal isOpen={modal1} size="lg" toggle={() => setModal1(false)}>
+          <div className="modal-header justify-content-center">
+            <button
+              className="close"
+              type="button"
+              onClick={() => setModal1(false)}
+            >
+              <i className="now-ui-icons ui-1_simple-remove"></i>
+            </button>
+            <h4 className="title title-up">Review Answered</h4>
+          </div>
+          <ModalBody>
+            <h5>
+              Answered : {answered.length}/{questions.length}
+            </h5>
+            <div className="d-flex flex-wrap">
+              {answered.map((ele: any, index: any) => {
+                return (
+                  <span className="mr-5" key={index}>
+                    <b className="font-weight-bold text-primary">
+                      Question {ele.id}
+                    </b>{" "}
+                    : {ele.keyAnswer}
+                  </span>
+                );
+              })}
+            </div>
+          </ModalBody>
+          <div className="modal-footer">
+            <Button
+              color="danger"
+              type="button"
+              onClick={() => setModal1(false)}
+            >
+              Close
+            </Button>
+          </div>
+        </Modal>
+        <Button
+          onClick={() => setModal2(true)}
+          className="bg-primary mx-auto font-weight-bold d-block"
+        >
           Submit
         </Button>
+
+        <Modal
+          modalClassName=" modal-brand"
+          toggle={() => setModal2(false)}
+          isOpen={modal2}
+          centered
+        >
+          <ModalBody>
+            <p>
+              Are you sure?{" "}
+              <i>
+                (Answered : {answered.length}/{questions.length})
+              </i>
+            </p>
+          </ModalBody>
+          <div className="modal-footer">
+            <Link
+              className="btn-transparent"
+              to={`${match.url}/result`}
+              onClick={() => {setModal2(false); setIsSubmit(true)}}
+            >
+              Submit
+            </Link>
+            <Button
+              className="btn-neutral"
+              color="link"
+              type="button"
+              onClick={() => setModal2(false)}
+            >
+              Close
+            </Button>
+          </div>
+        </Modal>
       </div>
     </section>
   );
