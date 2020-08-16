@@ -19,8 +19,9 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
   const [modal2, setModal2] = React.useState(false);
   answered.sort((a: any, b: any) => a.id - b.id);
   return (
+    
     <section
-      className="rounded bg-brand text-white text-center p-4 d-flex flex-wrap"
+      className="rounded bg-brand text-white text-center p-4 d-flex flex-wrap sticky-top-130"
       style={{
         height: "400px",
       }}
