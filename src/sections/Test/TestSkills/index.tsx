@@ -33,7 +33,7 @@ const TestSkills: React.FC<TestSkillsProps> = ({ setIsTaken }) => {
   return (
     <Container>
       <Switch>
-      <Route path={`${match.path}/take`}>
+      <Route path={`${match.path}/:typeSkill`}>
           <TestTaken testDetail={testDetail} setIsTaken={setIsTaken}/>
         </Route>
       <Route path={`${match.path}`}>
@@ -78,7 +78,7 @@ const TestSkills: React.FC<TestSkillsProps> = ({ setIsTaken }) => {
                 <th scope="row">Test 1</th>
                 <td className="text-center py-0">
                   <Link
-                    to={`${match.url}/take`}
+                    to={`${match.url}/reading`}
                     className="d-block rounded border border-none bg-success text-white p-2 width-8rem mx-auto"
                     style={{
                       textDecoration: "none",
@@ -89,7 +89,7 @@ const TestSkills: React.FC<TestSkillsProps> = ({ setIsTaken }) => {
                 </td>
                 <td className="text-center py-0">
                   <Link
-                    to=""
+                    to={`${match.url}/listening`}
                     className="d-block rounded border border-none bg-info text-white p-2 width-8rem mx-auto"
                     style={{
                       textDecoration: "none",
