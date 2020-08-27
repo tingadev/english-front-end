@@ -32,48 +32,29 @@ class Footer extends React.Component {
             <ul>
               <li>
                 <a
-                  href="https://www.creative-tim.com?ref=nudr-footer"
-                  target="_blank"
+                  href="/english-front-end#/home"
                 >
-                  Creative Tim
+                  Omega English
                 </a>
               </li>
               <li>
                 <a
-                  href="https://presentation.creative-tim.com?ref=nudr-footer"
-                  target="_blank"
+                  href="javascript:0;"
                 >
                   About Us
                 </a>
               </li>
-              <li>
-                <a
-                  href="https://blog.creative-tim.com?ref=nudr-footer"
-                  target="_blank"
-                >
-                  Blog
-                </a>
-              </li>
+              
             </ul>
           </nav>
           <div className="copyright">
             &copy; {1900 + new Date().getYear()}, Designed by{" "}
             <a
-              href="https://www.invisionapp.com"
-              target="_blank"
+              href="javascript:0;"
               rel="noopener noreferrer"
             >
-              Invision
+              Omega English
             </a>
-            . Coded by{" "}
-            <a
-              href="https://www.creative-tim.com?ref=nudr-footer"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Creative Tim
-            </a>
-            .
           </div>
         </Container>
       </footer>
