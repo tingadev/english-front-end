@@ -9,10 +9,6 @@ h1,h2,h3,h4,h5,h6{
     font-weight: $font-weight-normal;
 }
 
-small{
-    font-size: 60%;
-}
-
 a{
     color: $primary-color;
     &:hover,
@@ -24,7 +20,7 @@ h1, .h1 {
     font-size: $font-size-h1;
     line-height: 1.15;
     margin-bottom: $margin-base-vertical * 2;
-    font-weight: $font-weight-semi;
+
     small{
         font-weight: $font-weight-bold;
         text-transform: uppercase;
@@ -34,50 +30,47 @@ h1, .h1 {
 h2, .h2{
     font-size: $font-size-h2;
     margin-bottom: $margin-base-vertical * 2;
-    font-weight: $font-weight-semi;
 }
 h3, .h3{
     font-size: $font-size-h3;
     margin-bottom: $margin-base-vertical * 2;
     line-height: 1.4em;
-    font-weight: $font-weight-semi;
 }
 h4, .h4{
     font-size: $font-size-h4;
     line-height: 1.45em;
     margin-top: $margin-base-vertical * 2;
     margin-bottom: $margin-base-vertical;
-    font-weight: $font-weight-semi;
+
     & + .category,
     &.title + .category{
-        margin-top: -5px;
+        margin-top: -10px;
     }
 }
 h5, .h5 {
     font-size: $font-size-h5;
     line-height: 1.4em;
     margin-bottom: 15px;
-    font-weight: $font-weight-semi;
-    &.category{
-        font-weight: 400;
-    }
 }
 h6, .h6{
     font-size: $font-size-h6;
     font-weight: $font-weight-bold;
     text-transform: uppercase;
-    
 }
 p{
-    line-height: 1.61em;
-    font-weight: 500;
-    font-size: 1.2em;
+    &.description{
+        font-size: 1.14em;
+    }
 }
+
+// i.fa{
+//     font-size: 18px;
+//     position: relative;
+//     top: 1px;
+// }
 
 .title{
     font-weight: $font-weight-bold;
-    padding-top: 30px;
-
 
     &.title-up{
         text-transform: uppercase;
@@ -88,39 +81,55 @@ p{
         }
     }
     & + .category{
-        margin-top: -25px;
+        margin-top: -10px;
     }
 }
 
 .description,
 .card-description,
-.footer-big p{
+.footer-big p,
+.card .footer .stats{
     color: $dark-gray;
     font-weight: $font-weight-light;
 }
-.category{
+.category,
+.card-category{
     text-transform: capitalize;
-    font-weight: $font-weight-bold;
+    font-weight: $font-weight-normal;
     color: $dark-gray;
+    font-size: $font-size-mini;
 }
-.text-primary {
+
+.card-category{
+    font-size: $font-size-h6;
+}
+
+.text-primary,
+a.text-primary:focus, a.text-primary:hover {
   color: $brand-primary !important;
 }
-.text-info {
+.text-info,
+a.text-info:focus, a.text-info:hover {
   color: $brand-info !important;
 }
-.text-success {
+.text-success,
+a.text-success:focus, a.text-success:hover {
   color: $brand-success !important;
 }
-.text-warning {
+.text-warning,
+a.text-warning:focus, a.text-warning:hover {
   color: $brand-warning !important;
 }
-.text-danger {
+.text-danger,
+a.text-danger:focus, a.text-danger:hover {
   color: $brand-danger !important;
 }
-.text-black{
-  color: $light-black;
+
+.text-gray,
+a.text-gray:focus, a.text-gray:hover{
+    color: $light-gray !important;
 }
+
 
 .blockquote{
     border-left: none;

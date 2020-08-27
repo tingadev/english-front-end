@@ -27,6 +27,8 @@ import NucleoIcons from "./views/NucleoIcons";
 import LoginPage from "./views/examples/LoginPage";
 import LandingPage from "./views/examples/LandingPage";
 import ProfilePage from "./views/examples/ProfilePage";
+import AboutUs from "./sections/AboutUs";
+// import Dashboard from "./admin/layouts/Admin";
 
 const httpLink = createHttpLink({
   uri: "http://localhost:4000/graphql",
@@ -61,6 +63,12 @@ function App() {
             <Route path="/login-page">
               <LoginPage/>
             </Route>
+            <Route path="/about-toiec">
+              <AboutUs/>
+            </Route>
+            {/* <Route path="/admin">
+               <Dashboard/> 
+            </Route> */}
             <Redirect to="/home" />
             <Redirect from="/" to="/home" />
           </Switch>

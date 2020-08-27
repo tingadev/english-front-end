@@ -28,6 +28,11 @@ const elementsNav = [
     title: "Toiec Thương mại",
     dropdown: [
       {
+        title: "T0 - Giới thiệu",
+        link: "/about-toiec",
+        id: "ielts",
+      },
+      {
         title: "T1 - Test 1-40",
         link: "/home/toiec",
         id: "ielts",
