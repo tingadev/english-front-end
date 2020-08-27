@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "1d07141ad99cc50e64d033d8015ef584",
+    "revision": "7e637343d33c55fe59ff153c73b5bc26",
     "url": "/english-front-end/index.html"
   },
   {
-    "revision": "f45dece3bfba27562786",
-    "url": "/english-front-end/static/css/main.559fab57.chunk.css"
+    "revision": "6cfaaf47a16a7ca0c916",
+    "url": "/english-front-end/static/css/main.a3777fd0.chunk.css"
   },
   {
-    "revision": "03481c898f71d5535b75",
-    "url": "/english-front-end/static/js/2.71867dec.chunk.js"
+    "revision": "27cc6aec3c1461ac930a",
+    "url": "/english-front-end/static/js/2.b585ce3b.chunk.js"
   },
   {
     "revision": "f6a33b08b8dab27dd8ab525dc9994832",
-    "url": "/english-front-end/static/js/2.71867dec.chunk.js.LICENSE.txt"
+    "url": "/english-front-end/static/js/2.b585ce3b.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "f45dece3bfba27562786",
-    "url": "/english-front-end/static/js/main.9a7aeafe.chunk.js"
+    "revision": "6cfaaf47a16a7ca0c916",
+    "url": "/english-front-end/static/js/main.d01875b5.chunk.js"
   },
   {
     "revision": "b04dba6082876b6b906d",
@@ -26,6 +26,22 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "756eeb8467d441938dd72808afe6316b",
     "url": "/english-front-end/static/media/4772.756eeb84.jpg"
+  },
+  {
+    "revision": "a2ca3ce686279fd3181d9ccd4f16bc1d",
+    "url": "/english-front-end/static/media/a1.a2ca3ce6.png"
+  },
+  {
+    "revision": "bb4864346a2b8a0fb8b15f822ae8e580",
+    "url": "/english-front-end/static/media/a2.bb486434.png"
+  },
+  {
+    "revision": "afc9e7878eaf4324433f67a33156ec5a",
+    "url": "/english-front-end/static/media/a3.afc9e787.png"
+  },
+  {
+    "revision": "c021c966544d5312d819c4203eea43bf",
+    "url": "/english-front-end/static/media/a4.c021c966.png"
   },
   {
     "revision": "fe1b9237d1564af858c8c1f1033d6cfa",
@@ -46,6 +62,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "f807b37b1736e7709918ea35ef80ca7d",
     "url": "/english-front-end/static/media/bg3.f807b37b.jpg"
+  },
+  {
+    "revision": "30b2841b2b4741a2aa9437e53dc860e2",
+    "url": "/english-front-end/static/media/bg32.30b2841b.jpg"
   },
   {
     "revision": "056eb0586182a8d28273ad11c028e912",
