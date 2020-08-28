@@ -1,0 +1,6 @@
+.list-number{
+ > li {
+     list-style : decimal-leading-zero !important;
+     line-height: 2em;
+ }
+}

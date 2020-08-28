@@ -33,6 +33,12 @@ $sizes: 100px, 200px;
     font-weight: 400 !important;
   }
 }
+.font-weight-medium{
+  font-weight: 500 !important;
+  > * {
+    font-weight: 500 !important;
+  }
+}
 .font-weight-semi{
   font-weight: 600 !important;
   > * {
