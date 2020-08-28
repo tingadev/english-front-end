@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "d50cd7aea56466faebf032c397a21128",
+    "revision": "737a7f9d20dd1b60a5b66fcaea876d40",
     "url": "/english-front-end/index.html"
   },
   {
-    "revision": "321747e4d6c7a69c3912",
-    "url": "/english-front-end/static/css/main.a3777fd0.chunk.css"
+    "revision": "6560e23b2ee7389f5ae6",
+    "url": "/english-front-end/static/css/main.aae686ec.chunk.css"
   },
   {
-    "revision": "27cc6aec3c1461ac930a",
-    "url": "/english-front-end/static/js/2.b585ce3b.chunk.js"
+    "revision": "181c4cb364eee94b5edc",
+    "url": "/english-front-end/static/js/2.d611596f.chunk.js"
   },
   {
     "revision": "f6a33b08b8dab27dd8ab525dc9994832",
-    "url": "/english-front-end/static/js/2.b585ce3b.chunk.js.LICENSE.txt"
+    "url": "/english-front-end/static/js/2.d611596f.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "321747e4d6c7a69c3912",
-    "url": "/english-front-end/static/js/main.d3b72c03.chunk.js"
+    "revision": "6560e23b2ee7389f5ae6",
+    "url": "/english-front-end/static/js/main.a3658855.chunk.js"
   },
   {
     "revision": "b04dba6082876b6b906d",
@@ -32,6 +32,14 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/english-front-end/static/media/a1.a2ca3ce6.png"
   },
   {
+    "revision": "48dfa22e61ef4cb8da88ab3cd56f8aa1",
+    "url": "/english-front-end/static/media/a10.48dfa22e.png"
+  },
+  {
+    "revision": "3ec4e928b3df73c1a0d972a65702f46b",
+    "url": "/english-front-end/static/media/a11.3ec4e928.png"
+  },
+  {
     "revision": "bb4864346a2b8a0fb8b15f822ae8e580",
     "url": "/english-front-end/static/media/a2.bb486434.png"
   },
@@ -42,6 +50,26 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "c021c966544d5312d819c4203eea43bf",
     "url": "/english-front-end/static/media/a4.c021c966.png"
+  },
+  {
+    "revision": "bcd63ee5c781b5f5776f725025a02627",
+    "url": "/english-front-end/static/media/a5.bcd63ee5.png"
+  },
+  {
+    "revision": "84fb5b80b9ca8abc59cff88bedf22002",
+    "url": "/english-front-end/static/media/a6.84fb5b80.png"
+  },
+  {
+    "revision": "a15b9879d72c3ea871442c2ce6039ea5",
+    "url": "/english-front-end/static/media/a7.a15b9879.png"
+  },
+  {
+    "revision": "d48f0b88a0e33fcf6cd96dea85c95534",
+    "url": "/english-front-end/static/media/a8.d48f0b88.png"
+  },
+  {
+    "revision": "ade51f8065175e98c183d083b7169def",
+    "url": "/english-front-end/static/media/a9.ade51f80.png"
   },
   {
     "revision": "fe1b9237d1564af858c8c1f1033d6cfa",
