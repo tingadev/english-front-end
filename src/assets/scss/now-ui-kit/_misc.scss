@@ -20,6 +20,13 @@ body{
 .tag [data-role="remove"]{
     @include transition($general-transition-time, $transition-ease);
 }
+.sidebar .nav a,
+.sidebar .nav a i,
+.navbar-collapse .navbar-nav .nav-link,
+.animation-transition-general,
+.animation-transition-general{
+    @include transition($general-transition-time, $transition-ease);
+}
 
 //transition for dropdown caret
 .card a,

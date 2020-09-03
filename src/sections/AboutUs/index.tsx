@@ -8,11 +8,6 @@ import {
   Row,
   Col,
   Table,
-  FormGroup,
-  Label,
-  Input,
-  Button,
-  UncontrolledTooltip,
 } from "reactstrap";
 
 // core components

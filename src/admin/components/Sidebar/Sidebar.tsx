@@ -56,7 +56,7 @@ class Sidebar extends React.Component<SidebarProps> {
   }
   render() {
     return (
-      <div className="sidebar" data-color={this.props.backgroundColor}>
+      <div className="sidebar">
         <div className="logo">
           <a
             href="https://www.creative-tim.com?ref=nudr-sidebar"
@@ -72,7 +72,7 @@ class Sidebar extends React.Component<SidebarProps> {
             className="simple-text logo-normal"
             target="_blank"
           >
-            Creative Tim
+            Omega English
           </a>
         </div>
         <div className="sidebar-wrapper" ref={this.sidebar}>

@@ -29,6 +29,9 @@
 .badge-primary{
     @include badge-color($primary-color);
 }
+.badge-brand{
+    @include badge-color($brand-color);
+}
 .badge-info{
     @include badge-color($info-color);
 }

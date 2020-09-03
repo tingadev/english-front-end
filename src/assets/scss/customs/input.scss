@@ -1,0 +1,7 @@
+.custom-control-input:checked~.custom-control-label::before{
+    border-color: $primary-color !important;
+    background-color: $primary-color !important;
+}
+.input-error {
+    border-color: $danger-color !important
+}

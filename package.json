@@ -12,6 +12,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "@tinymce/tinymce-react": "^3.6.0",
     "@types/jest": "^24.9.1",
     "@types/node": "^12.12.53",
     "@types/nouislider": "^9.0.7",
@@ -21,7 +22,9 @@
     "@types/react-router-dom": "^5.1.5",
     "@types/react-select": "^3.0.19",
     "@types/react-sticky": "^6.0.3",
+    "@types/yup": "^0.29.6",
     "chart.js": "^2.9.3",
+    "formik": "^2.1.5",
     "graphql": "^15.3.0",
     "lodash": "^4.17.20",
     "moment": "^2.27.0",
@@ -36,19 +39,22 @@
     "react-dom": "^16.13.1",
     "react-google-maps": "^9.4.5",
     "react-notification-alert": "0.0.12",
+    "react-notifications-component": "^2.4.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "react-select": "^3.1.0",
     "react-sticky": "^6.0.3",
+    "react-summernote": "^2.0.2",
     "reactstrap": "^8.5.1",
-    "typescript": "^3.7.5"
+    "typescript": "^3.7.5",
+    "yup": "^0.29.3"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "refresh:schema": "rimraf src/schema/* && cp ../back-end/dist/schema.g*ql src/schema/schema.graphql && graphql-codegen --config codegen.yml",
+    "refresh:schema": "rimraf src/schema/* && cp ../english-back-end/dist/schema.g*ql src/schema/schema.graphql && graphql-codegen --config codegen.yml",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
@@ -71,6 +77,7 @@
     "@graphql-codegen/cli": "^1.17.7",
     "@graphql-codegen/typescript-operations": "^1.17.7",
     "@graphql-codegen/typescript-react-apollo": "^1.17.7",
+    "@types/react-notifications-component": "^2.4.0",
     "@types/reactstrap": "^8.5.0",
     "gh-pages": "^3.1.0"
   }

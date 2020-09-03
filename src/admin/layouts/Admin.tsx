@@ -17,8 +17,6 @@
 */
 import React from "react";
 // javascript plugin used to create scrollbars on windows
-import PerfectScrollbar from "perfect-scrollbar";
-
 // reactstrap components
 import { Route, Switch, Redirect } from "react-router-dom";
 
@@ -29,60 +27,28 @@ import Sidebar from "../components/Sidebar/Sidebar";
 import FixedPlugin from "../components/FixedPlugin/FixedPlugin.js";
 
 
-import "../../assets/css/bootstrap.min.css";
-import "../assets/scss/now-ui-dashboard.scss?v1.4.0";
-import "../assets/css/demo.css";
-
 
 import routes from "../routes.js";
 
-var ps: { destroy: () => void; };
+interface DashboardAdmin {
 
-class Dashboard extends React.Component {
-  state = {
-    backgroundColor: "blue",
+}
+
+const DashboardAdmin : React.FC<DashboardAdmin> = () => {
+
+  const mainPanel = React.useRef<HTMLDivElement>(null);
+  const [backgroundColor, setBackgroundColor] = React.useState('brand')
+  const handleColorClick = (color: any) => {
+    setBackgroundColor(color);
   };
-  mainPanel = React.createRef<HTMLDivElement>();
-  componentDidMount() {
-    if (navigator.platform.indexOf("Win") > -1) {
-      if(this.mainPanel.current){
-        ps = new PerfectScrollbar(this.mainPanel.current);
-        // document.body.classList.toggle("perfect-scrollbar-on");
-      }
-      
-    }
-  }
-  componentWillUnmount() {
-    if (navigator.platform.indexOf("Win") > -1) {
-      ps.destroy();
-      // document.body.classList.toggle("perfect-scrollbar-on");
-    }
-  }
-  componentDidUpdate(e: any) {
-    if (e.history.action === "PUSH") {
-      document.documentElement.scrollTop = 0;
-      if(document.scrollingElement){
-        document.scrollingElement.scrollTop = 0;
-      }
-      if(this.mainPanel.current){
-        this.mainPanel.current.scrollTop = 0;
-      }
-      
-    }
-  }
-  handleColorClick = (color: any) => {
-    this.setState({ backgroundColor: color });
-  };
-  render() {
     return (
       <div className="wrapper">
         <Sidebar
-          {...this.props}
           routes={routes}
-          backgroundColor={this.state.backgroundColor}
+          backgroundColor={backgroundColor}
         />
-        <div className="main-panel" ref={this.mainPanel}>
-          <DemoNavbar {...this.props} />
+        <div className="main-panel" ref={mainPanel}>
+          <DemoNavbar/>
           <Switch>
             {routes.map((prop, key) => {
               return (
@@ -98,12 +64,13 @@ class Dashboard extends React.Component {
           <Footer fluid />
         </div>
         <FixedPlugin
-          bgColor={this.state.backgroundColor}
-          handleColorClick={this.handleColorClick}
+          bgColor={backgroundColor}
+          handleColorClick={(e: any) => {
+            handleColorClick(e.value)
+          }}
         />
       </div>
     );
-  }
 }
 
-export default Dashboard;
+export default DashboardAdmin;

@@ -1,6 +1,10 @@
 type Query {
   user(id: String!): User!
   users: [User!]!
+  part(id: String!): Part!
+  parts(certificateType: String!): [Part!]!
+  question(id: String!): Question!
+  questions(questionFilterType: QuestionFilterTypeInput!): [Question!]!
 }
 
 type User {
@@ -42,8 +46,96 @@ enum UserState {
   HasPublished
 }
 
+type Part {
+  id: String!
+  partName: String!
+  description: String!
+  skillType: SkillsType!
+  certificateType: EnglishCertificateType!
+  testQuestion: Test
+  test: TestQuestion
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deleteAt: DateTime
+}
+
+enum SkillsType {
+  Reading
+  Listening
+}
+
+enum EnglishCertificateType {
+  Toiec
+  IELTS
+}
+
+type Test {
+  id: String!
+  testName: String!
+  skillType: SkillsType!
+  autdioPartSecs: [AudioSeconds!]
+  testQuestions: [TestQuestion!]
+  part: Part
+  isPublished: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deleteAt: DateTime
+}
+
+type AudioSeconds {
+  partId: String
+  autdioSecs: Float
+}
+
+type TestQuestion {
+  id: String!
+  test: Test!
+  question: Question!
+  part: Part!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deleteAt: DateTime
+}
+
+type Question {
+  id: String!
+  questionName: String!
+  audioSec: Float!
+  questionType: QuestionType!
+  description: String!
+  content: String!
+  explaination: String!
+  answers: [Answers!]!
+  testQuestion: TestQuestion
+  skillType: SkillsType!
+  certificateType: EnglishCertificateType!
+  result: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deleteAt: DateTime
+}
+
+enum QuestionType {
+  SingleChoice
+  MultiChoice
+  FillBlank
+}
+
+type Answers {
+  keyAnswer: String
+  answerContent: String
+}
+
+input QuestionFilterTypeInput {
+  skillType: SkillsType!
+  certificateType: EnglishCertificateType!
+}
+
 type Mutation {
   createUser(data: UserInput!): User!
+  createPart(data: NewPartInput!): Part!
+  updatePart(data: NewPartInput!, id: String!): Part!
+  createQuestion(data: NewQuestionInput!): Question!
 }
 
 input UserInput {
@@ -51,4 +143,31 @@ input UserInput {
   lastName: String!
   email: String!
   state: UserState!
+}
+
+input NewPartInput {
+  id: String
+  partName: String!
+  skillType: SkillsType!
+  description: String!
+  certificateType: EnglishCertificateType!
+}
+
+input NewQuestionInput {
+  id: String
+  questionName: String!
+  audioSec: Float!
+  questionType: QuestionType!
+  content: String
+  description: String
+  explaination: String
+  skillType: SkillsType!
+  certificateType: EnglishCertificateType!
+  answers: [AnswersInput!]!
+  result: String!
+}
+
+input AnswersInput {
+  keyAnswer: String
+  answerContent: String
 }

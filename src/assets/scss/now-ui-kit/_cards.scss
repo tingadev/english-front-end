@@ -4,26 +4,56 @@
   display: inline-block;
   position: relative;
   width: 100%;
-  margin-bottom: 30px;
-  box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+  box-shadow: $box-shadow;
 
-  .card-header{
-    background-color: $transparent-bg;
-    border-bottom: 0;
-    background-color: transparent;
-    border-radius: 0;
-    padding: 0;
+  [data-notify="container"].alert {
+    min-width: auto;
+    left: unset !important;
+    right: unset !important;
   }
 
-  .card-footer{
-    padding: 0;
-    margin-top: 15px;
-    background-color: $transparent-bg;
-    border:0;
+  .card-body{
+      padding: 15px 15px 10px 15px;
+
+      &.table-full-width{
+          padding-left: 0;
+          padding-right: 0;
+      }
+  }
+
+  .card-header{
+    &:not([data-background-color]){
+      background-color: transparent;
+    }
+    padding: 15px 15px 0;
+    border: 0;
+
+    .card-title{
+        margin-top: 10px;
+    }
+  }
+
+  .map{
+      border-radius: $border-radius-small;
+
+      &.map-big{
+        height: 400px;
+      }
   }
 
   &[data-background-color="orange"]{
       background-color: $primary-color;
+
+      .card-header{
+          background-color: $primary-color;
+      }
+
+      .card-footer{
+          .stats{
+              color: $white-color;
+          }
+      }
   }
 
   &[data-background-color="red"]{
@@ -39,6 +69,45 @@
   }
 
   &[data-background-color="green"]{
-      background-color: darken($success-color, 5%);
+      background-color: $success-color;
+  }
+
+  .image{
+      overflow: hidden;
+      height: 200px;
+      position: relative;
+  }
+
+  .avatar{
+      width: 30px;
+      height: 30px;
+      overflow: hidden;
+      border-radius: 50%;
+      margin-bottom: 15px;
+  }
+
+  label{
+      font-weight: 600 !important;
+      font-size: $font-size-large;
+      margin-bottom: 5px;
+      color: $black-color;
+  }
+
+  .card-footer{
+      background-color: transparent;
+      border: 0;
+
+
+      .stats{
+          i{
+              margin-right: 5px;
+              position: relative;
+              top: 2px;
+          }
+      }
+
+      .btn{
+          margin: 0;
+      }
   }
 }

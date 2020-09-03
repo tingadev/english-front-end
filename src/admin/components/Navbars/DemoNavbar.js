@@ -88,14 +88,14 @@ class Header extends React.Component {
     window.addEventListener("resize", this.updateColor.bind(this));
   }
   componentDidUpdate(e) {
-    if (
-      window.innerWidth < 993 &&
-      e.history.location.pathname !== e.location.pathname &&
-      document.documentElement.className.indexOf("nav-open") !== -1
-    ) {
-      document.documentElement.classList.toggle("nav-open");
-      this.sidebarToggle.current.classList.toggle("toggled");
-    }
+    // if (
+    //   window.innerWidth < 993 &&
+    //   e.history.location.pathname !== e.location.pathname &&
+    //   document.documentElement.className.indexOf("nav-open") !== -1
+    // ) {
+    //   document.documentElement.classList.toggle("nav-open");
+    //   this.sidebarToggle.current.classList.toggle("toggled");
+    // }
   }
   render() {
     return (

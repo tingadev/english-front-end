@@ -21,15 +21,10 @@ import "./assets/css/bootstrap.min.css";
 import "./assets/scss/now-ui-kit.scss?v=1.4.0";
 import "./assets/demo/demo.css?v=1.4.0";
 import "./assets/demo/nucleo-icons-page-styles.css?v=1.4.0";
+import 'react-notifications-component/dist/theme.css'
 // pages for this kit
-import Index from "./views/Index";
-import NucleoIcons from "./views/NucleoIcons";
-import LoginPage from "./views/examples/LoginPage";
-import LandingPage from "./views/examples/LandingPage";
-import ProfilePage from "./views/examples/ProfilePage";
-import AboutUs from "./sections/AboutUs";
-// import Dashboard from "./admin/layouts/Admin";
-
+import routes from "./router.js";
+import ReactNotification from 'react-notifications-component'
 const httpLink = createHttpLink({
   uri: "http://localhost:4000/graphql",
   fetch,
@@ -47,30 +42,20 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <HashRouter basename='/'>
+      <ReactNotification/>
           <Switch>
-            <Route path="/home">
-              <Index/>
-            </Route>
-            <Route path="/nucleo-icons">
-              <NucleoIcons />
-            </Route>
-            <Route path="/landing-page">
-              <LandingPage/>
-            </Route>
-            <Route path="/profile-page">
-              <ProfilePage/>
-            </Route>
-            <Route path="/login-page">
-              <LoginPage/>
-            </Route>
-            <Route path="/about-toiec">
-              <AboutUs/>
-            </Route>
-            {/* <Route path="/admin">
-               <Dashboard/> 
-            </Route> */}
+          {routes.map((prop, key) => {
+              return (
+                <Route
+                  path={prop.path}
+                  component={prop.component}
+                  key={key}
+                />
+              );
+            })}
             <Redirect to="/home" />
             <Redirect from="/" to="/home" />
+            
           </Switch>
       </HashRouter>
       ,
