@@ -21,6 +21,8 @@ import {
   useCreateQuestionMutation,
   SkillsType,
   AnswersInput,
+  useGetPartsLazyQuery,
+  PartFragment,
 } from "../../../schema/schema";
 import Select from "react-select";
 import { useFormik } from "formik";
@@ -48,6 +50,12 @@ const answersKey : AnswersInput[] = [
     answerContent: ""
   },
 ];
+let PartsOptions = [
+  {
+    value: '0',
+    label: "Chose part",
+  },
+];
 interface ToiecAdminProps {}
 
 const CreateQuestion: React.FC<ToiecAdminProps> = () => {
@@ -58,6 +66,40 @@ const CreateQuestion: React.FC<ToiecAdminProps> = () => {
   const [skillTypeSelect, setSkillTypeSelect] = React.useState(
     SkillsTypeOptions[0]
   );
+ 
+  const [partSelect, setPartSelect] = React.useState(
+    PartsOptions[0]
+  );
+  const [partsQuery, partsResponse] = useGetPartsLazyQuery()
+  const parts = partsResponse.data?.parts;
+  React.useEffect(() => {
+    partsQuery({
+      variables: {
+        certificateType: certificateTypeSelect.value
+      }
+    })
+    PartsOptions = [
+      {
+        value: '0',
+        label: "Chose part",
+      },
+    ];
+    if(parts){
+      parts.filter(part => part.skillType === skillTypeSelect.value).map((part) =>{
+       const optionPart = {
+         value: part.id,
+         label: part.partName
+       }
+        PartsOptions = [...PartsOptions, optionPart];
+      })
+      
+     }
+  },[certificateTypeSelect, skillTypeSelect, parts])
+
+  
+  
+  
+ 
   const initialValues: NewQuestionInput = {
     questionName: "",
     explaination: "",
@@ -148,6 +190,65 @@ const CreateQuestion: React.FC<ToiecAdminProps> = () => {
                   </Col>
                 </Row>
                 <Row>
+                  <Col md="4" className="pr-1">
+                    <FormGroup>
+                      <label>Type of test</label>
+                      <Select
+                        className="react-select react-select-primary"
+                        onChange={(opt: any) => {
+                          setPartSelect(PartsOptions[0])
+                          setCertificateTypeSelect(opt);
+                          formik.setFieldValue("certificateType", opt.value);
+                        }}
+                        value={certificateTypeSelect}
+                        classNamePrefix="react-select"
+                        placeholder="Chose type of Test"
+                        name="certificateType"
+                        options={EnglishCertificateOptions}
+                      ></Select>
+                      <ErrorMessage message={formik.errors.certificateType} />
+                    </FormGroup>
+                  </Col>
+                  <Col md="4" className="pr-1 pl-1">
+                    <FormGroup>
+                      <label>Skill</label>
+                      <Select
+                        className="react-select react-select-primary"
+                        onChange={(opt: any) => {
+                          setPartSelect(PartsOptions[0])
+                          setSkillTypeSelect(opt);
+                          formik.setFieldValue("skillType", opt.value);
+                        }}
+                        classNamePrefix="react-select"
+                        placeholder="Single Select"
+                        value={skillTypeSelect}
+                        name="skillType"
+                        options={SkillsTypeOptions}
+                      ></Select>
+                      <ErrorMessage message={formik.errors.skillType} />
+                    </FormGroup>
+                  </Col>
+                  <Col md="4" className="pl-1">
+                    <FormGroup>
+                      <label>Part</label>
+                      <Select
+                        className="react-select react-select-primary"
+                        onChange={(opt: any) => {
+                          setPartSelect(opt)
+                          formik.setFieldValue("partId", opt.value);
+                        }}
+                        classNamePrefix="react-select"
+                        placeholder="Single Select"
+                        value={partSelect}
+                        name="partId"
+                        options={PartsOptions}
+                      ></Select>
+                      <ErrorMessage message={formik.errors.partId} />
+                    </FormGroup>
+                  </Col>
+                </Row>
+                
+                <Row>
                   <Col className="" md="12">
                     <FormGroup>
                       <label>Content</label>
@@ -177,44 +278,7 @@ const CreateQuestion: React.FC<ToiecAdminProps> = () => {
                     <ErrorMessage message={formik.errors.explaination} />
                   </Col>
                 </Row>
-                <Row>
-                  <Col md="6" className="pr-1">
-                    <FormGroup>
-                      <label>Type of test</label>
-                      <Select
-                        className="react-select react-select-primary"
-                        onChange={(opt: any) => {
-                          setCertificateTypeSelect(opt);
-                          formik.setFieldValue("certificateType", opt.value);
-                        }}
-                        value={certificateTypeSelect}
-                        classNamePrefix="react-select"
-                        placeholder="Chose type of Test"
-                        name="certificateType"
-                        options={EnglishCertificateOptions}
-                      ></Select>
-                      <ErrorMessage message={formik.errors.certificateType} />
-                    </FormGroup>
-                  </Col>
-                  <Col md="6" className="pl-1">
-                    <FormGroup>
-                      <label>Skill</label>
-                      <Select
-                        className="react-select react-select-primary"
-                        onChange={(opt: any) => {
-                          setSkillTypeSelect(opt);
-                          formik.setFieldValue("skillType", opt.value);
-                        }}
-                        classNamePrefix="react-select"
-                        placeholder="Single Select"
-                        value={skillTypeSelect}
-                        name="skillType"
-                        options={SkillsTypeOptions}
-                      ></Select>
-                      <ErrorMessage message={formik.errors.skillType} />
-                    </FormGroup>
-                  </Col>
-                </Row>
+                
                 <Row>
                   <Col className="pr-1" md="6">
                     <FormGroup className="d-flex justify-content-between">
