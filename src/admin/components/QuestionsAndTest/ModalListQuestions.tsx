@@ -176,7 +176,7 @@ const ModalListQuestions: React.FC<ModalListQuestionsProps> = ({
                             questions,
                             partId
                           );
-                          setArrQuestionIds(res!);
+                          // setArrQuestionIds(res!);
                         }}
                         type="checkbox"
                       ></Input>
