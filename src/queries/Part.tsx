@@ -8,6 +8,7 @@ export const PART_FRAGMENT = gql`
     description
     skillType
     certificateType
+    order
   }
 `;
 
@@ -39,8 +40,8 @@ export const GET_PARTS = gql `
 `;
 
 export const UPDATE_PART = gql `
-  mutation updatePart($id: String!, $data: NewPartInput!) {
-    updatePart(id: $id, data: $data) {
+  mutation updatePart($data: NewPartInput!) {
+    updatePart(data: $data) {
         ...Part
       }
   }

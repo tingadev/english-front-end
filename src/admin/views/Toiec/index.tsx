@@ -1,15 +1,15 @@
 import React from "react";
 import PanelHeader from "../../components/PanelHeader/PanelHeader";
-import { Switch, Route, useRouteMatch,  } from "react-router-dom";
-import CreateQuestion from "../../components/Questions/CreateQuestion";
-import ListTests from "../../components/Questions/ListTest";
-import CreatePart from "../../components/Questions/CreatePart";
-import CreateAndEditTest from "../../components/Questions/CreateAndEditTest";
+import { Switch, Route, useRouteMatch } from "react-router-dom";
+import CreateAndEditQuestion from "../../components/QuestionsAndTest/CreateAndEditQuestion";
+import ListTests from "../../components/QuestionsAndTest/ListTest";
+import CreateAndEditPart from "../../components/QuestionsAndTest/CreateAndEditPart";
+import CreateAndEditTest from "../../components/QuestionsAndTest/CreateAndEditTest";
 // import { Route, Switch, Redirect } from "react-router-dom";
 interface ToiecAdminProps {}
 
 const ToiecAdmin: React.FC<ToiecAdminProps> = () => {
-  const match = useRouteMatch()
+  const match = useRouteMatch();
   return (
     <>
       <PanelHeader
@@ -23,24 +23,20 @@ const ToiecAdmin: React.FC<ToiecAdminProps> = () => {
         }
       />
       <div className="content">
-            <Switch>
-            
-             <Route path={`${match.path}/create-test-toiec`}>
-                <CreateAndEditTest/>
-              </Route>
-              <Route path={`${match.path}/create-question-toiec`}>
-                <CreateQuestion/>
-              </Route>
-              <Route path={`${match.path}/create-part-toiec`}>
-                <CreatePart/>
-              </Route>
-              <Route path={`${match.path}/part/:partId/edit`}>
-                <CreatePart/>
-              </Route>
-              <Route path={`${match.path}`}>
-                <ListTests/>
-              </Route>
-            </Switch>
+        <Switch>
+          <Route path={`${match.path}/create-test-toiec/:skillTypeParam`}>
+            <CreateAndEditTest />
+          </Route>
+          <Route path={[`${match.path}/create-question-toiec`, `${match.path}/questions/:questionId/edit`]}>
+            <CreateAndEditQuestion />
+          </Route>
+          <Route path={[`${match.path}/create-part-toiec`, `${match.path}/part/:partId/edit`]}>
+            <CreateAndEditPart />
+          </Route>
+          <Route path={`${match.path}`}>
+            <ListTests />
+          </Route>
+        </Switch>
       </div>
     </>
   );

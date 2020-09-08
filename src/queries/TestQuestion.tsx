@@ -12,7 +12,7 @@ export const TEST_QUESTION_FRAGMENT = gql`
     part{
         ...Part
     }
-    
+    order
   }
   ${QUESTION_FRAGMENT}
   ${PART_FRAGMENT}

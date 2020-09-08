@@ -7,6 +7,7 @@ export const QUESTION_FRAGMENT = gql`
     questionName
     audioSec
     questionType
+    image
     answers{
         keyAnswer
         answerContent
@@ -15,12 +16,23 @@ export const QUESTION_FRAGMENT = gql`
     description
     skillType
     certificateType
+    explaination
+    result
   }
 `;
 
 export const CREATE_QUESTION = gql`
   mutation createQuestion($data: NewQuestionInput!) {
     createQuestion(data: $data) {
+      ...Question
+    }
+  }
+  ${QUESTION_FRAGMENT}
+`;
+
+export const UPDATE_QUESTION = gql`
+  mutation updateQuestion($data: NewQuestionInput!) {
+    updateQuestion(data: $data) {
       ...Question
     }
   }
@@ -37,8 +49,8 @@ export const GET_QUESTION = gql `
 `;
 
 export const GET_QUESTIONS = gql `
-  query getQuestions($questionFilterType: QuestionFilterTypeInput!) {
-      questions(questionFilterType: $questionFilterType) {
+  query getQuestions($data: QuestionFilterTypeInput!) {
+      questions(questionFilterType: $data) {
         ...Question
       }
   }

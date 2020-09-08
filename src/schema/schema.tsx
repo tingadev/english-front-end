@@ -13,136 +13,24 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
   DateTime: any;
-};
-
-export type Answers = {
-  __typename?: 'Answers';
-  answerContent?: Maybe<Scalars['String']>;
-  keyAnswer?: Maybe<Scalars['String']>;
-};
-
-export type AnswersInput = {
-  answerContent?: Maybe<Scalars['String']>;
-  keyAnswer?: Maybe<Scalars['String']>;
-};
-
-export type AudioSeconds = {
-  __typename?: 'AudioSeconds';
-  autdioSecs?: Maybe<Scalars['Float']>;
-  partId?: Maybe<Scalars['String']>;
-};
-
-export type AudioSecondsInput = {
-  autdioSecs?: Maybe<Scalars['Float']>;
-  partId?: Maybe<Scalars['String']>;
-};
-
-
-export enum EnglishCertificateType {
-  Ielts = 'IELTS',
-  Toiec = 'Toiec'
-}
-
-export type Mutation = {
-  __typename?: 'Mutation';
-  createPart: Part;
-  createQuestion: Question;
-  createTest: Test;
-  createUser: User;
-  updatePart: Part;
-  updateTest: Test;
-};
-
-
-export type MutationCreatePartArgs = {
-  data: NewPartInput;
-};
-
-
-export type MutationCreateQuestionArgs = {
-  data: NewQuestionInput;
-};
-
-
-export type MutationCreateTestArgs = {
-  data: NewTestInput;
-};
-
-
-export type MutationCreateUserArgs = {
-  data: UserInput;
-};
-
-
-export type MutationUpdatePartArgs = {
-  data: NewPartInput;
-  id: Scalars['String'];
-};
-
-
-export type MutationUpdateTestArgs = {
-  data: NewTestInput;
-  id: Scalars['String'];
-};
-
-export type NewPartInput = {
-  certificateType: EnglishCertificateType;
-  description: Scalars['String'];
-  id?: Maybe<Scalars['String']>;
-  partName: Scalars['String'];
-  skillType: SkillsType;
-};
-
-export type NewQuestionInput = {
-  answers: Array<AnswersInput>;
-  audioSec: Scalars['Float'];
-  certificateType: EnglishCertificateType;
-  content?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  explaination?: Maybe<Scalars['String']>;
-  partId?: Maybe<Scalars['String']>;
-  questionName: Scalars['String'];
-  questionType: QuestionType;
-  result: Scalars['String'];
-  skillType: SkillsType;
-  testId?: Maybe<Scalars['String']>;
-};
-
-export type NewTestInput = {
-  autdioPartSecs?: Maybe<Array<AudioSecondsInput>>;
-  certificateType?: Maybe<EnglishCertificateType>;
-  description?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['String']>;
-  isPublished?: Maybe<Scalars['Boolean']>;
-  skillType?: Maybe<SkillsType>;
-  testName: Scalars['String'];
-};
-
-export type Part = {
-  __typename?: 'Part';
-  certificateType: EnglishCertificateType;
-  createdAt: Scalars['DateTime'];
-  deleteAt?: Maybe<Scalars['DateTime']>;
-  description: Scalars['String'];
-  id: Scalars['String'];
-  partName: Scalars['String'];
-  skillType: SkillsType;
-  test?: Maybe<TestQuestion>;
-  testQuestion?: Maybe<Test>;
-  updatedAt: Scalars['DateTime'];
 };
 
 export type Query = {
   __typename?: 'Query';
+  user: User;
+  users: Array<User>;
   part: Part;
   parts: Array<Part>;
   question: Question;
   questions: Array<Question>;
   test: Test;
-  tests: Array<Test>;
-  user: User;
-  users: Array<User>;
+};
+
+
+export type QueryUserArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -170,138 +58,288 @@ export type QueryTestArgs = {
   id: Scalars['String'];
 };
 
-
-export type QueryTestsArgs = {
-  testCategoryId: Scalars['String'];
-};
-
-
-export type QueryUserArgs = {
+export type User = {
+  __typename?: 'User';
   id: Scalars['String'];
-};
-
-export type Question = {
-  __typename?: 'Question';
-  answers: Array<Answers>;
-  audioSec: Scalars['Float'];
-  certificateType: EnglishCertificateType;
-  content: Scalars['String'];
   createdAt: Scalars['DateTime'];
-  deleteAt?: Maybe<Scalars['DateTime']>;
-  description: Scalars['String'];
-  explaination: Scalars['String'];
-  id: Scalars['String'];
-  questionName: Scalars['String'];
-  questionType: QuestionType;
-  result: Scalars['String'];
-  skillType: SkillsType;
-  testQuestion?: Maybe<TestQuestion>;
   updatedAt: Scalars['DateTime'];
+  profileMediaUrl?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
+  displayEmail?: Maybe<Scalars['String']>;
+  firstName: Scalars['String'];
+  lastName?: Maybe<Scalars['String']>;
+  /** First + Last name */
+  name: Scalars['String'];
+  phone?: Maybe<Scalars['String']>;
+  company?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  bio?: Maybe<Scalars['String']>;
+  socialLinks?: Maybe<SocialLink>;
+  password?: Maybe<Scalars['String']>;
+  state: UserState;
+  isVerified?: Maybe<Scalars['Boolean']>;
 };
 
-export type QuestionFilterTypeInput = {
-  certificateType: EnglishCertificateType;
-  skillType: SkillsType;
-};
-
-export enum QuestionType {
-  FillBlank = 'FillBlank',
-  MultiChoice = 'MultiChoice',
-  SingleChoice = 'SingleChoice'
-}
-
-export enum SkillsType {
-  Listening = 'Listening',
-  Reading = 'Reading'
-}
 
 export type SocialLink = {
   __typename?: 'SocialLink';
   facebook?: Maybe<Scalars['String']>;
-  linkedin?: Maybe<Scalars['String']>;
   twitter?: Maybe<Scalars['String']>;
+  linkedin?: Maybe<Scalars['String']>;
 };
+
+export enum UserState {
+  New = 'New',
+  HasCreated = 'HasCreated',
+  HasPublished = 'HasPublished'
+}
+
+export type Part = {
+  __typename?: 'Part';
+  id: Scalars['String'];
+  partName: Scalars['String'];
+  description: Scalars['String'];
+  skillType: SkillsType;
+  certificateType: EnglishCertificateType;
+  testQuestion?: Maybe<Test>;
+  test?: Maybe<TestQuestion>;
+  order: Scalars['Float'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  deleteAt?: Maybe<Scalars['DateTime']>;
+};
+
+export enum SkillsType {
+  Reading = 'Reading',
+  Listening = 'Listening'
+}
+
+export enum EnglishCertificateType {
+  Toiec = 'Toiec',
+  Ielts = 'IELTS'
+}
 
 export type Test = {
   __typename?: 'Test';
-  audioPartSecs?: Maybe<Array<AudioSeconds>>;
-  certificateType: EnglishCertificateType;
-  createdAt: Scalars['DateTime'];
-  deleteAt?: Maybe<Scalars['DateTime']>;
-  description: Scalars['String'];
   id: Scalars['String'];
-  isPublished: Scalars['Boolean'];
-  part?: Maybe<Part>;
-  skillType: SkillsType;
-  testCategory: TestCategory;
   testName: Scalars['String'];
+  description: Scalars['String'];
+  skillType: SkillsType;
+  certificateType: EnglishCertificateType;
+  partAndAudioSecs?: Maybe<Array<PartAndAudioSeconds>>;
   testQuestions?: Maybe<Array<TestQuestion>>;
+  part?: Maybe<Part>;
+  isPublished: Scalars['Boolean'];
+  order: Scalars['Float'];
+  createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
+  deleteAt?: Maybe<Scalars['DateTime']>;
 };
 
-export type TestCategory = {
-  __typename?: 'TestCategory';
-  certificateType: EnglishCertificateType;
-  createdAt: Scalars['DateTime'];
-  deleteAt?: Maybe<Scalars['DateTime']>;
-  id: Scalars['String'];
-  isPublished: Scalars['Boolean'];
-  test?: Maybe<Array<Test>>;
-  testCategoryName: Scalars['String'];
-  updatedAt: Scalars['DateTime'];
+export type PartAndAudioSeconds = {
+  __typename?: 'PartAndAudioSeconds';
+  partId?: Maybe<Scalars['String']>;
+  autdioSecs?: Maybe<Scalars['Float']>;
 };
 
 export type TestQuestion = {
   __typename?: 'TestQuestion';
-  createdAt: Scalars['DateTime'];
-  deleteAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['String'];
-  part: Part;
-  question: Question;
   test: Test;
+  question: Question;
+  part: Part;
+  order: Scalars['Float'];
+  createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
+  deleteAt?: Maybe<Scalars['DateTime']>;
 };
 
-export type User = {
-  __typename?: 'User';
-  bio?: Maybe<Scalars['String']>;
-  company?: Maybe<Scalars['String']>;
-  createdAt: Scalars['DateTime'];
-  displayEmail?: Maybe<Scalars['String']>;
-  email: Scalars['String'];
-  firstName: Scalars['String'];
+export type Question = {
+  __typename?: 'Question';
   id: Scalars['String'];
-  isVerified?: Maybe<Scalars['Boolean']>;
-  lastName?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
-  password?: Maybe<Scalars['String']>;
-  phone?: Maybe<Scalars['String']>;
-  profileMediaUrl?: Maybe<Scalars['String']>;
-  socialLinks?: Maybe<SocialLink>;
-  state: UserState;
-  title?: Maybe<Scalars['String']>;
+  questionName: Scalars['String'];
+  audioSec: Scalars['Float'];
+  questionType: QuestionType;
+  description?: Maybe<Scalars['String']>;
+  content?: Maybe<Scalars['String']>;
+  explaination?: Maybe<Scalars['String']>;
+  image: Scalars['String'];
+  answers: Array<Answers>;
+  testQuestion?: Maybe<TestQuestion>;
+  skillType: SkillsType;
+  certificateType: EnglishCertificateType;
+  result: Scalars['String'];
+  createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
+  deleteAt?: Maybe<Scalars['DateTime']>;
+};
+
+export enum QuestionType {
+  SingleChoice = 'SingleChoice',
+  MultiChoice = 'MultiChoice',
+  FillBlank = 'FillBlank'
+}
+
+export type Answers = {
+  __typename?: 'Answers';
+  keyAnswer?: Maybe<Scalars['String']>;
+  answerContent?: Maybe<Scalars['String']>;
+};
+
+export type QuestionFilterTypeInput = {
+  skillType?: Maybe<SkillsType>;
+  certificateType: EnglishCertificateType;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  createUser: User;
+  createPart: Part;
+  updatePart: Part;
+  createQuestion: Question;
+  updateQuestion: Question;
+  createTest: Test;
+  updateTest: Test;
+  uploadMedia: Asset;
+};
+
+
+export type MutationCreateUserArgs = {
+  data: UserInput;
+};
+
+
+export type MutationCreatePartArgs = {
+  data: NewPartInput;
+};
+
+
+export type MutationUpdatePartArgs = {
+  data: NewPartInput;
+};
+
+
+export type MutationCreateQuestionArgs = {
+  data: NewQuestionInput;
+};
+
+
+export type MutationUpdateQuestionArgs = {
+  data: NewQuestionInput;
+};
+
+
+export type MutationCreateTestArgs = {
+  data: NewTestInput;
+};
+
+
+export type MutationUpdateTestArgs = {
+  data: NewTestInput;
+  id: Scalars['String'];
+};
+
+
+export type MutationUploadMediaArgs = {
+  data: AssetInput;
 };
 
 export type UserInput = {
-  email: Scalars['String'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
+  email: Scalars['String'];
   state: UserState;
 };
 
-export enum UserState {
-  HasCreated = 'HasCreated',
-  HasPublished = 'HasPublished',
-  New = 'New'
+export type NewPartInput = {
+  id?: Maybe<Scalars['String']>;
+  partName: Scalars['String'];
+  skillType: SkillsType;
+  description: Scalars['String'];
+  certificateType: EnglishCertificateType;
+};
+
+export type NewQuestionInput = {
+  id?: Maybe<Scalars['String']>;
+  questionName: Scalars['String'];
+  audioSec: Scalars['Float'];
+  questionType: QuestionType;
+  content?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  explaination?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
+  skillType: SkillsType;
+  certificateType: EnglishCertificateType;
+  answers: Array<AnswersInput>;
+  result: Scalars['String'];
+  partId?: Maybe<Scalars['String']>;
+  testId?: Maybe<Scalars['String']>;
+};
+
+export type AnswersInput = {
+  keyAnswer?: Maybe<Scalars['String']>;
+  answerContent?: Maybe<Scalars['String']>;
+};
+
+export type NewTestInput = {
+  id?: Maybe<Scalars['String']>;
+  testName: Scalars['String'];
+  skillType?: Maybe<SkillsType>;
+  description?: Maybe<Scalars['String']>;
+  certificateType?: Maybe<EnglishCertificateType>;
+  isPublished?: Maybe<Scalars['Boolean']>;
+  partAndAudioSecs?: Maybe<Array<AudioSecondsInput>>;
+  testQuestionInputIds?: Maybe<TestQuestionInputIds>;
+};
+
+export type AudioSecondsInput = {
+  partId?: Maybe<Scalars['String']>;
+  autdioSecs?: Maybe<Scalars['Float']>;
+};
+
+export type TestQuestionInputIds = {
+  testId?: Maybe<Scalars['String']>;
+  partIdAndQuestionIdsInput: Array<PartIdAndQuestionIdsInput>;
+};
+
+export type PartIdAndQuestionIdsInput = {
+  partId?: Maybe<Scalars['String']>;
+  questionIds: Array<Scalars['String']>;
+};
+
+export type Asset = {
+  __typename?: 'Asset';
+  url: Scalars['String'];
+  name: Scalars['String'];
+  type: MediaType;
+  createdAt: Scalars['DateTime'];
+};
+
+export enum MediaType {
+  Image = 'Image',
+  Audio = 'Audio',
+  Video = 'Video'
 }
 
+export type AssetInput = {
+  name: Scalars['String'];
+  file: Scalars['String'];
+  type: MediaType;
+};
+
+export const AssetFragmentDoc = gql`
+    fragment Asset on Asset {
+  name
+  type
+}
+    `;
 export const QuestionFragmentDoc = gql`
     fragment Question on Question {
   id
   questionName
   audioSec
   questionType
+  image
   answers {
     keyAnswer
     answerContent
@@ -310,6 +348,8 @@ export const QuestionFragmentDoc = gql`
   description
   skillType
   certificateType
+  explaination
+  result
 }
     `;
 export const PartFragmentDoc = gql`
@@ -319,6 +359,7 @@ export const PartFragmentDoc = gql`
   description
   skillType
   certificateType
+  order
 }
     `;
 export const TestQuestionFragmentDoc = gql`
@@ -330,6 +371,7 @@ export const TestQuestionFragmentDoc = gql`
   part {
     ...Part
   }
+  order
 }
     ${QuestionFragmentDoc}
 ${PartFragmentDoc}`;
@@ -340,17 +382,15 @@ export const TestFragmentDoc = gql`
   description
   skillType
   certificateType
-  audioPartSecs {
+  partAndAudioSecs {
     partId
     autdioSecs
   }
   testQuestions {
     ...TestQuestion
   }
-  testCategory {
-    id
-  }
   isPublished
+  order
 }
     ${TestQuestionFragmentDoc}`;
 export const UserFragmentDoc = gql`
@@ -361,6 +401,44 @@ export const UserFragmentDoc = gql`
   email
 }
     `;
+export const UploadMediaDocument = gql`
+    mutation uploadMedia($data: AssetInput!) {
+  uploadMedia(data: $data) {
+    ...Asset
+  }
+}
+    ${AssetFragmentDoc}`;
+export type UploadMediaMutationFn = ApolloReactCommon.MutationFunction<UploadMediaMutation, UploadMediaMutationVariables>;
+export type UploadMediaComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UploadMediaMutation, UploadMediaMutationVariables>, 'mutation'>;
+
+    export const UploadMediaComponent = (props: UploadMediaComponentProps) => (
+      <ApolloReactComponents.Mutation<UploadMediaMutation, UploadMediaMutationVariables> mutation={UploadMediaDocument} {...props} />
+    );
+    
+
+/**
+ * __useUploadMediaMutation__
+ *
+ * To run a mutation, you first call `useUploadMediaMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUploadMediaMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [uploadMediaMutation, { data, loading, error }] = useUploadMediaMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUploadMediaMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UploadMediaMutation, UploadMediaMutationVariables>) {
+        return ApolloReactHooks.useMutation<UploadMediaMutation, UploadMediaMutationVariables>(UploadMediaDocument, baseOptions);
+      }
+export type UploadMediaMutationHookResult = ReturnType<typeof useUploadMediaMutation>;
+export type UploadMediaMutationResult = ApolloReactCommon.MutationResult<UploadMediaMutation>;
+export type UploadMediaMutationOptions = ApolloReactCommon.BaseMutationOptions<UploadMediaMutation, UploadMediaMutationVariables>;
 export const CreatePartDocument = gql`
     mutation createPart($data: NewPartInput!) {
   createPart(data: $data) {
@@ -478,8 +556,8 @@ export type GetPartsQueryHookResult = ReturnType<typeof useGetPartsQuery>;
 export type GetPartsLazyQueryHookResult = ReturnType<typeof useGetPartsLazyQuery>;
 export type GetPartsQueryResult = ApolloReactCommon.QueryResult<GetPartsQuery, GetPartsQueryVariables>;
 export const UpdatePartDocument = gql`
-    mutation updatePart($id: String!, $data: NewPartInput!) {
-  updatePart(id: $id, data: $data) {
+    mutation updatePart($data: NewPartInput!) {
+  updatePart(data: $data) {
     ...Part
   }
 }
@@ -505,7 +583,6 @@ export type UpdatePartComponentProps = Omit<ApolloReactComponents.MutationCompon
  * @example
  * const [updatePartMutation, { data, loading, error }] = useUpdatePartMutation({
  *   variables: {
- *      id: // value for 'id'
  *      data: // value for 'data'
  *   },
  * });
@@ -554,6 +631,44 @@ export function useCreateQuestionMutation(baseOptions?: ApolloReactHooks.Mutatio
 export type CreateQuestionMutationHookResult = ReturnType<typeof useCreateQuestionMutation>;
 export type CreateQuestionMutationResult = ApolloReactCommon.MutationResult<CreateQuestionMutation>;
 export type CreateQuestionMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateQuestionMutation, CreateQuestionMutationVariables>;
+export const UpdateQuestionDocument = gql`
+    mutation updateQuestion($data: NewQuestionInput!) {
+  updateQuestion(data: $data) {
+    ...Question
+  }
+}
+    ${QuestionFragmentDoc}`;
+export type UpdateQuestionMutationFn = ApolloReactCommon.MutationFunction<UpdateQuestionMutation, UpdateQuestionMutationVariables>;
+export type UpdateQuestionComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateQuestionMutation, UpdateQuestionMutationVariables>, 'mutation'>;
+
+    export const UpdateQuestionComponent = (props: UpdateQuestionComponentProps) => (
+      <ApolloReactComponents.Mutation<UpdateQuestionMutation, UpdateQuestionMutationVariables> mutation={UpdateQuestionDocument} {...props} />
+    );
+    
+
+/**
+ * __useUpdateQuestionMutation__
+ *
+ * To run a mutation, you first call `useUpdateQuestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateQuestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateQuestionMutation, { data, loading, error }] = useUpdateQuestionMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateQuestionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateQuestionMutation, UpdateQuestionMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateQuestionMutation, UpdateQuestionMutationVariables>(UpdateQuestionDocument, baseOptions);
+      }
+export type UpdateQuestionMutationHookResult = ReturnType<typeof useUpdateQuestionMutation>;
+export type UpdateQuestionMutationResult = ApolloReactCommon.MutationResult<UpdateQuestionMutation>;
+export type UpdateQuestionMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateQuestionMutation, UpdateQuestionMutationVariables>;
 export const GetQuestionDocument = gql`
     query getQuestion($id: String!) {
   question(id: $id) {
@@ -594,8 +709,8 @@ export type GetQuestionQueryHookResult = ReturnType<typeof useGetQuestionQuery>;
 export type GetQuestionLazyQueryHookResult = ReturnType<typeof useGetQuestionLazyQuery>;
 export type GetQuestionQueryResult = ApolloReactCommon.QueryResult<GetQuestionQuery, GetQuestionQueryVariables>;
 export const GetQuestionsDocument = gql`
-    query getQuestions($questionFilterType: QuestionFilterTypeInput!) {
-  questions(questionFilterType: $questionFilterType) {
+    query getQuestions($data: QuestionFilterTypeInput!) {
+  questions(questionFilterType: $data) {
     ...Question
   }
 }
@@ -619,7 +734,7 @@ export type GetQuestionsComponentProps = Omit<ApolloReactComponents.QueryCompone
  * @example
  * const { data, loading, error } = useGetQuestionsQuery({
  *   variables: {
- *      questionFilterType: // value for 'questionFilterType'
+ *      data: // value for 'data'
  *   },
  * });
  */
@@ -709,45 +824,6 @@ export function useGetTestLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHook
 export type GetTestQueryHookResult = ReturnType<typeof useGetTestQuery>;
 export type GetTestLazyQueryHookResult = ReturnType<typeof useGetTestLazyQuery>;
 export type GetTestQueryResult = ApolloReactCommon.QueryResult<GetTestQuery, GetTestQueryVariables>;
-export const GetTestsDocument = gql`
-    query getTests($testCategoryId: String!) {
-  tests(testCategoryId: $testCategoryId) {
-    ...Test
-  }
-}
-    ${TestFragmentDoc}`;
-export type GetTestsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetTestsQuery, GetTestsQueryVariables>, 'query'> & ({ variables: GetTestsQueryVariables; skip?: boolean; } | { skip: boolean; });
-
-    export const GetTestsComponent = (props: GetTestsComponentProps) => (
-      <ApolloReactComponents.Query<GetTestsQuery, GetTestsQueryVariables> query={GetTestsDocument} {...props} />
-    );
-    
-
-/**
- * __useGetTestsQuery__
- *
- * To run a query within a React component, call `useGetTestsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetTestsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetTestsQuery({
- *   variables: {
- *      testCategoryId: // value for 'testCategoryId'
- *   },
- * });
- */
-export function useGetTestsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetTestsQuery, GetTestsQueryVariables>) {
-        return ApolloReactHooks.useQuery<GetTestsQuery, GetTestsQueryVariables>(GetTestsDocument, baseOptions);
-      }
-export function useGetTestsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetTestsQuery, GetTestsQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<GetTestsQuery, GetTestsQueryVariables>(GetTestsDocument, baseOptions);
-        }
-export type GetTestsQueryHookResult = ReturnType<typeof useGetTestsQuery>;
-export type GetTestsLazyQueryHookResult = ReturnType<typeof useGetTestsLazyQuery>;
-export type GetTestsQueryResult = ApolloReactCommon.QueryResult<GetTestsQuery, GetTestsQueryVariables>;
 export const CreateUserDocument = gql`
     mutation createUser($data: UserInput!) {
   createUser(data: $data) {
@@ -863,7 +939,19 @@ export function useGetUsersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHoo
 export type GetUsersQueryHookResult = ReturnType<typeof useGetUsersQuery>;
 export type GetUsersLazyQueryHookResult = ReturnType<typeof useGetUsersLazyQuery>;
 export type GetUsersQueryResult = ApolloReactCommon.QueryResult<GetUsersQuery, GetUsersQueryVariables>;
-export type PartFragment = { __typename?: 'Part', id: string, partName: string, description: string, skillType: SkillsType, certificateType: EnglishCertificateType };
+export type AssetFragment = { __typename?: 'Asset', name: string, type: MediaType };
+
+export type UploadMediaMutationVariables = Exact<{
+  data: AssetInput;
+}>;
+
+
+export type UploadMediaMutation = { __typename?: 'Mutation', uploadMedia: (
+    { __typename?: 'Asset' }
+    & AssetFragment
+  ) };
+
+export type PartFragment = { __typename?: 'Part', id: string, partName: string, description: string, skillType: SkillsType, certificateType: EnglishCertificateType, order: number };
 
 export type CreatePartMutationVariables = Exact<{
   data: NewPartInput;
@@ -896,7 +984,6 @@ export type GetPartsQuery = { __typename?: 'Query', parts: Array<(
   )> };
 
 export type UpdatePartMutationVariables = Exact<{
-  id: Scalars['String'];
   data: NewPartInput;
 }>;
 
@@ -906,7 +993,7 @@ export type UpdatePartMutation = { __typename?: 'Mutation', updatePart: (
     & PartFragment
   ) };
 
-export type QuestionFragment = { __typename?: 'Question', id: string, questionName: string, audioSec: number, questionType: QuestionType, content: string, description: string, skillType: SkillsType, certificateType: EnglishCertificateType, answers: Array<{ __typename?: 'Answers', keyAnswer?: Maybe<string>, answerContent?: Maybe<string> }> };
+export type QuestionFragment = { __typename?: 'Question', id: string, questionName: string, audioSec: number, questionType: QuestionType, image: string, content?: Maybe<string>, description?: Maybe<string>, skillType: SkillsType, certificateType: EnglishCertificateType, explaination?: Maybe<string>, result: string, answers: Array<{ __typename?: 'Answers', keyAnswer?: Maybe<string>, answerContent?: Maybe<string> }> };
 
 export type CreateQuestionMutationVariables = Exact<{
   data: NewQuestionInput;
@@ -914,6 +1001,16 @@ export type CreateQuestionMutationVariables = Exact<{
 
 
 export type CreateQuestionMutation = { __typename?: 'Mutation', createQuestion: (
+    { __typename?: 'Question' }
+    & QuestionFragment
+  ) };
+
+export type UpdateQuestionMutationVariables = Exact<{
+  data: NewQuestionInput;
+}>;
+
+
+export type UpdateQuestionMutation = { __typename?: 'Mutation', updateQuestion: (
     { __typename?: 'Question' }
     & QuestionFragment
   ) };
@@ -929,7 +1026,7 @@ export type GetQuestionQuery = { __typename?: 'Query', question: (
   ) };
 
 export type GetQuestionsQueryVariables = Exact<{
-  questionFilterType: QuestionFilterTypeInput;
+  data: QuestionFilterTypeInput;
 }>;
 
 
@@ -938,10 +1035,10 @@ export type GetQuestionsQuery = { __typename?: 'Query', questions: Array<(
     & QuestionFragment
   )> };
 
-export type TestFragment = { __typename?: 'Test', id: string, testName: string, description: string, skillType: SkillsType, certificateType: EnglishCertificateType, isPublished: boolean, audioPartSecs?: Maybe<Array<{ __typename?: 'AudioSeconds', partId?: Maybe<string>, autdioSecs?: Maybe<number> }>>, testQuestions?: Maybe<Array<(
+export type TestFragment = { __typename?: 'Test', id: string, testName: string, description: string, skillType: SkillsType, certificateType: EnglishCertificateType, isPublished: boolean, order: number, partAndAudioSecs?: Maybe<Array<{ __typename?: 'PartAndAudioSeconds', partId?: Maybe<string>, autdioSecs?: Maybe<number> }>>, testQuestions?: Maybe<Array<(
     { __typename?: 'TestQuestion' }
     & TestQuestionFragment
-  )>>, testCategory: { __typename?: 'TestCategory', id: string } };
+  )>> };
 
 export type CreateTestMutationVariables = Exact<{
   data: NewTestInput;
@@ -963,17 +1060,7 @@ export type GetTestQuery = { __typename?: 'Query', test: (
     & TestFragment
   ) };
 
-export type GetTestsQueryVariables = Exact<{
-  testCategoryId: Scalars['String'];
-}>;
-
-
-export type GetTestsQuery = { __typename?: 'Query', tests: Array<(
-    { __typename?: 'Test' }
-    & TestFragment
-  )> };
-
-export type TestQuestionFragment = { __typename?: 'TestQuestion', id: string, question: (
+export type TestQuestionFragment = { __typename?: 'TestQuestion', id: string, order: number, question: (
     { __typename?: 'Question' }
     & QuestionFragment
   ), part: (

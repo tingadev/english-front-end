@@ -9,17 +9,15 @@ export const TEST_FRAGMENT = gql`
     description
     skillType
     certificateType
-    audioPartSecs{
+    partAndAudioSecs{
         partId
         autdioSecs
     }
     testQuestions{
         ...TestQuestion
     }
-    testCategory{
-        id
-    }
     isPublished
+    order
   }
   ${TEST_QUESTION_FRAGMENT}
 `;
@@ -42,12 +40,4 @@ export const GET_TEST = gql `
   ${TEST_FRAGMENT}
 `;
 
-export const GET_TESTS = gql `
-  query getTests($testCategoryId: String!) {
-      tests(testCategoryId: $testCategoryId) {
-        ...Test
-      }
-  }
-  ${TEST_FRAGMENT}
-`;
 
