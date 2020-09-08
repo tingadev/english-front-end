@@ -3,9 +3,7 @@ import { Link, useRouteMatch, Route, Switch } from "react-router-dom";
 import {
   Card,
   CardHeader,
-  CardTitle,
   CardBody,
-  Table,
   Col,
   Row,
   Nav,
@@ -15,9 +13,9 @@ import {
 import ListPart from "./ListPart";
 import ListQuestions from "./ListQuestions";
 // import { Route, Switch, Redirect } from "react-router-dom";
-interface ToiecAdminProps {}
+// interface ToiecAdminProps {}
 
-const ListTests: React.FC<ToiecAdminProps> = () => {
+const ListTests: React.FC<{}> = () => {
   const match = useRouteMatch();
   const [iconPills, setIconPills] = React.useState("test-category");
   return (

@@ -5,13 +5,7 @@ import {
   Card,
   CardHeader,
   CardBody,
-  Form,
-  Button,
-  NavItem,
-  Nav,
-  NavLink,
-  TabPane,
-  TabContent,
+  Form
 } from "reactstrap";
 import {
   SkillsType,
@@ -28,14 +22,14 @@ import ModalCreateQuestion from "./ModalCreateQuestion";
 import { useParams } from "react-router-dom";
 import { capitalizeFirstLetter } from "../../utils/UppercaseFirstLetter";
 
-const TemplateOptions = [
-  {
-    templateName: SkillsType.Listening,
-  },
-  {
-    templateName: SkillsType.Reading,
-  },
-];
+// const TemplateOptions = [
+//   {
+//     templateName: SkillsType.Listening,
+//   },
+//   {
+//     templateName: SkillsType.Reading,
+//   },
+// ];
 
 export interface ArrayQuestionIds {
   skillType: SkillsType,

@@ -6,9 +6,9 @@ import ListTests from "../../components/QuestionsAndTest/ListTest";
 import CreateAndEditPart from "../../components/QuestionsAndTest/CreateAndEditPart";
 import CreateAndEditTest from "../../components/QuestionsAndTest/CreateAndEditTest";
 // import { Route, Switch, Redirect } from "react-router-dom";
-interface ToiecAdminProps {}
+// interface ToiecAdminProps {}
 
-const ToiecAdmin: React.FC<ToiecAdminProps> = () => {
+const ToiecAdmin: React.FC<{}> = () => {
   const match = useRouteMatch();
   return (
     <>

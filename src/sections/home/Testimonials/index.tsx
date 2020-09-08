@@ -3,8 +3,8 @@ import React from "react";
 import { Container, Row, Col, CardBody, CardFooter, CardTitle, Card } from "reactstrap";
 
 // core components
-interface TestimonialsProps {}
-const Testimonials: React.FC<TestimonialsProps> = ({}) => {
+// interface TestimonialsProps {}
+const Testimonials: React.FC<{}> = ({}) => {
   return (
     <>
       <div className="cd-section" id="testimonials">
