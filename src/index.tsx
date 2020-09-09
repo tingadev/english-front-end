@@ -15,7 +15,7 @@ import {
   Route,
   HashRouter,
 } from "react-router-dom";
-
+import config from "./config"
 // styles for this kit
 import "./assets/css/bootstrap.min.css";
 import "./assets/scss/now-ui-kit.scss?v=1.4.0";
@@ -26,13 +26,12 @@ import 'react-notifications-component/dist/theme.css'
 import routes from "./router.js";
 import ReactNotification from 'react-notifications-component'
 const httpLink = createHttpLink({
-  uri: process.env.NODE_ENV === 'production' ? process.env.API_GRAPHQL_SERVER : process.env.API_GRAPHQL_SERVER,
+  uri: config.GRAPHQL_SERVER_URL,
   fetch,
   fetchOptions: {
     credentials: "include",
   },
 });
-
 const client = new ApolloClient({
   link: ApolloLink.from([httpLink]),
   cache: new InMemoryCache(),
