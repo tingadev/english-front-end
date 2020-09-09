@@ -107,6 +107,7 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({modal, ski
       })
       
      }
+     
   },[certificateTypeSelect, skillTypeSelect, parts])
   let initialValues: NewQuestionInput = {
     questionName: "",
