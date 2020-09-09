@@ -26,7 +26,7 @@ import 'react-notifications-component/dist/theme.css'
 import routes from "./router.js";
 import ReactNotification from 'react-notifications-component'
 const httpLink = createHttpLink({
-  uri: "http://localhost:4000/graphql",
+  uri: process.env.NODE_ENV === 'production' ? process.env.API_GRAPHQL_SERVER : process.env.API_GRAPHQL_SERVER,
   fetch,
   fetchOptions: {
     credentials: "include",
