@@ -3,20 +3,17 @@ import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 
 // core components
-import DemoNavbar from "../components/Navbars/DemoNavbar.js";
-import Footer from "../components/Footer/Footer.js";
+import HeaderAdmin from "../components/Navbars/HeaderAdmin";
+import Footer from "../components/Footer/FooterAdmin";
 import Sidebar from "../components/Sidebar/Sidebar";
 import FixedPlugin from "../components/FixedPlugin/FixedPlugin.js";
-
-
-
 import routes from "../routes.js";
 
-interface DashboardAdmin {
+interface DashboardAdminProps {
 
 }
 
-const DashboardAdmin : React.FC<DashboardAdmin> = () => {
+const DashboardAdmin : React.FC<DashboardAdminProps> = () => {
 
   const mainPanel = React.useRef<HTMLDivElement>(null);
   const [backgroundColor, setBackgroundColor] = React.useState('brand')
@@ -30,7 +27,7 @@ const DashboardAdmin : React.FC<DashboardAdmin> = () => {
           backgroundColor={backgroundColor}
         />
         <div className="main-panel" ref={mainPanel}>
-          <DemoNavbar/>
+          <HeaderAdmin/> ADMIN,
           <Switch>
             {routes.map((prop, key) => {
               return (

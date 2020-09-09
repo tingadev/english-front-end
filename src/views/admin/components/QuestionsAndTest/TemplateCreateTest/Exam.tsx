@@ -7,7 +7,7 @@ import {
   PartAndAudioSeconds,
   EnglishCertificateType,
   TestQuestionFragment,
-} from "../../../../schema/schema";
+} from "../../../../../schema/schema";
 import { Button, Row, Col, Form, FormGroup, Input, Badge } from "reactstrap";
 import { useFormik } from "formik";
 import ErrorMessage from "../../Error";

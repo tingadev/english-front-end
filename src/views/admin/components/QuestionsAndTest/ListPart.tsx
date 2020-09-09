@@ -12,7 +12,7 @@ import {
   useGetPartsQuery,
   EnglishCertificateType,
   SkillsType,
-} from "../../../schema/schema";
+} from "../../../../schema/schema";
 import { Link, useRouteMatch } from "react-router-dom";
 interface ListPartProps {
   setIconPills: (val: string) => void;

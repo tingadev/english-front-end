@@ -14,7 +14,7 @@ import {
   EnglishCertificateType,
   SkillsType,
   QuestionFilterTypeInput,
-} from "../../../schema/schema";
+} from "../../../../schema/schema";
 // import { Route, Switch, Redirect } from "react-router-dom";
 interface ListQuestionsProps {
   setIconPills: (val: string) => void;

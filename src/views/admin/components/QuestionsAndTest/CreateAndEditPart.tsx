@@ -20,7 +20,7 @@ import {
   useGetPartLazyQuery,
   useUpdatePartMutation,
   NewPartInput,
-} from "../../../schema/schema";
+} from "../../../../schema/schema";
 import ErrorMessage from "../Error";
 import { store } from "react-notifications-component";
 import { Link, useParams } from "react-router-dom";

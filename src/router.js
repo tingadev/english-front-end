@@ -21,7 +21,7 @@ import LoginPage from "./views/examples/LoginPage";
 import LandingPage from "./views/examples/LandingPage";
 import ProfilePage from "./views/examples/ProfilePage";
 import AboutUs from "./sections/AboutUs";
-import DashboardAdmin from "./admin/layouts/Admin";
+import DashboardAdmin from "./views/admin/layouts/Admin";
 
 var dashRoutes = [
   {

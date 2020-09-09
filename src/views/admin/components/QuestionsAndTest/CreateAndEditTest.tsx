@@ -15,7 +15,7 @@ import {
   useCreateTestMutation,
   NewTestInput,
   TestFragment,
-} from "../../../schema/schema";
+} from "../../../../schema/schema";
 import ModalListQuestions from "./ModalListQuestions";
 import Exam from "./TemplateCreateTest/Exam";
 import ModalCreateQuestion from "./ModalCreateQuestion";

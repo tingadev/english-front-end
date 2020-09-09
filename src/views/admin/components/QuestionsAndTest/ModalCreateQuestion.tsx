@@ -6,7 +6,7 @@ import {
 } from "reactstrap";
 import {
   SkillsType, EnglishCertificateType,
-} from "../../../schema/schema";
+} from "../../../../schema/schema";
 import CreateAndEditQuestion from "./CreateAndEditQuestion";
 
 interface ModalCreateQuestionProps {

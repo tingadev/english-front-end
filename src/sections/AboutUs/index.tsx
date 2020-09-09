@@ -11,7 +11,7 @@ import {
 } from "reactstrap";
 
 // core components
-import Footer from "../../admin/components/Footer/Footer";
+import Footer from "../../views/admin/components/Footer/FooterAdmin";
 import AboutUsHeader from "../../components/Headers/AboutUsHeader";
 import IndexNavbar from "../../components/Navbars/IndexNavbar";
 

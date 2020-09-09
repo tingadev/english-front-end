@@ -18,7 +18,7 @@ import {
   SkillsType,
   QuestionFilterTypeInput,
   QuestionFragment,
-} from "../../../schema/schema";
+} from "../../../../schema/schema";
 import { ArrayQuestionIds } from "./CreateAndEditTest";
 
 interface ModalListQuestionsProps {

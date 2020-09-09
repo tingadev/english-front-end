@@ -24,7 +24,7 @@ import {
   useGetPartsLazyQuery,
   useGetQuestionLazyQuery,
   useUpdateQuestionMutation,
-} from "../../../schema/schema";
+} from "../../../../schema/schema";
 import Select from "react-select";
 import { useFormik } from "formik";
 import * as yup from "yup";
