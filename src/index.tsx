@@ -26,12 +26,13 @@ import 'react-notifications-component/dist/theme.css'
 import routes from "./router.js";
 import ReactNotification from 'react-notifications-component'
 const httpLink = createHttpLink({
-  uri: config.GRAPHQL_SERVER_URL,
+  uri: 'http://54.255.167.21:4000/graphql',
   fetch,
   fetchOptions: {
     credentials: "include",
   },
 });
+console.log(config.GRAPHQL_SERVER_URL)
 const client = new ApolloClient({
   link: ApolloLink.from([httpLink]),
   cache: new InMemoryCache(),
