@@ -51,7 +51,12 @@ export const GET_QUESTION = gql `
 export const GET_QUESTIONS = gql `
   query getQuestions($data: QuestionFilterTypeInput!) {
       questions(questionFilterType: $data) {
-        ...Question
+        questions{
+          ...Question
+        }
+        total
+        nextCursor
+
       }
   }
   ${QUESTION_FRAGMENT}

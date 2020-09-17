@@ -1,0 +1,27 @@
+
+.uploadPicturesWrapper{
+  position: relative;
+  z-index: 9999;
+}
+.uploadPictureContainer{
+  width: 50% !important;
+}
+
+.wrapper-input-image .wrapper-img{
+  width: 50%;
+  margin: 0 auto;
+  box-shadow: 0 1px 15px 1px rgba(39, 39, 39, 0.1);
+}
+.wrapper-input-image .wrapper-img span{
+  top: -5px;
+  right: -10px;
+  display: block;
+  border: 1px solid white;
+  border-radius:100%;
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+  background: red;
+  color: white;
+  cursor: pointer;
+}

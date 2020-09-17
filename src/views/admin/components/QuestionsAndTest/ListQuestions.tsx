@@ -8,23 +8,44 @@ import {
   Table,
   Badge,
   Button,
+  Input,
+  Label,
 } from "reactstrap";
 import {
   useGetQuestionsQuery,
   EnglishCertificateType,
   SkillsType,
   QuestionFilterTypeInput,
+  useCreateTestQuestionMutation,
+  TestQuestionInputId, PartIdAndQuestionIdsInput
 } from "../../../../schema/schema";
 // import { Route, Switch, Redirect } from "react-router-dom";
 interface ListQuestionsProps {
-  setIconPills: (val: string) => void;
+  setIconPills?: (val: string) => void;
+  modal?: boolean;
+  skillType?: SkillsType;
+  dataTestQuestionInput?: TestQuestionInputId;
+  refetchTestQuestions?: any,
+  arrQuestionIds?: PartIdAndQuestionIdsInput; 
+  setArrQuestionIds?: (val: PartIdAndQuestionIdsInput) => void;
 }
-
-const ListQuestions: React.FC<ListQuestionsProps> = ({ setIconPills }) => {
+const ListQuestions: React.FC<ListQuestionsProps> = ({
+  setIconPills,
+  modal,
+  skillType,
+  dataTestQuestionInput,
+  refetchTestQuestions,
+  arrQuestionIds,
+  setArrQuestionIds
+}) => {
   const match = useRouteMatch();
+  
+  const [createTestQuestionMutation, resultCreateTestMutation] = useCreateTestQuestionMutation();
+  const [searchName, setSearchName] = React.useState("");
   const questionsFilter: QuestionFilterTypeInput = {
     certificateType: EnglishCertificateType.Toiec,
-    skillType: undefined,
+    skillType,
+    testId: dataTestQuestionInput?.testId,
   };
   const { data, loading, refetch } = useGetQuestionsQuery({
     variables: {
@@ -32,84 +53,159 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({ setIconPills }) => {
     },
   });
   React.useEffect(() => {
-    setIconPills("questions");
+    setIconPills && setIconPills("questions");
     refetch();
+    setArrQuestionIds && setArrQuestionIds({
+      partId: dataTestQuestionInput?.partId,
+      questionIds: []
+    })
   }, []);
+
+  React.useEffect(() => {
+    if(!resultCreateTestMutation.data?.createTestQuestion){
+      refetchTestQuestions && refetchTestQuestions();
+    }
+  },[resultCreateTestMutation.loading])
 
   if (loading) {
     return <>{"Loading...."}</>;
   }
-  const questions = data?.questions;
+  const questions = data?.questions.questions;
   return (
     <>
-      <CardHeader>
-        <CardTitle tag="h4">List Of Questions</CardTitle>
-      </CardHeader>
+      {!modal && (
+        <CardHeader>
+          <CardTitle tag="h4">List Of Questions</CardTitle>
+        </CardHeader>
+      )}
       <CardBody>
+        <Input
+          placeholder="Search by name"
+          onChange={(e) => {
+            setSearchName(e.target.value);
+          }}
+        />
         <Table responsive>
           <thead className="text-primary">
             <tr>
-              <th className="text-right" style={{ width: "5%" }}></th>
+              {modal && (
+                <th
+                  className="form-check m-0 p-td-initial"
+                  style={{ width: "5%" }}
+                >
+                  <Label check>
+                    <Input defaultChecked={false} o type="checkbox"></Input>
+                    <span className="form-check-sign"></span>
+                  </Label>
+                </th>
+              )}
+              {!modal && (
+                <th className="text-right" style={{ width: "5%" }}></th>
+              )}
               <th className="text-left font-weight-semi">Question Name</th>
               <th className="text-center font-weight-semi">Certificate</th>
               <th className="text-center font-weight-semi">Skill</th>
               <th className="text-center font-weight-semi">Question Type</th>
-              <th className="text-center font-weight-semi">Actions</th>
+              {!modal && (
+                <th className="text-center font-weight-semi">Actions</th>
+              )}
             </tr>
           </thead>
           <tbody>
             {questions &&
-              questions.map((q, index) => {
-                return (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td className="text-left font-weight-semi">
-                      {q.questionName}
-                    </td>
-                    <td className="text-center">
-                      {q.certificateType === EnglishCertificateType.Toiec ? (
-                        <Badge color="primary">{q.certificateType}</Badge>
-                      ) : (
-                        <Badge color="brand">{q.certificateType}</Badge>
+              questions
+                .filter((q) =>
+                  q.questionName
+                    .toLowerCase()
+                    .includes(searchName.toLowerCase())
+                )
+                .map((q, index) => {
+                  return (
+                    <tr key={index}>
+                      {modal && (
+                        <td className="form-check m-0 p-td-initial">
+                          <Label check>
+                            <Input
+                              type="checkbox"
+                              onChange={async (e) => {
+                                if(!arrQuestionIds){
+                                  return;
+                                }
+                                if (e.target.checked) {
+                                  const arrQuestionId = arrQuestionIds.questionIds;
+                                  arrQuestionId.push(q.id);
+                                  setArrQuestionIds && setArrQuestionIds({
+                                    ...arrQuestionIds,
+                                    questionIds: arrQuestionId
+                                  })
+                                }
+                                else{
+                                  const arrQuestionId = arrQuestionIds.questionIds;
+                                  setArrQuestionIds && setArrQuestionIds({
+                                    ...arrQuestionIds,
+                                    questionIds: arrQuestionId.filter(a => a !== q.id)
+                                  })
+                                  
+                                }
+                              }}
+                            />
+                            <span className="form-check-sign"></span>
+                          </Label>
+                        </td>
                       )}
-                    </td>
-                    <td className="text-center">
-                      {q.skillType === SkillsType.Reading ? (
-                        <Badge color="success">{q.skillType}</Badge>
-                      ) : (
-                        <Badge color="info">{q.skillType}</Badge>
+                      {!modal && <td>{index + 1}</td>}
+                      <td className="text-left font-weight-semi">
+                        {q.questionName}
+                      </td>
+                      <td className="text-center">
+                        {q.certificateType === EnglishCertificateType.Toiec ? (
+                          <Badge color="primary">{q.certificateType}</Badge>
+                        ) : (
+                          <Badge color="brand">{q.certificateType}</Badge>
+                        )}
+                      </td>
+                      <td className="text-center">
+                        {q.skillType === SkillsType.Reading ? (
+                          <Badge color="success">{q.skillType}</Badge>
+                        ) : (
+                          <Badge color="info">{q.skillType}</Badge>
+                        )}
+                      </td>
+                      <td className="text-center font-weight-semi">
+                        {q.questionType}
+                      </td>
+                      {!modal && (
+                        <td className="text-center">
+                          <Button
+                            className="btn-icon btn-round mr-1"
+                            color="info"
+                            size="sm"
+                            type="button"
+                          >
+                            <i className="now-ui-icons users_single-02"></i>
+                          </Button>
+                          <Link
+                            className="btn btn-sm mr-1 btn-warning btn-icon btn-round"
+                            to={`${match.url}/${q.id}/edit`}
+                          >
+                            <i className="now-ui-icons ui-2_settings-90"></i>
+                          </Link>
+                          <Button
+                            className="btn-icon btn-round"
+                            color="danger"
+                            size="sm"
+                            type="button"
+                            onClick={async () => {
+                              
+                            }}
+                          >
+                            <i className="now-ui-icons ui-1_simple-remove"></i>
+                          </Button>
+                        </td>
                       )}
-                    </td>
-                    <td className="text-center font-weight-semi">
-                      {q.questionType}
-                    </td>
-                    <td className="text-center">
-                      <Button
-                        className="btn-icon btn-round mr-1"
-                        color="info"
-                        size="sm"
-                        type="button"
-                      >
-                        <i className="now-ui-icons users_single-02"></i>
-                      </Button>
-                      <Link
-                        className="btn btn-sm mr-1 btn-warning btn-icon btn-round"
-                        to={`${match.url}/${q.id}/edit`}
-                      >
-                        <i className="now-ui-icons ui-2_settings-90"></i>
-                      </Link>
-                      <Button
-                        className="btn-icon btn-round"
-                        color="danger"
-                        size="sm"
-                        type="button"
-                      >
-                        <i className="now-ui-icons ui-1_simple-remove"></i>
-                      </Button>
-                    </td>
-                  </tr>
-                );
-              })}
+                    </tr>
+                  );
+                })}
           </tbody>
         </Table>
       </CardBody>

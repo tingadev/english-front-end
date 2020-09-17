@@ -4,8 +4,9 @@ type Query {
   part(id: String!): Part!
   parts(certificateType: String!): [Part!]!
   question(id: String!): Question!
-  questions(questionFilterType: QuestionFilterTypeInput!): [Question!]!
+  questions(questionFilterType: QuestionFilterTypeInput!): Questions!
   test(id: String!): Test!
+  getTestQuestions(testId: String!): [TestQuestion!]!
 }
 
 type User {
@@ -53,8 +54,8 @@ type Part {
   description: String!
   skillType: SkillsType!
   certificateType: EnglishCertificateType!
-  testQuestion: Test
-  test: TestQuestion
+  testQuestion: TestQuestion
+  test: Test
   order: Float!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -69,6 +70,17 @@ enum SkillsType {
 enum EnglishCertificateType {
   Toiec
   IELTS
+}
+
+type TestQuestion {
+  id: String!
+  test: Test!
+  question: Question!
+  part: Part!
+  order: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deleteAt: DateTime
 }
 
 type Test {
@@ -90,17 +102,6 @@ type Test {
 type PartAndAudioSeconds {
   partId: String
   autdioSecs: Float
-}
-
-type TestQuestion {
-  id: String!
-  test: Test!
-  question: Question!
-  part: Part!
-  order: Float!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deleteAt: DateTime
 }
 
 type Question {
@@ -133,9 +134,24 @@ type Answers {
   answerContent: String
 }
 
+type Questions {
+  questions: [Question!]!
+  total: Float!
+  nextCursor: String
+}
+
 input QuestionFilterTypeInput {
   skillType: SkillsType
   certificateType: EnglishCertificateType!
+  orderDirection: OrderDirection
+  cursor: String
+  testId: String
+}
+
+"""Query Order Direction"""
+enum OrderDirection {
+  Asc
+  Desc
 }
 
 type Mutation {
@@ -147,6 +163,9 @@ type Mutation {
   createTest(data: NewTestInput!): Test!
   updateTest(data: NewTestInput!, id: String!): Test!
   uploadMedia(data: AssetInput!): Asset!
+  createTestQuestion(data: TestQuestionInputId!): TestQuestion!
+  createListTestQuestions(data: TestQuestionInputIds!): [TestQuestion!]!
+  removeTestQuestion(id: String!): String!
 }
 
 input UserInput {
@@ -215,8 +234,15 @@ input PartIdAndQuestionIdsInput {
 type Asset {
   url: String!
   name: String!
-  type: MediaType!
+  path: String!
+  type: String!
   createdAt: DateTime!
+}
+
+input AssetInput {
+  name: String!
+  type: String!
+  typeFolder: MediaType!
 }
 
 enum MediaType {
@@ -225,8 +251,8 @@ enum MediaType {
   Video
 }
 
-input AssetInput {
-  name: String!
-  file: String!
-  type: MediaType!
+input TestQuestionInputId {
+  testId: String
+  partId: String
+  questionId: String
 }

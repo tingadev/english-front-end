@@ -24,7 +24,7 @@ const ToiecAdmin: React.FC<{}> = () => {
       />
       <div className="content">
         <Switch>
-          <Route path={`${match.path}/create-test-toiec/:skillTypeParam`}>
+          <Route path={`${match.path}/create-test-toiec/:skillTypeParam/:id`}>
             <CreateAndEditTest />
           </Route>
           <Route path={[`${match.path}/create-question-toiec`, `${match.path}/questions/:questionId/edit`]}>

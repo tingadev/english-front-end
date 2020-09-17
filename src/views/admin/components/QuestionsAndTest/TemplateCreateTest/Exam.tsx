@@ -7,8 +7,9 @@ import {
   PartAndAudioSeconds,
   EnglishCertificateType,
   TestQuestionFragment,
+  useRemoveTestQuestionMutation
 } from "../../../../../schema/schema";
-import { Button, Row, Col, Form, FormGroup, Input, Badge } from "reactstrap";
+import { Button, Row, Col, Form, FormGroup, Input, Badge, Spinner } from "reactstrap";
 import { useFormik } from "formik";
 import ErrorMessage from "../../Error";
 import { ButtonCreateQuestion } from "../../ButtonQuestion/ButtonCreateQuestion";
@@ -18,6 +19,7 @@ interface ExamProps {
   setIsOpenModal: (isOpenModal: boolean) => void;
   skillType: SkillsType;
   questions?: TestQuestionFragment[];
+  refetchTestQuestions?: any;
   setPartId: (partId: string) => void;
   setIsOpenModalCreateQuestion: (value: boolean) => void;
 }
@@ -27,9 +29,20 @@ const Exam: React.FC<ExamProps> = ({
   setIsOpenModal,
   skillType,
   questions,
+  refetchTestQuestions,
   setPartId,
   setIsOpenModalCreateQuestion,
 }) => {
+  const [removeTestQuestionMutation, {data, loading}] = useRemoveTestQuestionMutation();
+  const [idRemove,setIdRemove] = React.useState('')
+ 
+  React.useEffect(() => {
+    if (data?.removeTestQuestion) {
+      setIdRemove(data?.removeTestQuestion)
+      refetchTestQuestions && refetchTestQuestions();
+      console.log('hi')
+    }
+  },[loading])
   const partsFilter = dataParts?.filter((p) => p.skillType === skillType);
   let partAndAudioSeconds: PartAndAudioSeconds[] = [];
   partsFilter &&
@@ -220,13 +233,16 @@ const Exam: React.FC<ExamProps> = ({
                                     color="danger"
                                     size="sm"
                                     type="button"
-                                    onClick={(e) => {
+                                    onClick={async (e) => {
                                       e.preventDefault();
-
-                                      // remove question query
+                                      await removeTestQuestionMutation({
+                                        variables: {
+                                          id: q.id,
+                                        },
+                                      });
                                     }}
                                   >
-                                    <i className="now-ui-icons ui-1_simple-remove"></i>
+                                    {loading && idRemove === q.id ? <Spinner color="primary" /> : <i className="now-ui-icons ui-1_simple-remove"></i>}
                                   </Button>
                                 </div>
                               );

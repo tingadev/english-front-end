@@ -24,8 +24,9 @@ export type Query = {
   part: Part;
   parts: Array<Part>;
   question: Question;
-  questions: Array<Question>;
+  questions: Questions;
   test: Test;
+  getTestQuestions: Array<TestQuestion>;
 };
 
 
@@ -56,6 +57,11 @@ export type QueryQuestionsArgs = {
 
 export type QueryTestArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryGetTestQuestionsArgs = {
+  testId: Scalars['String'];
 };
 
 export type User = {
@@ -101,8 +107,8 @@ export type Part = {
   description: Scalars['String'];
   skillType: SkillsType;
   certificateType: EnglishCertificateType;
-  testQuestion?: Maybe<Test>;
-  test?: Maybe<TestQuestion>;
+  testQuestion?: Maybe<TestQuestion>;
+  test?: Maybe<Test>;
   order: Scalars['Float'];
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
@@ -118,6 +124,18 @@ export enum EnglishCertificateType {
   Toiec = 'Toiec',
   Ielts = 'IELTS'
 }
+
+export type TestQuestion = {
+  __typename?: 'TestQuestion';
+  id: Scalars['String'];
+  test: Test;
+  question: Question;
+  part: Part;
+  order: Scalars['Float'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  deleteAt?: Maybe<Scalars['DateTime']>;
+};
 
 export type Test = {
   __typename?: 'Test';
@@ -140,18 +158,6 @@ export type PartAndAudioSeconds = {
   __typename?: 'PartAndAudioSeconds';
   partId?: Maybe<Scalars['String']>;
   autdioSecs?: Maybe<Scalars['Float']>;
-};
-
-export type TestQuestion = {
-  __typename?: 'TestQuestion';
-  id: Scalars['String'];
-  test: Test;
-  question: Question;
-  part: Part;
-  order: Scalars['Float'];
-  createdAt: Scalars['DateTime'];
-  updatedAt: Scalars['DateTime'];
-  deleteAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type Question = {
@@ -186,10 +192,26 @@ export type Answers = {
   answerContent?: Maybe<Scalars['String']>;
 };
 
+export type Questions = {
+  __typename?: 'Questions';
+  questions: Array<Question>;
+  total: Scalars['Float'];
+  nextCursor?: Maybe<Scalars['String']>;
+};
+
 export type QuestionFilterTypeInput = {
   skillType?: Maybe<SkillsType>;
   certificateType: EnglishCertificateType;
+  orderDirection?: Maybe<OrderDirection>;
+  cursor?: Maybe<Scalars['String']>;
+  testId?: Maybe<Scalars['String']>;
 };
+
+/** Query Order Direction */
+export enum OrderDirection {
+  Asc = 'Asc',
+  Desc = 'Desc'
+}
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -201,6 +223,9 @@ export type Mutation = {
   createTest: Test;
   updateTest: Test;
   uploadMedia: Asset;
+  createTestQuestion: TestQuestion;
+  createListTestQuestions: Array<TestQuestion>;
+  removeTestQuestion: Scalars['String'];
 };
 
 
@@ -242,6 +267,21 @@ export type MutationUpdateTestArgs = {
 
 export type MutationUploadMediaArgs = {
   data: AssetInput;
+};
+
+
+export type MutationCreateTestQuestionArgs = {
+  data: TestQuestionInputId;
+};
+
+
+export type MutationCreateListTestQuestionsArgs = {
+  data: TestQuestionInputIds;
+};
+
+
+export type MutationRemoveTestQuestionArgs = {
+  id: Scalars['String'];
 };
 
 export type UserInput = {
@@ -311,8 +351,15 @@ export type Asset = {
   __typename?: 'Asset';
   url: Scalars['String'];
   name: Scalars['String'];
-  type: MediaType;
+  path: Scalars['String'];
+  type: Scalars['String'];
   createdAt: Scalars['DateTime'];
+};
+
+export type AssetInput = {
+  name: Scalars['String'];
+  type: Scalars['String'];
+  typeFolder: MediaType;
 };
 
 export enum MediaType {
@@ -321,16 +368,18 @@ export enum MediaType {
   Video = 'Video'
 }
 
-export type AssetInput = {
-  name: Scalars['String'];
-  file: Scalars['String'];
-  type: MediaType;
+export type TestQuestionInputId = {
+  testId?: Maybe<Scalars['String']>;
+  partId?: Maybe<Scalars['String']>;
+  questionId?: Maybe<Scalars['String']>;
 };
 
 export const AssetFragmentDoc = gql`
     fragment Asset on Asset {
+  url
   name
   type
+  path
 }
     `;
 export const QuestionFragmentDoc = gql`
@@ -711,7 +760,11 @@ export type GetQuestionQueryResult = ApolloReactCommon.QueryResult<GetQuestionQu
 export const GetQuestionsDocument = gql`
     query getQuestions($data: QuestionFilterTypeInput!) {
   questions(questionFilterType: $data) {
-    ...Question
+    questions {
+      ...Question
+    }
+    total
+    nextCursor
   }
 }
     ${QuestionFragmentDoc}`;
@@ -824,6 +877,157 @@ export function useGetTestLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHook
 export type GetTestQueryHookResult = ReturnType<typeof useGetTestQuery>;
 export type GetTestLazyQueryHookResult = ReturnType<typeof useGetTestLazyQuery>;
 export type GetTestQueryResult = ApolloReactCommon.QueryResult<GetTestQuery, GetTestQueryVariables>;
+export const GetTestQuestionsDocument = gql`
+    query getTestQuestions($testId: String!) {
+  getTestQuestions(testId: $testId) {
+    ...TestQuestion
+  }
+}
+    ${TestQuestionFragmentDoc}`;
+export type GetTestQuestionsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetTestQuestionsQuery, GetTestQuestionsQueryVariables>, 'query'> & ({ variables: GetTestQuestionsQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const GetTestQuestionsComponent = (props: GetTestQuestionsComponentProps) => (
+      <ApolloReactComponents.Query<GetTestQuestionsQuery, GetTestQuestionsQueryVariables> query={GetTestQuestionsDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetTestQuestionsQuery__
+ *
+ * To run a query within a React component, call `useGetTestQuestionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTestQuestionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTestQuestionsQuery({
+ *   variables: {
+ *      testId: // value for 'testId'
+ *   },
+ * });
+ */
+export function useGetTestQuestionsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetTestQuestionsQuery, GetTestQuestionsQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetTestQuestionsQuery, GetTestQuestionsQueryVariables>(GetTestQuestionsDocument, baseOptions);
+      }
+export function useGetTestQuestionsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetTestQuestionsQuery, GetTestQuestionsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetTestQuestionsQuery, GetTestQuestionsQueryVariables>(GetTestQuestionsDocument, baseOptions);
+        }
+export type GetTestQuestionsQueryHookResult = ReturnType<typeof useGetTestQuestionsQuery>;
+export type GetTestQuestionsLazyQueryHookResult = ReturnType<typeof useGetTestQuestionsLazyQuery>;
+export type GetTestQuestionsQueryResult = ApolloReactCommon.QueryResult<GetTestQuestionsQuery, GetTestQuestionsQueryVariables>;
+export const CreateTestQuestionDocument = gql`
+    mutation createTestQuestion($data: TestQuestionInputId!) {
+  createTestQuestion(data: $data) {
+    ...TestQuestion
+  }
+}
+    ${TestQuestionFragmentDoc}`;
+export type CreateTestQuestionMutationFn = ApolloReactCommon.MutationFunction<CreateTestQuestionMutation, CreateTestQuestionMutationVariables>;
+export type CreateTestQuestionComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<CreateTestQuestionMutation, CreateTestQuestionMutationVariables>, 'mutation'>;
+
+    export const CreateTestQuestionComponent = (props: CreateTestQuestionComponentProps) => (
+      <ApolloReactComponents.Mutation<CreateTestQuestionMutation, CreateTestQuestionMutationVariables> mutation={CreateTestQuestionDocument} {...props} />
+    );
+    
+
+/**
+ * __useCreateTestQuestionMutation__
+ *
+ * To run a mutation, you first call `useCreateTestQuestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTestQuestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTestQuestionMutation, { data, loading, error }] = useCreateTestQuestionMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateTestQuestionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateTestQuestionMutation, CreateTestQuestionMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateTestQuestionMutation, CreateTestQuestionMutationVariables>(CreateTestQuestionDocument, baseOptions);
+      }
+export type CreateTestQuestionMutationHookResult = ReturnType<typeof useCreateTestQuestionMutation>;
+export type CreateTestQuestionMutationResult = ApolloReactCommon.MutationResult<CreateTestQuestionMutation>;
+export type CreateTestQuestionMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateTestQuestionMutation, CreateTestQuestionMutationVariables>;
+export const CreateListTestQuestionsDocument = gql`
+    mutation createListTestQuestions($data: TestQuestionInputIds!) {
+  createListTestQuestions(data: $data) {
+    ...TestQuestion
+  }
+}
+    ${TestQuestionFragmentDoc}`;
+export type CreateListTestQuestionsMutationFn = ApolloReactCommon.MutationFunction<CreateListTestQuestionsMutation, CreateListTestQuestionsMutationVariables>;
+export type CreateListTestQuestionsComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<CreateListTestQuestionsMutation, CreateListTestQuestionsMutationVariables>, 'mutation'>;
+
+    export const CreateListTestQuestionsComponent = (props: CreateListTestQuestionsComponentProps) => (
+      <ApolloReactComponents.Mutation<CreateListTestQuestionsMutation, CreateListTestQuestionsMutationVariables> mutation={CreateListTestQuestionsDocument} {...props} />
+    );
+    
+
+/**
+ * __useCreateListTestQuestionsMutation__
+ *
+ * To run a mutation, you first call `useCreateListTestQuestionsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateListTestQuestionsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createListTestQuestionsMutation, { data, loading, error }] = useCreateListTestQuestionsMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateListTestQuestionsMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateListTestQuestionsMutation, CreateListTestQuestionsMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateListTestQuestionsMutation, CreateListTestQuestionsMutationVariables>(CreateListTestQuestionsDocument, baseOptions);
+      }
+export type CreateListTestQuestionsMutationHookResult = ReturnType<typeof useCreateListTestQuestionsMutation>;
+export type CreateListTestQuestionsMutationResult = ApolloReactCommon.MutationResult<CreateListTestQuestionsMutation>;
+export type CreateListTestQuestionsMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateListTestQuestionsMutation, CreateListTestQuestionsMutationVariables>;
+export const RemoveTestQuestionDocument = gql`
+    mutation removeTestQuestion($id: String!) {
+  removeTestQuestion(id: $id)
+}
+    `;
+export type RemoveTestQuestionMutationFn = ApolloReactCommon.MutationFunction<RemoveTestQuestionMutation, RemoveTestQuestionMutationVariables>;
+export type RemoveTestQuestionComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<RemoveTestQuestionMutation, RemoveTestQuestionMutationVariables>, 'mutation'>;
+
+    export const RemoveTestQuestionComponent = (props: RemoveTestQuestionComponentProps) => (
+      <ApolloReactComponents.Mutation<RemoveTestQuestionMutation, RemoveTestQuestionMutationVariables> mutation={RemoveTestQuestionDocument} {...props} />
+    );
+    
+
+/**
+ * __useRemoveTestQuestionMutation__
+ *
+ * To run a mutation, you first call `useRemoveTestQuestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveTestQuestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeTestQuestionMutation, { data, loading, error }] = useRemoveTestQuestionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveTestQuestionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RemoveTestQuestionMutation, RemoveTestQuestionMutationVariables>) {
+        return ApolloReactHooks.useMutation<RemoveTestQuestionMutation, RemoveTestQuestionMutationVariables>(RemoveTestQuestionDocument, baseOptions);
+      }
+export type RemoveTestQuestionMutationHookResult = ReturnType<typeof useRemoveTestQuestionMutation>;
+export type RemoveTestQuestionMutationResult = ApolloReactCommon.MutationResult<RemoveTestQuestionMutation>;
+export type RemoveTestQuestionMutationOptions = ApolloReactCommon.BaseMutationOptions<RemoveTestQuestionMutation, RemoveTestQuestionMutationVariables>;
 export const CreateUserDocument = gql`
     mutation createUser($data: UserInput!) {
   createUser(data: $data) {
@@ -939,7 +1143,7 @@ export function useGetUsersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHoo
 export type GetUsersQueryHookResult = ReturnType<typeof useGetUsersQuery>;
 export type GetUsersLazyQueryHookResult = ReturnType<typeof useGetUsersLazyQuery>;
 export type GetUsersQueryResult = ApolloReactCommon.QueryResult<GetUsersQuery, GetUsersQueryVariables>;
-export type AssetFragment = { __typename?: 'Asset', name: string, type: MediaType };
+export type AssetFragment = { __typename?: 'Asset', url: string, name: string, type: string, path: string };
 
 export type UploadMediaMutationVariables = Exact<{
   data: AssetInput;
@@ -1030,10 +1234,10 @@ export type GetQuestionsQueryVariables = Exact<{
 }>;
 
 
-export type GetQuestionsQuery = { __typename?: 'Query', questions: Array<(
-    { __typename?: 'Question' }
-    & QuestionFragment
-  )> };
+export type GetQuestionsQuery = { __typename?: 'Query', questions: { __typename?: 'Questions', total: number, nextCursor?: Maybe<string>, questions: Array<(
+      { __typename?: 'Question' }
+      & QuestionFragment
+    )> } };
 
 export type TestFragment = { __typename?: 'Test', id: string, testName: string, description: string, skillType: SkillsType, certificateType: EnglishCertificateType, isPublished: boolean, order: number, partAndAudioSecs?: Maybe<Array<{ __typename?: 'PartAndAudioSeconds', partId?: Maybe<string>, autdioSecs?: Maybe<number> }>>, testQuestions?: Maybe<Array<(
     { __typename?: 'TestQuestion' }
@@ -1067,6 +1271,43 @@ export type TestQuestionFragment = { __typename?: 'TestQuestion', id: string, or
     { __typename?: 'Part' }
     & PartFragment
   ) };
+
+export type GetTestQuestionsQueryVariables = Exact<{
+  testId: Scalars['String'];
+}>;
+
+
+export type GetTestQuestionsQuery = { __typename?: 'Query', getTestQuestions: Array<(
+    { __typename?: 'TestQuestion' }
+    & TestQuestionFragment
+  )> };
+
+export type CreateTestQuestionMutationVariables = Exact<{
+  data: TestQuestionInputId;
+}>;
+
+
+export type CreateTestQuestionMutation = { __typename?: 'Mutation', createTestQuestion: (
+    { __typename?: 'TestQuestion' }
+    & TestQuestionFragment
+  ) };
+
+export type CreateListTestQuestionsMutationVariables = Exact<{
+  data: TestQuestionInputIds;
+}>;
+
+
+export type CreateListTestQuestionsMutation = { __typename?: 'Mutation', createListTestQuestions: Array<(
+    { __typename?: 'TestQuestion' }
+    & TestQuestionFragment
+  )> };
+
+export type RemoveTestQuestionMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type RemoveTestQuestionMutation = { __typename?: 'Mutation', removeTestQuestion: string };
 
 export type UserFragment = { __typename?: 'User', id: string, firstName: string, lastName?: Maybe<string>, email: string };
 

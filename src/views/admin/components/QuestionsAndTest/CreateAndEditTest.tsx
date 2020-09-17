@@ -12,9 +12,8 @@ import {
   useGetPartsQuery,
   EnglishCertificateType,
   QuestionFragment,
-  useCreateTestMutation,
   NewTestInput,
-  TestFragment,
+  TestFragment, TestQuestionInputId, useGetTestQuestionsLazyQuery, useGetTestLazyQuery
 } from "../../../../schema/schema";
 import ModalListQuestions from "./ModalListQuestions";
 import Exam from "./TemplateCreateTest/Exam";
@@ -22,14 +21,7 @@ import ModalCreateQuestion from "./ModalCreateQuestion";
 import { useParams } from "react-router-dom";
 import { capitalizeFirstLetter } from "../../utils/UppercaseFirstLetter";
 
-// const TemplateOptions = [
-//   {
-//     templateName: SkillsType.Listening,
-//   },
-//   {
-//     templateName: SkillsType.Reading,
-//   },
-// ];
+
 
 export interface ArrayQuestionIds {
   skillType: SkillsType,
@@ -39,64 +31,60 @@ interface CreateAndEditTestProps {
 }
 
 const CreateAndEditTest: React.FC<CreateAndEditTestProps> = ({}) => {
-  const {skillTypeParam} = useParams();
-  const skillType = capitalizeFirstLetter(skillTypeParam) as SkillsType;
+  const { id } = useParams();
   // create and mark it draft
-  const [createTestMutation, resultCreateTestMutation] = useCreateTestMutation();
-  const dataCreateTest : NewTestInput = {
-    testName: '',
-    isPublished: false,
-    description: '',
-    skillType,
-    certificateType: EnglishCertificateType.Toiec,
-  }
+  const [getTestQuery, getTestResponse] = useGetTestLazyQuery();
+
   React.useEffect(() => {
-    createTestMutation({
+    id && getTestQuery({
       variables: {
-        data: dataCreateTest,
+        id,
       }
     })
-  },[])
- 
-  let testData: TestFragment ;
-  if(resultCreateTestMutation.data) {
-    testData = resultCreateTestMutation.data.createTest;
+  },[id])
+  let testData: TestFragment | undefined;
+  if(getTestResponse.data) {
+    testData = getTestResponse.data.test;
   }
-
- 
-
   const [partId, setPartId] = React.useState('');
-  const [arrQuestionIds, setArrQuestionIds] = React.useState<ArrayQuestionIds[]>();
   const [isOpenModal, setIsOpenModal] = React.useState(false);
   const [isOpenModalCreateQuestion, setIsOpenModalCreateQuestion] = React.useState(false);
 
- 
+ const dataTestQuestionInput: TestQuestionInputId = {
+   testId: testData && testData.id,
+   partId,
+ }
   const {data, loading} = useGetPartsQuery({
     variables: {
       certificateType: EnglishCertificateType.Toiec,
     },
   });
+  
+  const [testQuestionsQuery, testQuestionsResponse] = useGetTestQuestionsLazyQuery()
+  const variablesTestQuestion = {
+    testId : id
+  }
   React.useEffect(() => {
-    const temp : ArrayQuestionIds[] =  [
-      {
-        skillType: SkillsType.Listening,
-        questions: [],
-      },
-      {
-        skillType: SkillsType.Reading,
-        questions: [],
-      },
-    ]
-    setArrQuestionIds(temp);
-  },[])
-  if(resultCreateTestMutation.loading || loading){
+    if(testData && testData?.id){
+      return;
+    }
+    testQuestionsQuery({
+      variables: variablesTestQuestion,
+    })
+  },[testData])
+  const refetchTestQuestions = () => {
+    testQuestionsResponse.refetch && testQuestionsResponse.refetch(variablesTestQuestion)
+  }
+  const testQuestions = testQuestionsResponse.data?.getTestQuestions;
+  if(getTestResponse.loading || loading){
     return <>{'...loading'}</>
   }
+  const skillType = testData?.skillType!;
   const dataParts = data?.parts;
   return (
     <Card>
       <CardHeader className="d-flex justify-content-between align-items-center">
-        <h5 className="title">Create Test</h5>
+      <h5 className="title">Create Test {skillType}</h5>
        
       </CardHeader>
       <CardBody>
@@ -107,7 +95,9 @@ const CreateAndEditTest: React.FC<CreateAndEditTestProps> = ({}) => {
               dataParts={dataParts}
               skillType={skillType}
               setPartId={setPartId}
+              questions={testQuestions}
               setIsOpenModalCreateQuestion={setIsOpenModalCreateQuestion}
+              refetchTestQuestions={refetchTestQuestions}
             />
           </Col>
         </Row>
@@ -117,9 +107,8 @@ const CreateAndEditTest: React.FC<CreateAndEditTestProps> = ({}) => {
         skillType={skillType}
         isOpenModal={isOpenModal}
         setIsOpenModal={setIsOpenModal}
-        arrQuestionIds={arrQuestionIds}
-        setArrQuestionIds={setArrQuestionIds}
-        partId={partId}
+        refetchTestQuestions={refetchTestQuestions}
+        dataTestQuestionInput={dataTestQuestionInput}
       />
 
       <ModalCreateQuestion

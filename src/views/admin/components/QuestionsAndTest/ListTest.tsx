@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useRouteMatch, Route, Switch } from "react-router-dom";
+import { Link, useRouteMatch, Route, Switch, useHistory } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -10,6 +10,7 @@ import {
   NavItem,
   NavLink,
 } from "reactstrap";
+import { EnglishCertificateType, NewTestInput, SkillsType, useCreateTestMutation } from "../../../../schema/schema";
 import ListPart from "./ListPart";
 import ListQuestions from "./ListQuestions";
 // import { Route, Switch, Redirect } from "react-router-dom";
@@ -18,16 +19,53 @@ import ListQuestions from "./ListQuestions";
 const ListTests: React.FC<{}> = () => {
   const match = useRouteMatch();
   const [iconPills, setIconPills] = React.useState("test-category");
+  const [createTestMutation, resultCreateTestMutation] = useCreateTestMutation();
+  const dataCreateTest : NewTestInput = {
+    testName: '',
+    isPublished: false,
+    description: '',
+    certificateType: EnglishCertificateType.Toiec,
+  }
+  const history = useHistory();
+  const createTestClick = async (skillType: SkillsType) => {
+    let path = '';
+    await createTestMutation({
+      variables: {
+        data: {
+          ...dataCreateTest,
+          skillType
+        }
+      }
+    })
+    return path;
+  }
+  React.useEffect(() => {
+    if(resultCreateTestMutation.data){
+      const id = resultCreateTestMutation.data.createTest.id
+      const path = `${match.path}/create-test-toiec/${resultCreateTestMutation.data.createTest.skillType.toLowerCase()}/${id}`;
+      history.push(path)
+    }
+  },[resultCreateTestMutation.data])
   return (
     <Row>
       <Col md={12}>
         <div className="px-4 py-2 bg-white font-weight-semi font-10">
-          <Link className="btn-info btn" to={`${match.path}/create-test-toiec/reading`}>
+          <a className="btn-info btn text-white"
+            onClick={async (e) => {
+              e.preventDefault()
+              await createTestClick(SkillsType.Reading);
+            }}
+          >
             Create Test Reading
-          </Link>
-          <Link className="btn-info btn" to={`${match.path}/create-test-toiec/listening`}>
+          </a>
+          <a className="btn-info btn text-white"
+            onClick={async (e) => {
+              e.preventDefault()
+              await createTestClick(SkillsType.Listening);
+            }}
+          >
             Create Test Listening
-          </Link>
+          </a>
           <Link className="btn-info btn" to={`${match.url}/create-part-toiec`}>
             Create Part
           </Link>

@@ -23,7 +23,7 @@ import {
   AnswersInput,
   useGetPartsLazyQuery,
   useGetQuestionLazyQuery,
-  useUpdateQuestionMutation,
+  useUpdateQuestionMutation, MediaType
 } from "../../../../schema/schema";
 import Select from "react-select";
 import { useFormik } from "formik";
@@ -31,8 +31,8 @@ import * as yup from "yup";
 import { store } from "react-notifications-component";
 import ErrorMessage from "../Error";
 import TinyMCETextarea from "../TinyMCETextarea";
-import ImageUpload from "../ImageUploader";
-// import { Route, Switch, Redirect } from "react-router-dom";
+import ImageUpload from "../ImageUploader/index";
+import config from "../../../../config";
 
 const answersKey : AnswersInput[] = [
   {
@@ -66,7 +66,12 @@ interface CreateAndEditQuestionProps {
 }
 
 const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({modal, skillType, certificateType}) => {
-
+  const [path, setPath] = React.useState<string | null>(null);
+  React.useEffect(() => {
+    if(path){
+      formik.setFieldValue("image", path);
+    }
+  },[path])
   const { questionId } = useParams();
   let notification = notificationAdd("Question");
   if (questionId) {
@@ -136,13 +141,14 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({modal, ski
       },
     });
   }, [questionId]);
-
+  let urlDefault: string = '';
   if (getQuestionRespone.data) {
     const { __typename, ...data } = getQuestionRespone.data.question;
     const answers = data.answers.map((answer) => {
       const { __typename, ...answerData } = answer
       return answerData;
     });
+    urlDefault = config.PATH_IMAGE + data.image; 
     
     initialValues = { 
       ...data,
@@ -424,14 +430,12 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({modal, ski
                     })}
                   </Col>
                   <Col className="pl-1 mt-4" md="6">
-                    <FormGroup>
                       <Input
                         placeholder="Chose file"
                         name="image"
                         type="hidden"
                       />
-                      <ImageUpload/>
-                    </FormGroup>
+                      <ImageUpload type={MediaType.Image} setPath={setPath} url={urlDefault} singleImage/>
                     <ErrorMessage message={formik.errors.image} />
                   </Col>
                 </Row>
