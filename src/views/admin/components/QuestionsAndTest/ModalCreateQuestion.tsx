@@ -1,55 +1,44 @@
 import React from "react";
-import {
-  Modal,
-  ModalBody,
-  Button,
-} from "reactstrap";
-import {
-  SkillsType, EnglishCertificateType,
-} from "../../../../schema/schema";
+import { Modal, ModalBody, Button } from "reactstrap";
+import { SkillsType, TestQuestionInputId } from "../../../../schema/schema";
 import CreateAndEditQuestion from "./CreateAndEditQuestion";
+import { QuestionContext } from "./QuestionContext";
 
 interface ModalCreateQuestionProps {
-  isOpenModalCreateQuestion: boolean;
-  setIsOpenModalCreateQuestion: (isOpenModal: boolean) => void;
   skillType: SkillsType;
-  partId: string;
-  certificateType: EnglishCertificateType;
+  refetchTestQuestions?: any;
+  dataTestQuestionInput: TestQuestionInputId;
 }
 
-
 const ModalCreateQuestion: React.FC<ModalCreateQuestionProps> = ({
-  isOpenModalCreateQuestion,
-  setIsOpenModalCreateQuestion,
   skillType,
-  partId,
-  certificateType,
+  refetchTestQuestions,
+  dataTestQuestionInput,
 }) => {
-  
+  const questionContext = React.useContext(QuestionContext);
   return (
     <>
       <Modal
         contentClassName="h-100"
         size="lg"
         centered
-        isOpen={isOpenModalCreateQuestion}
-        toggle={() => setIsOpenModalCreateQuestion(false)}
+        isOpen={questionContext.isOpenModalCreateQuestion}
+        toggle={() => questionContext.setIsOpenModalCreateQuestion(false)}
+        key={dataTestQuestionInput.questionId!}
       >
         <div className="modal-header justify-content-center">
           <button
             className="close"
             type="button"
-            onClick={() => setIsOpenModalCreateQuestion(false)}
+            onClick={() => questionContext.setIsOpenModalCreateQuestion(false)}
           >
             <i className="now-ui-icons ui-1_simple-remove"></i>
           </button>
           <h4 className="title title-up">List of Questions</h4>
         </div>
         <ModalBody>
-        <CreateAndEditQuestion modal partId={partId} skillType={skillType} certificateType={certificateType}/>
-           
+          <CreateAndEditQuestion dataTestQuestionInput={dataTestQuestionInput} modal refetchTestQuestions={refetchTestQuestions}  skillType={skillType} />
         </ModalBody>
-        
       </Modal>
     </>
   );

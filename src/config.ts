@@ -1,8 +1,9 @@
-export const apiUrl = process.env.NODE_ENV === 'production' ? 'https://54.255.167.21:4000' : 'http://localhost:3000';
+export const apiUrl = process.env.NODE_ENV === 'production' ? 'http://103.153.73.228' : 'http://localhost:4000';
 
 const config = {
-  GRAPHQL_SERVER_URL: process.env.NODE_ENV === 'production' ? 'https://54.255.167.21:4000/graphql' : `${apiUrl}/graphql`,
-  PATH_IMAGE : 'http://tingadev.s3.amazonaws.com/',
+  GRAPHQL_SERVER_URL: `${apiUrl}/graphql`,
+  PATH_IMAGE : `${apiUrl}/public/uploads/`,
+  UPLOAD_MEDIA: `${apiUrl}/uploads/`,
 }
 
 export default config;

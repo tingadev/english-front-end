@@ -2,11 +2,17 @@ type Query {
   user(id: String!): User!
   users: [User!]!
   part(id: String!): Part!
-  parts(certificateType: String!): [Part!]!
+  getParts(data: PartFilterInput!): Parts!
+  getPartsFromIds(data: PartIdsInput!): [Part!]!
   question(id: String!): Question!
   questions(questionFilterType: QuestionFilterTypeInput!): Questions!
   test(id: String!): Test!
+  getTests(data: TestFilterInput!): Tests!
+  getTestCategory(id: String!): TestCategory!
+  getTestCategories(data: TestCategoryFilterInput!): TestCategories!
   getTestQuestions(testId: String!): [TestQuestion!]!
+  getTestGroup(id: String!): TestGroup!
+  getTestGroups(data: TestGroupFilterInput!): TestGroups!
 }
 
 type User {
@@ -56,7 +62,7 @@ type Part {
   certificateType: EnglishCertificateType!
   testQuestion: TestQuestion
   test: Test
-  order: Float!
+  displayOrder: Float!
   createdAt: DateTime!
   updatedAt: DateTime!
   deleteAt: DateTime
@@ -70,6 +76,7 @@ enum SkillsType {
 enum EnglishCertificateType {
   Toiec
   IELTS
+  Custom
 }
 
 type TestQuestion {
@@ -77,7 +84,7 @@ type TestQuestion {
   test: Test!
   question: Question!
   part: Part!
-  order: Float!
+  displayOrder: Float!
   createdAt: DateTime!
   updatedAt: DateTime!
   deleteAt: DateTime
@@ -87,13 +94,17 @@ type Test {
   id: String!
   testName: String!
   description: String!
+  audioUrl: String!
+  explaination: String!
   skillType: SkillsType!
   certificateType: EnglishCertificateType!
   partAndAudioSecs: [PartAndAudioSeconds!]
   testQuestions: [TestQuestion!]
   part: Part
+  testCategory: TestCategory
   isPublished: Boolean!
-  order: Float!
+  displayOrder: Float!
+  displayOrderCategory: Float!
   createdAt: DateTime!
   updatedAt: DateTime!
   deleteAt: DateTime
@@ -102,12 +113,40 @@ type Test {
 type PartAndAudioSeconds {
   partId: String
   autdioSecs: Float
+  displayOrder: Float
+}
+
+type TestCategory {
+  id: String!
+  testCategoryName: String!
+  certificateType: EnglishCertificateType!
+  tests: [Test!]
+  testGroup: TestGroup
+  isPublished: Boolean!
+  displayOrder: Float!
+  displayOrderGroup: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deleteAt: DateTime
+}
+
+type TestGroup {
+  id: String!
+  testGroupName: String!
+  certificateType: EnglishCertificateType!
+  testCategories: [TestCategory!]
+  isPublished: Boolean!
+  displayOrder: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deleteAt: DateTime
 }
 
 type Question {
   id: String!
   questionName: String!
   audioSec: Float!
+  audioSecVN: Float!
   questionType: QuestionType!
   description: String
   content: String
@@ -134,6 +173,30 @@ type Answers {
   answerContent: String
 }
 
+type Parts {
+  parts: [Part!]!
+  total: Float!
+  nextCursor: String
+}
+
+input PartFilterInput {
+  skillType: SkillsType
+  certificateType: EnglishCertificateType
+  orderDirection: OrderDirection
+  cursor: String
+  partIds: PartIdsInput
+}
+
+"""Query Order Direction"""
+enum OrderDirection {
+  Asc
+  Desc
+}
+
+input PartIdsInput {
+  ids: [String!]!
+}
+
 type Questions {
   questions: [Question!]!
   total: Float!
@@ -148,24 +211,82 @@ input QuestionFilterTypeInput {
   testId: String
 }
 
-"""Query Order Direction"""
-enum OrderDirection {
-  Asc
-  Desc
+type Tests {
+  tests: [Test!]!
+  total: Float!
+  nextCursor: String
+}
+
+input TestFilterInput {
+  skillType: SkillsType
+  certificateType: EnglishCertificateType
+  orderDirection: OrderDirection
+  cursor: String
+  testIds: TestIdsInput
+}
+
+input TestIdsInput {
+  ids: [String!]!
+}
+
+type TestCategories {
+  testCategories: [TestCategory!]!
+  total: Float!
+  nextCursor: String
+}
+
+input TestCategoryFilterInput {
+  certificateType: EnglishCertificateType
+  orderDirection: OrderDirection
+  cursor: String
+  testCategoryIds: TestCategoryIdsInput
+}
+
+input TestCategoryIdsInput {
+  ids: [String!]!
+}
+
+type TestGroups {
+  testGroups: [TestGroup!]!
+  total: Float!
+  nextCursor: String
+}
+
+input TestGroupFilterInput {
+  certificateType: EnglishCertificateType
+  orderDirection: OrderDirection
+  cursor: String
+  testGroupIds: TestGroupIdsInput
+}
+
+input TestGroupIdsInput {
+  ids: [String!]!
 }
 
 type Mutation {
   createUser(data: UserInput!): User!
   createPart(data: NewPartInput!): Part!
   updatePart(data: NewPartInput!): Part!
+  removePart(id: String!): String!
   createQuestion(data: NewQuestionInput!): Question!
   updateQuestion(data: NewQuestionInput!): Question!
+  removeQuestion(id: String!): String!
   createTest(data: NewTestInput!): Test!
-  updateTest(data: NewTestInput!, id: String!): Test!
+  updateTest(data: NewTestInput!): Test!
+  updateTests(data: TestsUpdateInput!): [Test!]!
+  removeFromCat(id: String!): Test!
+  removeTest(id: String!): String!
+  createTestCategory(data: NewTestCategoryInput!): TestCategory!
+  updateTestCategory(data: NewTestCategoryInput!): TestCategory!
+  removeTestCategory(id: String!): String!
   uploadMedia(data: AssetInput!): Asset!
   createTestQuestion(data: TestQuestionInputId!): TestQuestion!
   createListTestQuestions(data: TestQuestionInputIds!): [TestQuestion!]!
   removeTestQuestion(id: String!): String!
+  updateTestQuestion(data: TestQuestionInputId!): TestQuestion!
+  createTestGroup(data: NewTestGroupInput!): TestGroup!
+  updateTestGroup(data: NewTestGroupInput!): TestGroup!
+  removeTestGroup(id: String!): String!
 }
 
 input UserInput {
@@ -181,12 +302,14 @@ input NewPartInput {
   skillType: SkillsType!
   description: String!
   certificateType: EnglishCertificateType!
+  displayOrder: Float
 }
 
 input NewQuestionInput {
   id: String
   questionName: String!
   audioSec: Float!
+  audioSecVN: Float!
   questionType: QuestionType!
   content: String
   description: String
@@ -207,18 +330,24 @@ input AnswersInput {
 
 input NewTestInput {
   id: String
-  testName: String!
+  testCategoryId: String
+  testName: String
   skillType: SkillsType
   description: String
+  explaination: String
   certificateType: EnglishCertificateType
   isPublished: Boolean
   partAndAudioSecs: [AudioSecondsInput!]
   testQuestionInputIds: TestQuestionInputIds
+  audioUrl: String
+  displayOrder: Float
+  displayOrderCategory: Float
 }
 
 input AudioSecondsInput {
   partId: String
   autdioSecs: Float
+  displayOrder: Float
 }
 
 input TestQuestionInputIds {
@@ -229,6 +358,21 @@ input TestQuestionInputIds {
 input PartIdAndQuestionIdsInput {
   partId: String
   questionIds: [String!]!
+}
+
+input TestsUpdateInput {
+  testIds: TestIdsInput!
+  testCategoryId: String!
+}
+
+input NewTestCategoryInput {
+  id: String
+  testGroupId: String
+  testCategoryName: String!
+  certificateType: EnglishCertificateType
+  isPublished: Boolean
+  displayOrder: Float
+  displayOrderGroup: Float
 }
 
 type Asset {
@@ -252,7 +396,16 @@ enum MediaType {
 }
 
 input TestQuestionInputId {
+  id: String
   testId: String
   partId: String
   questionId: String
+  displayOrder: Float
+}
+
+input NewTestGroupInput {
+  id: String
+  testGroupName: String!
+  certificateType: EnglishCertificateType
+  isPublished: Boolean
 }

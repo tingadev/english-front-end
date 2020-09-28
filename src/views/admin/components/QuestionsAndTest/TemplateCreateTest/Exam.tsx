@@ -4,71 +4,98 @@ import {
   PartFragment,
   SkillsType,
   NewTestInput,
-  PartAndAudioSeconds,
-  EnglishCertificateType,
   TestQuestionFragment,
-  useRemoveTestQuestionMutation
+  TestFragment,
+  AudioSecondsInput,
+  MediaType,
+  PartAndAudioSeconds,
 } from "../../../../../schema/schema";
-import { Button, Row, Col, Form, FormGroup, Input, Badge, Spinner } from "reactstrap";
+import {
+  Button,
+  Row,
+  Col,
+  Form,
+  FormGroup,
+  Input,
+} from "reactstrap";
 import { useFormik } from "formik";
 import ErrorMessage from "../../Error";
 import { ButtonCreateQuestion } from "../../ButtonQuestion/ButtonCreateQuestion";
-
+import { QuestionContext } from "../QuestionContext";
+import { notificationAdd } from "../../../utils/Notification";
+import { store } from "react-notifications-component";
+import _ from "lodash";
+import * as yup from "yup";
+import { Link } from "react-router-dom";
+import AudioUpload from "../../AudioUploader";
+import { ButtonAddPart } from "../../ButtonQuestion/ButtonAddPart";
+import ListQuestionExam from "./ListQuestionExam";
 interface ExamProps {
   dataParts?: PartFragment[];
-  setIsOpenModal: (isOpenModal: boolean) => void;
   skillType: SkillsType;
   questions?: TestQuestionFragment[];
   refetchTestQuestions?: any;
-  setPartId: (partId: string) => void;
-  setIsOpenModalCreateQuestion: (value: boolean) => void;
+  testData?: TestFragment;
+  refetchTest?: any;
 }
 
 const Exam: React.FC<ExamProps> = ({
   dataParts,
-  setIsOpenModal,
   skillType,
   questions,
   refetchTestQuestions,
-  setPartId,
-  setIsOpenModalCreateQuestion,
+  testData,
 }) => {
-  const [removeTestQuestionMutation, {data, loading}] = useRemoveTestQuestionMutation();
-  const [idRemove,setIdRemove] = React.useState('')
- 
-  React.useEffect(() => {
-    if (data?.removeTestQuestion) {
-      setIdRemove(data?.removeTestQuestion)
-      refetchTestQuestions && refetchTestQuestions();
-      console.log('hi')
-    }
-  },[loading])
-  const partsFilter = dataParts?.filter((p) => p.skillType === skillType);
-  let partAndAudioSeconds: PartAndAudioSeconds[] = [];
-  partsFilter &&
-    partsFilter.map((e) => {
-      const ele = {
-        partId: e.id,
-        autdioSecs: 0,
-      };
-      partAndAudioSeconds.push(ele);
-    });
+  const questionContext = React.useContext(QuestionContext);
+  const notification = notificationAdd("Test", "Update");
+  const [partAndAudioSeconds, setPartAndAudioSeconds] = React.useState<
+    AudioSecondsInput[]
+  >([]);
 
+
+
+  let partAndAudioSecondsDefault: PartAndAudioSeconds[] = [];
+  React.useEffect(() => {
+    if (testData?.partAndAudioSecs) {
+      partAndAudioSecondsDefault = testData?.partAndAudioSecs.map((p) => {
+        const { __typename, ...data } = p;
+        return data;
+      });
+    }
+    setPartAndAudioSeconds(partAndAudioSecondsDefault);
+  }, [dataParts]);
   let initialValues: NewTestInput = {
-    testName: "",
-    skillType,
-    partAndAudioSecs: partAndAudioSeconds,
+    id: testData?.id,
+    certificateType: testData?.certificateType,
+    explaination: testData?.explaination || "",
+    testName: testData?.testName!,
+    skillType: testData?.skillType,
+    partAndAudioSecs:
+      partAndAudioSeconds.length > 0
+        ? partAndAudioSeconds
+        : partAndAudioSecondsDefault,
+    audioUrl: testData?.audioUrl,
   };
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: initialValues,
+    validationSchema: yup.object().shape({
+      testName: yup.string().required("Test Name is a required field"),
+    }),
     onSubmit: async (values) => {
-      console.log(values);
+      const result = await questionContext.updateTestMutation({
+        variables: {
+          data: values,
+        },
+      });
+      if (result.data?.updateTest) {
+        store.addNotification(notification);
+      }
     },
   });
 
   return (
-    <Form>
+    <Form onSubmit={formik.handleSubmit}>
       <Row>
         <Col md={12}>
           <div className="d-flex justify-content-between pl-5 align-items-end">
@@ -80,12 +107,12 @@ const Exam: React.FC<ExamProps> = ({
                 type="text"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.testName}
+                value={formik.values.testName || ""}
                 className={formik.errors.testName && "input-error"}
               />
-
               <ErrorMessage message={formik.errors.testName} />
             </FormGroup>
+
             <div>
               <Button
                 type="submit"
@@ -93,166 +120,142 @@ const Exam: React.FC<ExamProps> = ({
               >
                 Submit
               </Button>
-              <Button className="bg-danger font-weight-bold font-10">
+              <Link
+                to={`/admin/toiec/tests`}
+                className="bg-danger btn font-weight-bold font-10"
+              >
                 Cancel
-              </Button>
+              </Link>
             </div>
           </div>
         </Col>
+      </Row>
+      <Row>
+        <Col>
+          <div className="w-50 pl-5 d-flex">
+            <FormGroup>
+              <label>Audio</label>
+              <Input placeholder="Chose file" name="audioUrl" type="hidden" />
+              <AudioUpload
+                type={MediaType.Audio}
+                url={testData?.audioUrl}
+                onChange={(e: string) => {
+                  formik.setFieldValue("audioUrl", e);
+                }}
+                onClick={() => {
+                  formik.setFieldValue("audioUrl", "");
+                }}
+              />
+            </FormGroup>
+          </div>
+        </Col>
+      </Row>
+      <Row>
         <Col>
           <ul className="list-style-none mt-4">
-            {partsFilter &&
-              partsFilter.map((p: PartFragment, index: number) => {
-                return (
-                  <div key={index}>
-                    <li className="mb-2 bg-primary d-flex justify-content-between align-items-center">
-                      <h4 className="p-2 text-white my-0">{p.partName}</h4>
-                      <FormGroup className="width-15rem d-flex pr-2 justify-content-between align-items-center">
-                        <label className="text-white font-10">
-                          Audio Seconds
-                        </label>
-                        <Input
-                          placeholder="Seconds"
-                          type="text"
-                          onChange={(e) => {
-                            formik.setFieldValue(
-                              "partAndAudioSecs",
-                              partAndAudioSeconds
-                            );
-                          }}
-                          value={
-                            formik.values.partAndAudioSecs![index].autdioSecs!
-                          }
-                          onBlur={formik.handleBlur}
-                          className={`width-7rem bg-white ${
-                            formik.errors.testName && "input-error"
-                          }`}
-                        />
-                      </FormGroup>
-                    </li>
-                    <ButtonAddQuestion
-                      setIsOpenModal={setIsOpenModal}
-                      setPartId={setPartId}
-                      partId={p.id}
-                    />
-                    <ButtonCreateQuestion
-                      setIsOpenModalCreateQuestion={
-                        setIsOpenModalCreateQuestion
-                      }
-                      setPartId={setPartId}
-                      partId={p.id}
-                    />
-                    <div className="d-flex mb-2 px-5 justify-content-between align-items-center">
-                      <span
-                        style={{ width: "10%" }}
-                        className="font-10 text-primary text-center font-weight-semi"
-                      >
-                        Order
-                      </span>
-                      <span
-                        style={{ width: "20%" }}
-                        className="font-10 text-primary text-center font-weight-semi"
-                      >
-                        Question Name
-                      </span>
-                      <span
-                        style={{ width: "20%" }}
-                        className="font-10 text-primary text-center font-weight-semi"
-                      >
-                        Certificate
-                      </span>
-                      <span
-                        style={{ width: "20%" }}
-                        className="font-10 text-primary text-center font-weight-semi"
-                      >
-                        Question Type
-                      </span>
-                      <span
-                        style={{ width: "20%" }}
-                        className="font-10 text-primary text-center font-weight-semi"
-                      ></span>
-                      <span
-                        style={{ width: "10%" }}
-                        className="font-10 text-primary text-center font-weight-semi"
-                      >
-                        Action
-                      </span>
-                    </div>
-                    <div>
-                      <>
-                        {questions &&
-                          questions.map((q, q_index) => {
-                            if (q.part.id === p.id) {
-                              return (
-                                <div
-                                  className="d-flex mb-2 px-5 justify-content-between align-items-center"
-                                  key={q_index}
-                                >
-                                  <span
-                                    style={{ width: "10%" }}
-                                    className="font-10 text-center text-primary font-weight-semi"
-                                  >
-                                    {q_index + 1}
-                                  </span>
-                                  <span
-                                    style={{ width: "20%" }}
-                                    className="font-10 text-center text-primary font-weight-semi"
-                                  >
-                                    {q.question.questionName}
-                                  </span>
-                                  <span
-                                    style={{ width: "20%" }}
-                                    className="text-center"
-                                  >
-                                    {q.question.certificateType ===
-                                    EnglishCertificateType.Toiec ? (
-                                      <Badge color="primary">
-                                        {q.question.certificateType}
-                                      </Badge>
-                                    ) : (
-                                      <Badge color="brand">
-                                        {q.question.certificateType}
-                                      </Badge>
-                                    )}
-                                  </span>
-                                  <span
-                                    style={{ width: "20%" }}
-                                    className="font-10 text-primary text-center"
-                                  >
-                                    {q.question.questionType}
-                                  </span>
-                                  <span
-                                    style={{ width: "20%" }}
-                                    className="font-10 text-brand text-center font-weight-semi"
-                                  >
-                                    View Details
-                                  </span>
-                                  <Button
-                                    style={{ width: "10%" }}
-                                    className="btn-icon btn-round text-center"
-                                    color="danger"
-                                    size="sm"
-                                    type="button"
-                                    onClick={async (e) => {
-                                      e.preventDefault();
-                                      await removeTestQuestionMutation({
-                                        variables: {
-                                          id: q.id,
-                                        },
-                                      });
-                                    }}
-                                  >
-                                    {loading && idRemove === q.id ? <Spinner color="primary" /> : <i className="now-ui-icons ui-1_simple-remove"></i>}
-                                  </Button>
-                                </div>
+            {partAndAudioSeconds &&
+              partAndAudioSeconds
+                .sort((a, b) => a.displayOrder! - b.displayOrder!)
+                .map((p, index: number) => {
+                  const part =
+                    dataParts && dataParts.find((part) => part.id === p.partId);
+                  return (
+                    <div key={index}>
+                      <li className="mb-2 bg-primary d-flex justify-content-between align-items-center">
+                        <h4 className="p-2 text-white my-0">
+                          {part?.partName}
+                        </h4>
+                        <div className="ml-auto d-flex align-items-center pr-2">
+                          {skillType === SkillsType.Listening && (
+                            <FormGroup className="width-15rem d-flex mr-4 justify-content-between align-items-center">
+                              <label className="text-white font-10">
+                                Audio Seconds
+                              </label>
+                              <Input
+                                placeholder="Seconds"
+                                type="number"
+                                onChange={async (e) => {
+                                  let res = _.cloneDeep(partAndAudioSeconds);
+                                  res = res.map((pp) => {
+                                    if (pp.partId === p.partId) {
+                                      pp.autdioSecs = parseInt(e.target.value);
+                                    }
+                                    return pp;
+                                  });
+                                  setPartAndAudioSeconds(res);
+                                  formik.setFieldValue(
+                                    "partAndAudioSecs",
+                                    partAndAudioSeconds
+                                  );
+                                }}
+                                value={
+                                  partAndAudioSeconds[index].autdioSecs || 0
+                                }
+                                onBlur={formik.handleBlur}
+                                className={`width-7rem bg-white`}
+                              />
+                            </FormGroup>
+                          )}
+                          <FormGroup className=" d-flex mr-4 justify-content-between align-items-center">
+                            <label className="text-white font-10">Order</label>
+                            <Input
+                              placeholder="Order"
+                              type="number"
+                              onChange={async (e) => {
+                                let res = _.cloneDeep(partAndAudioSeconds);
+                                res = res.map((pp) => {
+                                  if (pp.partId === p.partId) {
+                                    pp.displayOrder = parseInt(e.target.value);
+                                  }
+                                  return pp;
+                                });
+                                setPartAndAudioSeconds(res);
+                                formik.setFieldValue(
+                                  "partAndAudioSecs",
+                                  partAndAudioSeconds
+                                );
+                              }}
+                              value={
+                                partAndAudioSeconds[index].displayOrder || 0
+                              }
+                              onBlur={formik.handleBlur}
+                              className={`ml-3 width-4rem bg-white`}
+                            />
+                          </FormGroup>
+                          <Button
+                            className="btn-icon btn-round text-center"
+                            color="danger"
+                            size="sm"
+                            type="button"
+                            onClick={async (e) => {
+                              e.preventDefault();
+                              const res = partAndAudioSeconds.filter(
+                                (pp) => pp.partId !== p.partId
                               );
-                            }
-                          })}
-                      </>
+                              setPartAndAudioSeconds(res);
+                              await questionContext.updateTestMutation({
+                                variables: {
+                                  data: {
+                                    partAndAudioSecs: res,
+                                    id: testData?.id,
+                                  },
+                                },
+                              });
+                            }}
+                          >
+                            <i className="now-ui-icons ui-1_simple-remove"></i>
+                          </Button>
+                        </div>
+                      </li>
+                      <ButtonAddQuestion partId={p.partId!} />
+                      <ButtonCreateQuestion partId={p.partId!} />
+                      <ListQuestionExam questions={questions} partId={p.partId!} refetchTestQuestions={refetchTestQuestions} />
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+            <div className="mb-2 bg-primary d-flex justify-content-between align-items-center pl-2">
+              <ButtonAddPart />
+            </div>
           </ul>
         </Col>
       </Row>

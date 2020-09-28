@@ -12,10 +12,9 @@ import {
   useCreateListTestQuestionsMutation
 } from "../../../../schema/schema";
 import ListQuestions from "./ListQuestions";
+import { QuestionContext } from "./QuestionContext";
 
 interface ModalListQuestionsProps {
-  isOpenModal: boolean;
-  setIsOpenModal: (isOpenModal: boolean) => void;
   skillType: SkillsType;
   dataTestQuestionInput: TestQuestionInputId;
   refetchTestQuestions?: any;
@@ -23,19 +22,18 @@ interface ModalListQuestionsProps {
 
 
 const ModalListQuestions: React.FC<ModalListQuestionsProps> = ({
-  isOpenModal,
-  setIsOpenModal,
   skillType,
   dataTestQuestionInput,
   refetchTestQuestions,
 }) => {
-
+  const questionContext = React.useContext(QuestionContext);
   const [arrQuestionIds, setArrQuestionIds] = React.useState<PartIdAndQuestionIdsInput>();
   const [createListTestQuestionsMutation, resultCreateListTestQuestionsMutation] = useCreateListTestQuestionsMutation()
   React.useEffect(() => {
     if(resultCreateListTestQuestionsMutation.data?.createListTestQuestions){
+      console.log('OKAY');
       refetchTestQuestions && refetchTestQuestions();
-      setIsOpenModal(false);
+      questionContext.setIsOpenModal(false);
     }
   },[resultCreateListTestQuestionsMutation.loading])
   
@@ -46,14 +44,14 @@ const ModalListQuestions: React.FC<ModalListQuestionsProps> = ({
         contentClassName="h-100"
         size="lg"
         centered
-        isOpen={isOpenModal}
-        toggle={() => setIsOpenModal(false)}
+        isOpen={questionContext.isOpenModal}
+        toggle={() => questionContext.setIsOpenModal(false)}
       >
         <div className="modal-header justify-content-center">
           <button
             className="close"
             type="button"
-            onClick={() => setIsOpenModal(false)}
+            onClick={() => questionContext.setIsOpenModal(false)}
           >
             <i className="now-ui-icons ui-1_simple-remove"></i>
           </button>

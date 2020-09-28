@@ -1,152 +1,164 @@
 import React from "react";
-import { Link, useRouteMatch, Route, Switch, useHistory } from "react-router-dom";
 import {
-  Card,
   CardHeader,
+  CardTitle,
   CardBody,
-  Col,
-  Row,
-  Nav,
-  NavItem,
-  NavLink,
+  Table,
+  Badge,
+  Button,
+  Label, Input
 } from "reactstrap";
-import { EnglishCertificateType, NewTestInput, SkillsType, useCreateTestMutation } from "../../../../schema/schema";
-import ListPart from "./ListPart";
-import ListQuestions from "./ListQuestions";
-// import { Route, Switch, Redirect } from "react-router-dom";
-// interface ToiecAdminProps {}
+import {
+  EnglishCertificateType,
+  SkillsType,
+  TestIdsInput,
+  useGetTestsQuery,
+  useUpdateTestMutation
+} from "../../../../schema/schema";
+import { Link } from "react-router-dom";
+interface ListTestProps {
+  setIconPills?: (val: string) => void;
+  modal?: boolean;
+  setTestIds?: (val: TestIdsInput) => void;
+  testIds?: TestIdsInput;
+  testIdsForget?: string[];
+}
 
-const ListTests: React.FC<{}> = () => {
-  const match = useRouteMatch();
-  const [iconPills, setIconPills] = React.useState("test-category");
-  const [createTestMutation, resultCreateTestMutation] = useCreateTestMutation();
-  const dataCreateTest : NewTestInput = {
-    testName: '',
-    isPublished: false,
-    description: '',
-    certificateType: EnglishCertificateType.Toiec,
-  }
-  const history = useHistory();
-  const createTestClick = async (skillType: SkillsType) => {
-    let path = '';
-    await createTestMutation({
-      variables: {
-        data: {
-          ...dataCreateTest,
-          skillType
-        }
+const ListTest: React.FC<ListTestProps> = ({ setIconPills, modal, setTestIds, testIds, testIdsForget }) => {
+  console.log('testIdsForget', testIdsForget)
+  const {data, loading, refetch} = useGetTestsQuery({
+    variables: {
+      data: {
+        certificateType: EnglishCertificateType.Toiec,
+        testIds: {
+          ids: testIdsForget || []
+        },
       }
-    })
-    return path;
-  }
+    },
+  });
+  console.log(testIds);
+  const [updateTestMutation, updateTestMutationResult] = useUpdateTestMutation()
   React.useEffect(() => {
-    if(resultCreateTestMutation.data){
-      const id = resultCreateTestMutation.data.createTest.id
-      const path = `${match.path}/create-test-toiec/${resultCreateTestMutation.data.createTest.skillType.toLowerCase()}/${id}`;
-      history.push(path)
-    }
-  },[resultCreateTestMutation.data])
+    setIconPills && setIconPills("tests");
+    refetch();
+  }, []);
+ 
+  React.useEffect(() => {
+    updateTestMutationResult.data?.updateTest && refetch();
+  },[updateTestMutationResult.loading])
+  if (loading) {
+    return <>{"Loading...."}</>;
+  }
+  const tests = data?.getTests.tests;
   return (
-    <Row>
-      <Col md={12}>
-        <div className="px-4 py-2 bg-white font-weight-semi font-10">
-          <a className="btn-info btn text-white"
-            onClick={async (e) => {
-              e.preventDefault()
-              await createTestClick(SkillsType.Reading);
-            }}
-          >
-            Create Test Reading
-          </a>
-          <a className="btn-info btn text-white"
-            onClick={async (e) => {
-              e.preventDefault()
-              await createTestClick(SkillsType.Listening);
-            }}
-          >
-            Create Test Listening
-          </a>
-          <Link className="btn-info btn" to={`${match.url}/create-part-toiec`}>
-            Create Part
-          </Link>
-          <Link
-            className="btn-info btn"
-            to={`${match.url}/create-question-toiec`}
-          >
-            Create Question
-          </Link>
-        </div>
-      </Col>
-      <Col className="mt-4">
-        <Card>
-          <CardHeader>
-            <Nav className="justify-content-center" role="tablist" tabs>
-              <NavItem>
-                <NavLink
-                  className={iconPills === "test-category" ? "active" : ""}
-                  href="#pablo"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIconPills("1");
-                  }}
-                >
-                  <i className="now-ui-icons objects_umbrella-13"></i>
-                  Test Category
-                </NavLink>
-              </NavItem>
-              <NavItem>
-              <Link
-                  className={`${iconPills === "test" ? "active" : ""} nav-link`}
-                  to={`${match.path}/test`}
-                  onClick={(e) => {
-                    setIconPills("test");
-                  }}
-                >
-                  <i className="now-ui-icons shopping_shop"></i>
-                  Test
-                </Link>
-              </NavItem>
-              <NavItem>
-                <Link
-                  className={`${iconPills === "part" ? "active" : ""} nav-link`}
-                  to={`${match.path}/part`}
-                  onClick={(e) => {
-                    setIconPills("part");
-                  }}
-                >
-                  <i className="now-ui-icons shopping_shop"></i>
-                  Part
-                </Link>
-              </NavItem>
-              <NavItem>
-              <Link
-                  className={`${iconPills === "questions" ? "active" : ""} nav-link`}
-                  to={`${match.path}/questions`}
-                  onClick={(e) => {
-                    setIconPills("part");
-                  }}
-                >
-                  <i className="now-ui-icons shopping_shop"></i>
-                  Questions
-                </Link>
-              </NavItem>
-            </Nav>
-          </CardHeader>
-          <CardBody>
-            <Switch>
-              <Route path={`${match.path}/part`}>
-                <ListPart setIconPills={setIconPills}/>
-              </Route>
-              <Route path={`${match.path}/questions`}>
-                <ListQuestions setIconPills={setIconPills}/>
-              </Route>
-              
-            </Switch>
-          </CardBody>
-        </Card>
-      </Col>
-    </Row>
+    <>
+      {!modal && <CardHeader>
+        <CardTitle tag="h4">List of Tests</CardTitle>
+      </CardHeader> }
+      <CardBody>
+        <Table responsive>
+          <thead className="text-primary font-10">
+            <tr>
+              <th className="text-right" style={{ width: "5%" }}></th>
+              <th className="text-center font-weight-semi">Test Name</th>
+              <th className="text-center font-weight-semi">Certificate</th>
+              <th className="text-center font-weight-semi">Skill</th>
+              <th className="text-center font-weight-semi">Status</th>
+              <th className="text-center font-weight-semi">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tests &&
+              tests.map((test, index) => {
+                return (
+                  <tr key={index}>
+                    {modal && (
+                        <td className="form-check m-0 p-td-initial">
+                          <Label check>
+                            <Input
+                              type="checkbox"
+                              onChange={async (e) => {
+                                if (e.target.checked) {
+                                  testIds && setTestIds && setTestIds({
+                                      ids: [...testIds.ids, test.id]
+                                    })
+                                }
+                                else{
+                                  const res = testIds?.ids.filter(t => t !== test.id);
+                                  res && setTestIds && setTestIds({
+                                    ids: res
+                                  });
+                                }
+                              }}
+                            />
+                            <span className="form-check-sign"></span>
+                          </Label>
+                        </td>
+                      )}
+                    {!modal && <td>{index + 1}</td>}
+                    <td className="text-left font-weight-semi">
+                      <Link to={`create-test-toiec/${test.skillType}/${test.id}`}>
+                        {test.testName}
+                      </Link>
+                    </td>
+                    <td className="text-center">
+                      {test.certificateType === EnglishCertificateType.Toiec ? (
+                        <Badge color="primary">{test.certificateType}</Badge>
+                      ) : (
+                        <Badge color="brand">{test.certificateType}</Badge>
+                      )}
+                    </td>
+                    <td className="text-center">
+                      {test.skillType === SkillsType.Reading ? (
+                        <Badge color="success">{test.skillType}</Badge>
+                      ) : (
+                        <Badge color="info">{test.skillType}</Badge>
+                      )}
+                    </td>
+                      <td className="text-center font-weight-semi">{test.isPublished ? 'Published' : 'Draft'}</td>
+                    <td className="text-center">
+                      <Button
+                        className="btn-icon btn-round mr-1"
+                        color="info"
+                        size="sm"
+                        type="button"
+                        onClick={async () => {
+                            await updateTestMutation({
+                                variables: {
+                                    data : {
+                                        id: test.id,
+                                        isPublished: !test.isPublished,
+                                        testName: test.testName
+                                    }
+                                }
+                            })
+                        }}
+                      >
+                        <i className="now-ui-icons users_single-02"></i>
+                      </Button>
+                      <Link
+                        className="btn btn-sm mr-1 btn-warning btn-icon btn-round"
+                        to={`create-test-toiec/${test.skillType}/${test.id}`}
+                      >
+                        <i className="now-ui-icons ui-2_settings-90"></i>
+                      </Link>
+                      <Button
+                        className="btn-icon btn-round"
+                        color="danger"
+                        size="sm"
+                        type="button"
+                      >
+                        <i className="now-ui-icons ui-1_simple-remove"></i>
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </Table>
+      </CardBody>
+    </>
   );
 };
 
-export default ListTests;
+export default ListTest;

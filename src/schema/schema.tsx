@@ -22,11 +22,17 @@ export type Query = {
   user: User;
   users: Array<User>;
   part: Part;
-  parts: Array<Part>;
+  getParts: Parts;
+  getPartsFromIds: Array<Part>;
   question: Question;
   questions: Questions;
   test: Test;
+  getTests: Tests;
+  getTestCategory: TestCategory;
+  getTestCategories: TestCategories;
   getTestQuestions: Array<TestQuestion>;
+  getTestGroup: TestGroup;
+  getTestGroups: TestGroups;
 };
 
 
@@ -40,8 +46,13 @@ export type QueryPartArgs = {
 };
 
 
-export type QueryPartsArgs = {
-  certificateType: Scalars['String'];
+export type QueryGetPartsArgs = {
+  data: PartFilterInput;
+};
+
+
+export type QueryGetPartsFromIdsArgs = {
+  data: PartIdsInput;
 };
 
 
@@ -60,8 +71,33 @@ export type QueryTestArgs = {
 };
 
 
+export type QueryGetTestsArgs = {
+  data: TestFilterInput;
+};
+
+
+export type QueryGetTestCategoryArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryGetTestCategoriesArgs = {
+  data: TestCategoryFilterInput;
+};
+
+
 export type QueryGetTestQuestionsArgs = {
   testId: Scalars['String'];
+};
+
+
+export type QueryGetTestGroupArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryGetTestGroupsArgs = {
+  data: TestGroupFilterInput;
 };
 
 export type User = {
@@ -109,7 +145,7 @@ export type Part = {
   certificateType: EnglishCertificateType;
   testQuestion?: Maybe<TestQuestion>;
   test?: Maybe<Test>;
-  order: Scalars['Float'];
+  displayOrder: Scalars['Float'];
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
   deleteAt?: Maybe<Scalars['DateTime']>;
@@ -122,7 +158,8 @@ export enum SkillsType {
 
 export enum EnglishCertificateType {
   Toiec = 'Toiec',
-  Ielts = 'IELTS'
+  Ielts = 'IELTS',
+  Custom = 'Custom'
 }
 
 export type TestQuestion = {
@@ -131,7 +168,7 @@ export type TestQuestion = {
   test: Test;
   question: Question;
   part: Part;
-  order: Scalars['Float'];
+  displayOrder: Scalars['Float'];
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
   deleteAt?: Maybe<Scalars['DateTime']>;
@@ -142,13 +179,17 @@ export type Test = {
   id: Scalars['String'];
   testName: Scalars['String'];
   description: Scalars['String'];
+  audioUrl: Scalars['String'];
+  explaination: Scalars['String'];
   skillType: SkillsType;
   certificateType: EnglishCertificateType;
   partAndAudioSecs?: Maybe<Array<PartAndAudioSeconds>>;
   testQuestions?: Maybe<Array<TestQuestion>>;
   part?: Maybe<Part>;
+  testCategory?: Maybe<TestCategory>;
   isPublished: Scalars['Boolean'];
-  order: Scalars['Float'];
+  displayOrder: Scalars['Float'];
+  displayOrderCategory: Scalars['Float'];
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
   deleteAt?: Maybe<Scalars['DateTime']>;
@@ -158,6 +199,35 @@ export type PartAndAudioSeconds = {
   __typename?: 'PartAndAudioSeconds';
   partId?: Maybe<Scalars['String']>;
   autdioSecs?: Maybe<Scalars['Float']>;
+  displayOrder?: Maybe<Scalars['Float']>;
+};
+
+export type TestCategory = {
+  __typename?: 'TestCategory';
+  id: Scalars['String'];
+  testCategoryName: Scalars['String'];
+  certificateType: EnglishCertificateType;
+  tests?: Maybe<Array<Test>>;
+  testGroup?: Maybe<TestGroup>;
+  isPublished: Scalars['Boolean'];
+  displayOrder: Scalars['Float'];
+  displayOrderGroup: Scalars['Float'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  deleteAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type TestGroup = {
+  __typename?: 'TestGroup';
+  id: Scalars['String'];
+  testGroupName: Scalars['String'];
+  certificateType: EnglishCertificateType;
+  testCategories?: Maybe<Array<TestCategory>>;
+  isPublished: Scalars['Boolean'];
+  displayOrder: Scalars['Float'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  deleteAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type Question = {
@@ -165,6 +235,7 @@ export type Question = {
   id: Scalars['String'];
   questionName: Scalars['String'];
   audioSec: Scalars['Float'];
+  audioSecVN: Scalars['Float'];
   questionType: QuestionType;
   description?: Maybe<Scalars['String']>;
   content?: Maybe<Scalars['String']>;
@@ -192,6 +263,31 @@ export type Answers = {
   answerContent?: Maybe<Scalars['String']>;
 };
 
+export type Parts = {
+  __typename?: 'Parts';
+  parts: Array<Part>;
+  total: Scalars['Float'];
+  nextCursor?: Maybe<Scalars['String']>;
+};
+
+export type PartFilterInput = {
+  skillType?: Maybe<SkillsType>;
+  certificateType?: Maybe<EnglishCertificateType>;
+  orderDirection?: Maybe<OrderDirection>;
+  cursor?: Maybe<Scalars['String']>;
+  partIds?: Maybe<PartIdsInput>;
+};
+
+/** Query Order Direction */
+export enum OrderDirection {
+  Asc = 'Asc',
+  Desc = 'Desc'
+}
+
+export type PartIdsInput = {
+  ids: Array<Scalars['String']>;
+};
+
 export type Questions = {
   __typename?: 'Questions';
   questions: Array<Question>;
@@ -207,25 +303,86 @@ export type QuestionFilterTypeInput = {
   testId?: Maybe<Scalars['String']>;
 };
 
-/** Query Order Direction */
-export enum OrderDirection {
-  Asc = 'Asc',
-  Desc = 'Desc'
-}
+export type Tests = {
+  __typename?: 'Tests';
+  tests: Array<Test>;
+  total: Scalars['Float'];
+  nextCursor?: Maybe<Scalars['String']>;
+};
+
+export type TestFilterInput = {
+  skillType?: Maybe<SkillsType>;
+  certificateType?: Maybe<EnglishCertificateType>;
+  orderDirection?: Maybe<OrderDirection>;
+  cursor?: Maybe<Scalars['String']>;
+  testIds?: Maybe<TestIdsInput>;
+};
+
+export type TestIdsInput = {
+  ids: Array<Scalars['String']>;
+};
+
+export type TestCategories = {
+  __typename?: 'TestCategories';
+  testCategories: Array<TestCategory>;
+  total: Scalars['Float'];
+  nextCursor?: Maybe<Scalars['String']>;
+};
+
+export type TestCategoryFilterInput = {
+  certificateType?: Maybe<EnglishCertificateType>;
+  orderDirection?: Maybe<OrderDirection>;
+  cursor?: Maybe<Scalars['String']>;
+  testCategoryIds?: Maybe<TestCategoryIdsInput>;
+};
+
+export type TestCategoryIdsInput = {
+  ids: Array<Scalars['String']>;
+};
+
+export type TestGroups = {
+  __typename?: 'TestGroups';
+  testGroups: Array<TestGroup>;
+  total: Scalars['Float'];
+  nextCursor?: Maybe<Scalars['String']>;
+};
+
+export type TestGroupFilterInput = {
+  certificateType?: Maybe<EnglishCertificateType>;
+  orderDirection?: Maybe<OrderDirection>;
+  cursor?: Maybe<Scalars['String']>;
+  testGroupIds?: Maybe<TestGroupIdsInput>;
+};
+
+export type TestGroupIdsInput = {
+  ids: Array<Scalars['String']>;
+};
 
 export type Mutation = {
   __typename?: 'Mutation';
   createUser: User;
   createPart: Part;
   updatePart: Part;
+  removePart: Scalars['String'];
   createQuestion: Question;
   updateQuestion: Question;
+  removeQuestion: Scalars['String'];
   createTest: Test;
   updateTest: Test;
+  updateTests: Array<Test>;
+  removeFromCat: Test;
+  removeTest: Scalars['String'];
+  createTestCategory: TestCategory;
+  updateTestCategory: TestCategory;
+  removeTestCategory: Scalars['String'];
   uploadMedia: Asset;
   createTestQuestion: TestQuestion;
   createListTestQuestions: Array<TestQuestion>;
   removeTestQuestion: Scalars['String'];
+  updateTestQuestion: TestQuestion;
+  createTestGroup: TestGroup;
+  updateTestGroup: TestGroup;
+  removeTestGroup: Scalars['String'];
 };
 
 
@@ -244,6 +401,11 @@ export type MutationUpdatePartArgs = {
 };
 
 
+export type MutationRemovePartArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationCreateQuestionArgs = {
   data: NewQuestionInput;
 };
@@ -254,6 +416,11 @@ export type MutationUpdateQuestionArgs = {
 };
 
 
+export type MutationRemoveQuestionArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationCreateTestArgs = {
   data: NewTestInput;
 };
@@ -261,6 +428,35 @@ export type MutationCreateTestArgs = {
 
 export type MutationUpdateTestArgs = {
   data: NewTestInput;
+};
+
+
+export type MutationUpdateTestsArgs = {
+  data: TestsUpdateInput;
+};
+
+
+export type MutationRemoveFromCatArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationRemoveTestArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationCreateTestCategoryArgs = {
+  data: NewTestCategoryInput;
+};
+
+
+export type MutationUpdateTestCategoryArgs = {
+  data: NewTestCategoryInput;
+};
+
+
+export type MutationRemoveTestCategoryArgs = {
   id: Scalars['String'];
 };
 
@@ -284,6 +480,26 @@ export type MutationRemoveTestQuestionArgs = {
   id: Scalars['String'];
 };
 
+
+export type MutationUpdateTestQuestionArgs = {
+  data: TestQuestionInputId;
+};
+
+
+export type MutationCreateTestGroupArgs = {
+  data: NewTestGroupInput;
+};
+
+
+export type MutationUpdateTestGroupArgs = {
+  data: NewTestGroupInput;
+};
+
+
+export type MutationRemoveTestGroupArgs = {
+  id: Scalars['String'];
+};
+
 export type UserInput = {
   firstName: Scalars['String'];
   lastName: Scalars['String'];
@@ -297,12 +513,14 @@ export type NewPartInput = {
   skillType: SkillsType;
   description: Scalars['String'];
   certificateType: EnglishCertificateType;
+  displayOrder?: Maybe<Scalars['Float']>;
 };
 
 export type NewQuestionInput = {
   id?: Maybe<Scalars['String']>;
   questionName: Scalars['String'];
   audioSec: Scalars['Float'];
+  audioSecVN: Scalars['Float'];
   questionType: QuestionType;
   content?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
@@ -323,18 +541,24 @@ export type AnswersInput = {
 
 export type NewTestInput = {
   id?: Maybe<Scalars['String']>;
-  testName: Scalars['String'];
+  testCategoryId?: Maybe<Scalars['String']>;
+  testName?: Maybe<Scalars['String']>;
   skillType?: Maybe<SkillsType>;
   description?: Maybe<Scalars['String']>;
+  explaination?: Maybe<Scalars['String']>;
   certificateType?: Maybe<EnglishCertificateType>;
   isPublished?: Maybe<Scalars['Boolean']>;
   partAndAudioSecs?: Maybe<Array<AudioSecondsInput>>;
   testQuestionInputIds?: Maybe<TestQuestionInputIds>;
+  audioUrl?: Maybe<Scalars['String']>;
+  displayOrder?: Maybe<Scalars['Float']>;
+  displayOrderCategory?: Maybe<Scalars['Float']>;
 };
 
 export type AudioSecondsInput = {
   partId?: Maybe<Scalars['String']>;
   autdioSecs?: Maybe<Scalars['Float']>;
+  displayOrder?: Maybe<Scalars['Float']>;
 };
 
 export type TestQuestionInputIds = {
@@ -345,6 +569,21 @@ export type TestQuestionInputIds = {
 export type PartIdAndQuestionIdsInput = {
   partId?: Maybe<Scalars['String']>;
   questionIds: Array<Scalars['String']>;
+};
+
+export type TestsUpdateInput = {
+  testIds: TestIdsInput;
+  testCategoryId: Scalars['String'];
+};
+
+export type NewTestCategoryInput = {
+  id?: Maybe<Scalars['String']>;
+  testGroupId?: Maybe<Scalars['String']>;
+  testCategoryName: Scalars['String'];
+  certificateType?: Maybe<EnglishCertificateType>;
+  isPublished?: Maybe<Scalars['Boolean']>;
+  displayOrder?: Maybe<Scalars['Float']>;
+  displayOrderGroup?: Maybe<Scalars['Float']>;
 };
 
 export type Asset = {
@@ -369,9 +608,18 @@ export enum MediaType {
 }
 
 export type TestQuestionInputId = {
+  id?: Maybe<Scalars['String']>;
   testId?: Maybe<Scalars['String']>;
   partId?: Maybe<Scalars['String']>;
   questionId?: Maybe<Scalars['String']>;
+  displayOrder?: Maybe<Scalars['Float']>;
+};
+
+export type NewTestGroupInput = {
+  id?: Maybe<Scalars['String']>;
+  testGroupName: Scalars['String'];
+  certificateType?: Maybe<EnglishCertificateType>;
+  isPublished?: Maybe<Scalars['Boolean']>;
 };
 
 export const AssetFragmentDoc = gql`
@@ -387,6 +635,7 @@ export const QuestionFragmentDoc = gql`
   id
   questionName
   audioSec
+  audioSecVN
   questionType
   image
   answers {
@@ -408,7 +657,7 @@ export const PartFragmentDoc = gql`
   description
   skillType
   certificateType
-  order
+  displayOrder
 }
     `;
 export const TestQuestionFragmentDoc = gql`
@@ -420,7 +669,7 @@ export const TestQuestionFragmentDoc = gql`
   part {
     ...Part
   }
-  order
+  displayOrder
 }
     ${QuestionFragmentDoc}
 ${PartFragmentDoc}`;
@@ -431,17 +680,46 @@ export const TestFragmentDoc = gql`
   description
   skillType
   certificateType
+  explaination
+  audioUrl
   partAndAudioSecs {
     partId
     autdioSecs
+    displayOrder
   }
   testQuestions {
     ...TestQuestion
   }
   isPublished
-  order
+  displayOrder
+  displayOrderCategory
 }
     ${TestQuestionFragmentDoc}`;
+export const TestCategoryFragmentDoc = gql`
+    fragment TestCategory on TestCategory {
+  id
+  testCategoryName
+  certificateType
+  tests {
+    ...Test
+  }
+  isPublished
+  displayOrder
+  displayOrderGroup
+}
+    ${TestFragmentDoc}`;
+export const TestGroupFragmentDoc = gql`
+    fragment TestGroup on TestGroup {
+  id
+  testGroupName
+  certificateType
+  testCategories {
+    ...TestCategory
+  }
+  isPublished
+  displayOrder
+}
+    ${TestCategoryFragmentDoc}`;
 export const UserFragmentDoc = gql`
     fragment User on User {
   id
@@ -566,9 +844,13 @@ export type GetPartQueryHookResult = ReturnType<typeof useGetPartQuery>;
 export type GetPartLazyQueryHookResult = ReturnType<typeof useGetPartLazyQuery>;
 export type GetPartQueryResult = ApolloReactCommon.QueryResult<GetPartQuery, GetPartQueryVariables>;
 export const GetPartsDocument = gql`
-    query getParts($certificateType: String!) {
-  parts(certificateType: $certificateType) {
-    ...Part
+    query getParts($data: PartFilterInput!) {
+  getParts(data: $data) {
+    parts {
+      ...Part
+    }
+    total
+    nextCursor
   }
 }
     ${PartFragmentDoc}`;
@@ -591,7 +873,7 @@ export type GetPartsComponentProps = Omit<ApolloReactComponents.QueryComponentOp
  * @example
  * const { data, loading, error } = useGetPartsQuery({
  *   variables: {
- *      certificateType: // value for 'certificateType'
+ *      data: // value for 'data'
  *   },
  * });
  */
@@ -604,6 +886,45 @@ export function useGetPartsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHoo
 export type GetPartsQueryHookResult = ReturnType<typeof useGetPartsQuery>;
 export type GetPartsLazyQueryHookResult = ReturnType<typeof useGetPartsLazyQuery>;
 export type GetPartsQueryResult = ApolloReactCommon.QueryResult<GetPartsQuery, GetPartsQueryVariables>;
+export const GetPartsFromIdsDocument = gql`
+    query getPartsFromIds($data: PartIdsInput!) {
+  getPartsFromIds(data: $data) {
+    ...Part
+  }
+}
+    ${PartFragmentDoc}`;
+export type GetPartsFromIdsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetPartsFromIdsQuery, GetPartsFromIdsQueryVariables>, 'query'> & ({ variables: GetPartsFromIdsQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const GetPartsFromIdsComponent = (props: GetPartsFromIdsComponentProps) => (
+      <ApolloReactComponents.Query<GetPartsFromIdsQuery, GetPartsFromIdsQueryVariables> query={GetPartsFromIdsDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetPartsFromIdsQuery__
+ *
+ * To run a query within a React component, call `useGetPartsFromIdsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPartsFromIdsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPartsFromIdsQuery({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useGetPartsFromIdsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetPartsFromIdsQuery, GetPartsFromIdsQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetPartsFromIdsQuery, GetPartsFromIdsQueryVariables>(GetPartsFromIdsDocument, baseOptions);
+      }
+export function useGetPartsFromIdsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetPartsFromIdsQuery, GetPartsFromIdsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetPartsFromIdsQuery, GetPartsFromIdsQueryVariables>(GetPartsFromIdsDocument, baseOptions);
+        }
+export type GetPartsFromIdsQueryHookResult = ReturnType<typeof useGetPartsFromIdsQuery>;
+export type GetPartsFromIdsLazyQueryHookResult = ReturnType<typeof useGetPartsFromIdsLazyQuery>;
+export type GetPartsFromIdsQueryResult = ApolloReactCommon.QueryResult<GetPartsFromIdsQuery, GetPartsFromIdsQueryVariables>;
 export const UpdatePartDocument = gql`
     mutation updatePart($data: NewPartInput!) {
   updatePart(data: $data) {
@@ -642,6 +963,42 @@ export function useUpdatePartMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type UpdatePartMutationHookResult = ReturnType<typeof useUpdatePartMutation>;
 export type UpdatePartMutationResult = ApolloReactCommon.MutationResult<UpdatePartMutation>;
 export type UpdatePartMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdatePartMutation, UpdatePartMutationVariables>;
+export const RemovePartDocument = gql`
+    mutation removePart($id: String!) {
+  removePart(id: $id)
+}
+    `;
+export type RemovePartMutationFn = ApolloReactCommon.MutationFunction<RemovePartMutation, RemovePartMutationVariables>;
+export type RemovePartComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<RemovePartMutation, RemovePartMutationVariables>, 'mutation'>;
+
+    export const RemovePartComponent = (props: RemovePartComponentProps) => (
+      <ApolloReactComponents.Mutation<RemovePartMutation, RemovePartMutationVariables> mutation={RemovePartDocument} {...props} />
+    );
+    
+
+/**
+ * __useRemovePartMutation__
+ *
+ * To run a mutation, you first call `useRemovePartMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemovePartMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removePartMutation, { data, loading, error }] = useRemovePartMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemovePartMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RemovePartMutation, RemovePartMutationVariables>) {
+        return ApolloReactHooks.useMutation<RemovePartMutation, RemovePartMutationVariables>(RemovePartDocument, baseOptions);
+      }
+export type RemovePartMutationHookResult = ReturnType<typeof useRemovePartMutation>;
+export type RemovePartMutationResult = ApolloReactCommon.MutationResult<RemovePartMutation>;
+export type RemovePartMutationOptions = ApolloReactCommon.BaseMutationOptions<RemovePartMutation, RemovePartMutationVariables>;
 export const CreateQuestionDocument = gql`
     mutation createQuestion($data: NewQuestionInput!) {
   createQuestion(data: $data) {
@@ -838,6 +1195,120 @@ export function useCreateTestMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type CreateTestMutationHookResult = ReturnType<typeof useCreateTestMutation>;
 export type CreateTestMutationResult = ApolloReactCommon.MutationResult<CreateTestMutation>;
 export type CreateTestMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateTestMutation, CreateTestMutationVariables>;
+export const UpdateTestDocument = gql`
+    mutation updateTest($data: NewTestInput!) {
+  updateTest(data: $data) {
+    ...Test
+  }
+}
+    ${TestFragmentDoc}`;
+export type UpdateTestMutationFn = ApolloReactCommon.MutationFunction<UpdateTestMutation, UpdateTestMutationVariables>;
+export type UpdateTestComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateTestMutation, UpdateTestMutationVariables>, 'mutation'>;
+
+    export const UpdateTestComponent = (props: UpdateTestComponentProps) => (
+      <ApolloReactComponents.Mutation<UpdateTestMutation, UpdateTestMutationVariables> mutation={UpdateTestDocument} {...props} />
+    );
+    
+
+/**
+ * __useUpdateTestMutation__
+ *
+ * To run a mutation, you first call `useUpdateTestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTestMutation, { data, loading, error }] = useUpdateTestMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateTestMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateTestMutation, UpdateTestMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateTestMutation, UpdateTestMutationVariables>(UpdateTestDocument, baseOptions);
+      }
+export type UpdateTestMutationHookResult = ReturnType<typeof useUpdateTestMutation>;
+export type UpdateTestMutationResult = ApolloReactCommon.MutationResult<UpdateTestMutation>;
+export type UpdateTestMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateTestMutation, UpdateTestMutationVariables>;
+export const UpdateTestsDocument = gql`
+    mutation updateTests($data: TestsUpdateInput!) {
+  updateTests(data: $data) {
+    ...Test
+  }
+}
+    ${TestFragmentDoc}`;
+export type UpdateTestsMutationFn = ApolloReactCommon.MutationFunction<UpdateTestsMutation, UpdateTestsMutationVariables>;
+export type UpdateTestsComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateTestsMutation, UpdateTestsMutationVariables>, 'mutation'>;
+
+    export const UpdateTestsComponent = (props: UpdateTestsComponentProps) => (
+      <ApolloReactComponents.Mutation<UpdateTestsMutation, UpdateTestsMutationVariables> mutation={UpdateTestsDocument} {...props} />
+    );
+    
+
+/**
+ * __useUpdateTestsMutation__
+ *
+ * To run a mutation, you first call `useUpdateTestsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTestsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTestsMutation, { data, loading, error }] = useUpdateTestsMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateTestsMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateTestsMutation, UpdateTestsMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateTestsMutation, UpdateTestsMutationVariables>(UpdateTestsDocument, baseOptions);
+      }
+export type UpdateTestsMutationHookResult = ReturnType<typeof useUpdateTestsMutation>;
+export type UpdateTestsMutationResult = ApolloReactCommon.MutationResult<UpdateTestsMutation>;
+export type UpdateTestsMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateTestsMutation, UpdateTestsMutationVariables>;
+export const RemoveFromCatDocument = gql`
+    mutation removeFromCat($id: String!) {
+  removeFromCat(id: $id) {
+    ...Test
+  }
+}
+    ${TestFragmentDoc}`;
+export type RemoveFromCatMutationFn = ApolloReactCommon.MutationFunction<RemoveFromCatMutation, RemoveFromCatMutationVariables>;
+export type RemoveFromCatComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<RemoveFromCatMutation, RemoveFromCatMutationVariables>, 'mutation'>;
+
+    export const RemoveFromCatComponent = (props: RemoveFromCatComponentProps) => (
+      <ApolloReactComponents.Mutation<RemoveFromCatMutation, RemoveFromCatMutationVariables> mutation={RemoveFromCatDocument} {...props} />
+    );
+    
+
+/**
+ * __useRemoveFromCatMutation__
+ *
+ * To run a mutation, you first call `useRemoveFromCatMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveFromCatMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeFromCatMutation, { data, loading, error }] = useRemoveFromCatMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveFromCatMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RemoveFromCatMutation, RemoveFromCatMutationVariables>) {
+        return ApolloReactHooks.useMutation<RemoveFromCatMutation, RemoveFromCatMutationVariables>(RemoveFromCatDocument, baseOptions);
+      }
+export type RemoveFromCatMutationHookResult = ReturnType<typeof useRemoveFromCatMutation>;
+export type RemoveFromCatMutationResult = ApolloReactCommon.MutationResult<RemoveFromCatMutation>;
+export type RemoveFromCatMutationOptions = ApolloReactCommon.BaseMutationOptions<RemoveFromCatMutation, RemoveFromCatMutationVariables>;
 export const GetTestDocument = gql`
     query getTest($id: String!) {
   test(id: $id) {
@@ -877,6 +1348,473 @@ export function useGetTestLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHook
 export type GetTestQueryHookResult = ReturnType<typeof useGetTestQuery>;
 export type GetTestLazyQueryHookResult = ReturnType<typeof useGetTestLazyQuery>;
 export type GetTestQueryResult = ApolloReactCommon.QueryResult<GetTestQuery, GetTestQueryVariables>;
+export const RemoveTestDocument = gql`
+    mutation removeTest($id: String!) {
+  removeTest(id: $id)
+}
+    `;
+export type RemoveTestMutationFn = ApolloReactCommon.MutationFunction<RemoveTestMutation, RemoveTestMutationVariables>;
+export type RemoveTestComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<RemoveTestMutation, RemoveTestMutationVariables>, 'mutation'>;
+
+    export const RemoveTestComponent = (props: RemoveTestComponentProps) => (
+      <ApolloReactComponents.Mutation<RemoveTestMutation, RemoveTestMutationVariables> mutation={RemoveTestDocument} {...props} />
+    );
+    
+
+/**
+ * __useRemoveTestMutation__
+ *
+ * To run a mutation, you first call `useRemoveTestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveTestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeTestMutation, { data, loading, error }] = useRemoveTestMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveTestMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RemoveTestMutation, RemoveTestMutationVariables>) {
+        return ApolloReactHooks.useMutation<RemoveTestMutation, RemoveTestMutationVariables>(RemoveTestDocument, baseOptions);
+      }
+export type RemoveTestMutationHookResult = ReturnType<typeof useRemoveTestMutation>;
+export type RemoveTestMutationResult = ApolloReactCommon.MutationResult<RemoveTestMutation>;
+export type RemoveTestMutationOptions = ApolloReactCommon.BaseMutationOptions<RemoveTestMutation, RemoveTestMutationVariables>;
+export const GetTestsDocument = gql`
+    query getTests($data: TestFilterInput!) {
+  getTests(data: $data) {
+    tests {
+      ...Test
+    }
+    total
+    nextCursor
+  }
+}
+    ${TestFragmentDoc}`;
+export type GetTestsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetTestsQuery, GetTestsQueryVariables>, 'query'> & ({ variables: GetTestsQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const GetTestsComponent = (props: GetTestsComponentProps) => (
+      <ApolloReactComponents.Query<GetTestsQuery, GetTestsQueryVariables> query={GetTestsDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetTestsQuery__
+ *
+ * To run a query within a React component, call `useGetTestsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTestsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTestsQuery({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useGetTestsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetTestsQuery, GetTestsQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetTestsQuery, GetTestsQueryVariables>(GetTestsDocument, baseOptions);
+      }
+export function useGetTestsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetTestsQuery, GetTestsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetTestsQuery, GetTestsQueryVariables>(GetTestsDocument, baseOptions);
+        }
+export type GetTestsQueryHookResult = ReturnType<typeof useGetTestsQuery>;
+export type GetTestsLazyQueryHookResult = ReturnType<typeof useGetTestsLazyQuery>;
+export type GetTestsQueryResult = ApolloReactCommon.QueryResult<GetTestsQuery, GetTestsQueryVariables>;
+export const CreateTestCategoryDocument = gql`
+    mutation createTestCategory($data: NewTestCategoryInput!) {
+  createTestCategory(data: $data) {
+    ...TestCategory
+  }
+}
+    ${TestCategoryFragmentDoc}`;
+export type CreateTestCategoryMutationFn = ApolloReactCommon.MutationFunction<CreateTestCategoryMutation, CreateTestCategoryMutationVariables>;
+export type CreateTestCategoryComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<CreateTestCategoryMutation, CreateTestCategoryMutationVariables>, 'mutation'>;
+
+    export const CreateTestCategoryComponent = (props: CreateTestCategoryComponentProps) => (
+      <ApolloReactComponents.Mutation<CreateTestCategoryMutation, CreateTestCategoryMutationVariables> mutation={CreateTestCategoryDocument} {...props} />
+    );
+    
+
+/**
+ * __useCreateTestCategoryMutation__
+ *
+ * To run a mutation, you first call `useCreateTestCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTestCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTestCategoryMutation, { data, loading, error }] = useCreateTestCategoryMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateTestCategoryMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateTestCategoryMutation, CreateTestCategoryMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateTestCategoryMutation, CreateTestCategoryMutationVariables>(CreateTestCategoryDocument, baseOptions);
+      }
+export type CreateTestCategoryMutationHookResult = ReturnType<typeof useCreateTestCategoryMutation>;
+export type CreateTestCategoryMutationResult = ApolloReactCommon.MutationResult<CreateTestCategoryMutation>;
+export type CreateTestCategoryMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateTestCategoryMutation, CreateTestCategoryMutationVariables>;
+export const UpdateTestCategoryDocument = gql`
+    mutation updateTestCategory($data: NewTestCategoryInput!) {
+  updateTestCategory(data: $data) {
+    ...TestCategory
+  }
+}
+    ${TestCategoryFragmentDoc}`;
+export type UpdateTestCategoryMutationFn = ApolloReactCommon.MutationFunction<UpdateTestCategoryMutation, UpdateTestCategoryMutationVariables>;
+export type UpdateTestCategoryComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateTestCategoryMutation, UpdateTestCategoryMutationVariables>, 'mutation'>;
+
+    export const UpdateTestCategoryComponent = (props: UpdateTestCategoryComponentProps) => (
+      <ApolloReactComponents.Mutation<UpdateTestCategoryMutation, UpdateTestCategoryMutationVariables> mutation={UpdateTestCategoryDocument} {...props} />
+    );
+    
+
+/**
+ * __useUpdateTestCategoryMutation__
+ *
+ * To run a mutation, you first call `useUpdateTestCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTestCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTestCategoryMutation, { data, loading, error }] = useUpdateTestCategoryMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateTestCategoryMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateTestCategoryMutation, UpdateTestCategoryMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateTestCategoryMutation, UpdateTestCategoryMutationVariables>(UpdateTestCategoryDocument, baseOptions);
+      }
+export type UpdateTestCategoryMutationHookResult = ReturnType<typeof useUpdateTestCategoryMutation>;
+export type UpdateTestCategoryMutationResult = ApolloReactCommon.MutationResult<UpdateTestCategoryMutation>;
+export type UpdateTestCategoryMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateTestCategoryMutation, UpdateTestCategoryMutationVariables>;
+export const GetTestCategoryDocument = gql`
+    query getTestCategory($id: String!) {
+  getTestCategory(id: $id) {
+    ...TestCategory
+  }
+}
+    ${TestCategoryFragmentDoc}`;
+export type GetTestCategoryComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetTestCategoryQuery, GetTestCategoryQueryVariables>, 'query'> & ({ variables: GetTestCategoryQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const GetTestCategoryComponent = (props: GetTestCategoryComponentProps) => (
+      <ApolloReactComponents.Query<GetTestCategoryQuery, GetTestCategoryQueryVariables> query={GetTestCategoryDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetTestCategoryQuery__
+ *
+ * To run a query within a React component, call `useGetTestCategoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTestCategoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTestCategoryQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetTestCategoryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetTestCategoryQuery, GetTestCategoryQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetTestCategoryQuery, GetTestCategoryQueryVariables>(GetTestCategoryDocument, baseOptions);
+      }
+export function useGetTestCategoryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetTestCategoryQuery, GetTestCategoryQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetTestCategoryQuery, GetTestCategoryQueryVariables>(GetTestCategoryDocument, baseOptions);
+        }
+export type GetTestCategoryQueryHookResult = ReturnType<typeof useGetTestCategoryQuery>;
+export type GetTestCategoryLazyQueryHookResult = ReturnType<typeof useGetTestCategoryLazyQuery>;
+export type GetTestCategoryQueryResult = ApolloReactCommon.QueryResult<GetTestCategoryQuery, GetTestCategoryQueryVariables>;
+export const RemoveTestCategoryDocument = gql`
+    mutation removeTestCategory($id: String!) {
+  removeTestCategory(id: $id)
+}
+    `;
+export type RemoveTestCategoryMutationFn = ApolloReactCommon.MutationFunction<RemoveTestCategoryMutation, RemoveTestCategoryMutationVariables>;
+export type RemoveTestCategoryComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<RemoveTestCategoryMutation, RemoveTestCategoryMutationVariables>, 'mutation'>;
+
+    export const RemoveTestCategoryComponent = (props: RemoveTestCategoryComponentProps) => (
+      <ApolloReactComponents.Mutation<RemoveTestCategoryMutation, RemoveTestCategoryMutationVariables> mutation={RemoveTestCategoryDocument} {...props} />
+    );
+    
+
+/**
+ * __useRemoveTestCategoryMutation__
+ *
+ * To run a mutation, you first call `useRemoveTestCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveTestCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeTestCategoryMutation, { data, loading, error }] = useRemoveTestCategoryMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveTestCategoryMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RemoveTestCategoryMutation, RemoveTestCategoryMutationVariables>) {
+        return ApolloReactHooks.useMutation<RemoveTestCategoryMutation, RemoveTestCategoryMutationVariables>(RemoveTestCategoryDocument, baseOptions);
+      }
+export type RemoveTestCategoryMutationHookResult = ReturnType<typeof useRemoveTestCategoryMutation>;
+export type RemoveTestCategoryMutationResult = ApolloReactCommon.MutationResult<RemoveTestCategoryMutation>;
+export type RemoveTestCategoryMutationOptions = ApolloReactCommon.BaseMutationOptions<RemoveTestCategoryMutation, RemoveTestCategoryMutationVariables>;
+export const GetTestCategoriesDocument = gql`
+    query getTestCategories($data: TestCategoryFilterInput!) {
+  getTestCategories(data: $data) {
+    testCategories {
+      ...TestCategory
+    }
+    total
+    nextCursor
+  }
+}
+    ${TestCategoryFragmentDoc}`;
+export type GetTestCategoriesComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetTestCategoriesQuery, GetTestCategoriesQueryVariables>, 'query'> & ({ variables: GetTestCategoriesQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const GetTestCategoriesComponent = (props: GetTestCategoriesComponentProps) => (
+      <ApolloReactComponents.Query<GetTestCategoriesQuery, GetTestCategoriesQueryVariables> query={GetTestCategoriesDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetTestCategoriesQuery__
+ *
+ * To run a query within a React component, call `useGetTestCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTestCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTestCategoriesQuery({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useGetTestCategoriesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetTestCategoriesQuery, GetTestCategoriesQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetTestCategoriesQuery, GetTestCategoriesQueryVariables>(GetTestCategoriesDocument, baseOptions);
+      }
+export function useGetTestCategoriesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetTestCategoriesQuery, GetTestCategoriesQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetTestCategoriesQuery, GetTestCategoriesQueryVariables>(GetTestCategoriesDocument, baseOptions);
+        }
+export type GetTestCategoriesQueryHookResult = ReturnType<typeof useGetTestCategoriesQuery>;
+export type GetTestCategoriesLazyQueryHookResult = ReturnType<typeof useGetTestCategoriesLazyQuery>;
+export type GetTestCategoriesQueryResult = ApolloReactCommon.QueryResult<GetTestCategoriesQuery, GetTestCategoriesQueryVariables>;
+export const CreateTestGroupDocument = gql`
+    mutation createTestGroup($data: NewTestGroupInput!) {
+  createTestGroup(data: $data) {
+    ...TestGroup
+  }
+}
+    ${TestGroupFragmentDoc}`;
+export type CreateTestGroupMutationFn = ApolloReactCommon.MutationFunction<CreateTestGroupMutation, CreateTestGroupMutationVariables>;
+export type CreateTestGroupComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<CreateTestGroupMutation, CreateTestGroupMutationVariables>, 'mutation'>;
+
+    export const CreateTestGroupComponent = (props: CreateTestGroupComponentProps) => (
+      <ApolloReactComponents.Mutation<CreateTestGroupMutation, CreateTestGroupMutationVariables> mutation={CreateTestGroupDocument} {...props} />
+    );
+    
+
+/**
+ * __useCreateTestGroupMutation__
+ *
+ * To run a mutation, you first call `useCreateTestGroupMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTestGroupMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTestGroupMutation, { data, loading, error }] = useCreateTestGroupMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateTestGroupMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateTestGroupMutation, CreateTestGroupMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateTestGroupMutation, CreateTestGroupMutationVariables>(CreateTestGroupDocument, baseOptions);
+      }
+export type CreateTestGroupMutationHookResult = ReturnType<typeof useCreateTestGroupMutation>;
+export type CreateTestGroupMutationResult = ApolloReactCommon.MutationResult<CreateTestGroupMutation>;
+export type CreateTestGroupMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateTestGroupMutation, CreateTestGroupMutationVariables>;
+export const UpdateTestGroupDocument = gql`
+    mutation updateTestGroup($data: NewTestGroupInput!) {
+  updateTestGroup(data: $data) {
+    ...TestGroup
+  }
+}
+    ${TestGroupFragmentDoc}`;
+export type UpdateTestGroupMutationFn = ApolloReactCommon.MutationFunction<UpdateTestGroupMutation, UpdateTestGroupMutationVariables>;
+export type UpdateTestGroupComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateTestGroupMutation, UpdateTestGroupMutationVariables>, 'mutation'>;
+
+    export const UpdateTestGroupComponent = (props: UpdateTestGroupComponentProps) => (
+      <ApolloReactComponents.Mutation<UpdateTestGroupMutation, UpdateTestGroupMutationVariables> mutation={UpdateTestGroupDocument} {...props} />
+    );
+    
+
+/**
+ * __useUpdateTestGroupMutation__
+ *
+ * To run a mutation, you first call `useUpdateTestGroupMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTestGroupMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTestGroupMutation, { data, loading, error }] = useUpdateTestGroupMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateTestGroupMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateTestGroupMutation, UpdateTestGroupMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateTestGroupMutation, UpdateTestGroupMutationVariables>(UpdateTestGroupDocument, baseOptions);
+      }
+export type UpdateTestGroupMutationHookResult = ReturnType<typeof useUpdateTestGroupMutation>;
+export type UpdateTestGroupMutationResult = ApolloReactCommon.MutationResult<UpdateTestGroupMutation>;
+export type UpdateTestGroupMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateTestGroupMutation, UpdateTestGroupMutationVariables>;
+export const GetTestGroupDocument = gql`
+    query getTestGroup($id: String!) {
+  getTestGroup(id: $id) {
+    ...TestGroup
+  }
+}
+    ${TestGroupFragmentDoc}`;
+export type GetTestGroupComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetTestGroupQuery, GetTestGroupQueryVariables>, 'query'> & ({ variables: GetTestGroupQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const GetTestGroupComponent = (props: GetTestGroupComponentProps) => (
+      <ApolloReactComponents.Query<GetTestGroupQuery, GetTestGroupQueryVariables> query={GetTestGroupDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetTestGroupQuery__
+ *
+ * To run a query within a React component, call `useGetTestGroupQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTestGroupQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTestGroupQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetTestGroupQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetTestGroupQuery, GetTestGroupQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetTestGroupQuery, GetTestGroupQueryVariables>(GetTestGroupDocument, baseOptions);
+      }
+export function useGetTestGroupLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetTestGroupQuery, GetTestGroupQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetTestGroupQuery, GetTestGroupQueryVariables>(GetTestGroupDocument, baseOptions);
+        }
+export type GetTestGroupQueryHookResult = ReturnType<typeof useGetTestGroupQuery>;
+export type GetTestGroupLazyQueryHookResult = ReturnType<typeof useGetTestGroupLazyQuery>;
+export type GetTestGroupQueryResult = ApolloReactCommon.QueryResult<GetTestGroupQuery, GetTestGroupQueryVariables>;
+export const GetTestGroupsDocument = gql`
+    query getTestGroups($data: TestGroupFilterInput!) {
+  getTestGroups(data: $data) {
+    testGroups {
+      ...TestGroup
+    }
+    total
+    nextCursor
+  }
+}
+    ${TestGroupFragmentDoc}`;
+export type GetTestGroupsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<GetTestGroupsQuery, GetTestGroupsQueryVariables>, 'query'> & ({ variables: GetTestGroupsQueryVariables; skip?: boolean; } | { skip: boolean; });
+
+    export const GetTestGroupsComponent = (props: GetTestGroupsComponentProps) => (
+      <ApolloReactComponents.Query<GetTestGroupsQuery, GetTestGroupsQueryVariables> query={GetTestGroupsDocument} {...props} />
+    );
+    
+
+/**
+ * __useGetTestGroupsQuery__
+ *
+ * To run a query within a React component, call `useGetTestGroupsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTestGroupsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTestGroupsQuery({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useGetTestGroupsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetTestGroupsQuery, GetTestGroupsQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetTestGroupsQuery, GetTestGroupsQueryVariables>(GetTestGroupsDocument, baseOptions);
+      }
+export function useGetTestGroupsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetTestGroupsQuery, GetTestGroupsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetTestGroupsQuery, GetTestGroupsQueryVariables>(GetTestGroupsDocument, baseOptions);
+        }
+export type GetTestGroupsQueryHookResult = ReturnType<typeof useGetTestGroupsQuery>;
+export type GetTestGroupsLazyQueryHookResult = ReturnType<typeof useGetTestGroupsLazyQuery>;
+export type GetTestGroupsQueryResult = ApolloReactCommon.QueryResult<GetTestGroupsQuery, GetTestGroupsQueryVariables>;
+export const RemoveTestGroupDocument = gql`
+    mutation removeTestGroup($id: String!) {
+  removeTestGroup(id: $id)
+}
+    `;
+export type RemoveTestGroupMutationFn = ApolloReactCommon.MutationFunction<RemoveTestGroupMutation, RemoveTestGroupMutationVariables>;
+export type RemoveTestGroupComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<RemoveTestGroupMutation, RemoveTestGroupMutationVariables>, 'mutation'>;
+
+    export const RemoveTestGroupComponent = (props: RemoveTestGroupComponentProps) => (
+      <ApolloReactComponents.Mutation<RemoveTestGroupMutation, RemoveTestGroupMutationVariables> mutation={RemoveTestGroupDocument} {...props} />
+    );
+    
+
+/**
+ * __useRemoveTestGroupMutation__
+ *
+ * To run a mutation, you first call `useRemoveTestGroupMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveTestGroupMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeTestGroupMutation, { data, loading, error }] = useRemoveTestGroupMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveTestGroupMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RemoveTestGroupMutation, RemoveTestGroupMutationVariables>) {
+        return ApolloReactHooks.useMutation<RemoveTestGroupMutation, RemoveTestGroupMutationVariables>(RemoveTestGroupDocument, baseOptions);
+      }
+export type RemoveTestGroupMutationHookResult = ReturnType<typeof useRemoveTestGroupMutation>;
+export type RemoveTestGroupMutationResult = ApolloReactCommon.MutationResult<RemoveTestGroupMutation>;
+export type RemoveTestGroupMutationOptions = ApolloReactCommon.BaseMutationOptions<RemoveTestGroupMutation, RemoveTestGroupMutationVariables>;
 export const GetTestQuestionsDocument = gql`
     query getTestQuestions($testId: String!) {
   getTestQuestions(testId: $testId) {
@@ -1028,6 +1966,44 @@ export function useRemoveTestQuestionMutation(baseOptions?: ApolloReactHooks.Mut
 export type RemoveTestQuestionMutationHookResult = ReturnType<typeof useRemoveTestQuestionMutation>;
 export type RemoveTestQuestionMutationResult = ApolloReactCommon.MutationResult<RemoveTestQuestionMutation>;
 export type RemoveTestQuestionMutationOptions = ApolloReactCommon.BaseMutationOptions<RemoveTestQuestionMutation, RemoveTestQuestionMutationVariables>;
+export const UpdateTestQuestionDocument = gql`
+    mutation updateTestQuestion($data: TestQuestionInputId!) {
+  updateTestQuestion(data: $data) {
+    ...TestQuestion
+  }
+}
+    ${TestQuestionFragmentDoc}`;
+export type UpdateTestQuestionMutationFn = ApolloReactCommon.MutationFunction<UpdateTestQuestionMutation, UpdateTestQuestionMutationVariables>;
+export type UpdateTestQuestionComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<UpdateTestQuestionMutation, UpdateTestQuestionMutationVariables>, 'mutation'>;
+
+    export const UpdateTestQuestionComponent = (props: UpdateTestQuestionComponentProps) => (
+      <ApolloReactComponents.Mutation<UpdateTestQuestionMutation, UpdateTestQuestionMutationVariables> mutation={UpdateTestQuestionDocument} {...props} />
+    );
+    
+
+/**
+ * __useUpdateTestQuestionMutation__
+ *
+ * To run a mutation, you first call `useUpdateTestQuestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTestQuestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTestQuestionMutation, { data, loading, error }] = useUpdateTestQuestionMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateTestQuestionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateTestQuestionMutation, UpdateTestQuestionMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateTestQuestionMutation, UpdateTestQuestionMutationVariables>(UpdateTestQuestionDocument, baseOptions);
+      }
+export type UpdateTestQuestionMutationHookResult = ReturnType<typeof useUpdateTestQuestionMutation>;
+export type UpdateTestQuestionMutationResult = ApolloReactCommon.MutationResult<UpdateTestQuestionMutation>;
+export type UpdateTestQuestionMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateTestQuestionMutation, UpdateTestQuestionMutationVariables>;
 export const CreateUserDocument = gql`
     mutation createUser($data: UserInput!) {
   createUser(data: $data) {
@@ -1155,7 +2131,7 @@ export type UploadMediaMutation = { __typename?: 'Mutation', uploadMedia: (
     & AssetFragment
   ) };
 
-export type PartFragment = { __typename?: 'Part', id: string, partName: string, description: string, skillType: SkillsType, certificateType: EnglishCertificateType, order: number };
+export type PartFragment = { __typename?: 'Part', id: string, partName: string, description: string, skillType: SkillsType, certificateType: EnglishCertificateType, displayOrder: number };
 
 export type CreatePartMutationVariables = Exact<{
   data: NewPartInput;
@@ -1178,11 +2154,21 @@ export type GetPartQuery = { __typename?: 'Query', part: (
   ) };
 
 export type GetPartsQueryVariables = Exact<{
-  certificateType: Scalars['String'];
+  data: PartFilterInput;
 }>;
 
 
-export type GetPartsQuery = { __typename?: 'Query', parts: Array<(
+export type GetPartsQuery = { __typename?: 'Query', getParts: { __typename?: 'Parts', total: number, nextCursor?: Maybe<string>, parts: Array<(
+      { __typename?: 'Part' }
+      & PartFragment
+    )> } };
+
+export type GetPartsFromIdsQueryVariables = Exact<{
+  data: PartIdsInput;
+}>;
+
+
+export type GetPartsFromIdsQuery = { __typename?: 'Query', getPartsFromIds: Array<(
     { __typename?: 'Part' }
     & PartFragment
   )> };
@@ -1197,7 +2183,14 @@ export type UpdatePartMutation = { __typename?: 'Mutation', updatePart: (
     & PartFragment
   ) };
 
-export type QuestionFragment = { __typename?: 'Question', id: string, questionName: string, audioSec: number, questionType: QuestionType, image: string, content?: Maybe<string>, description?: Maybe<string>, skillType: SkillsType, certificateType: EnglishCertificateType, explaination?: Maybe<string>, result: string, answers: Array<{ __typename?: 'Answers', keyAnswer?: Maybe<string>, answerContent?: Maybe<string> }> };
+export type RemovePartMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type RemovePartMutation = { __typename?: 'Mutation', removePart: string };
+
+export type QuestionFragment = { __typename?: 'Question', id: string, questionName: string, audioSec: number, audioSecVN: number, questionType: QuestionType, image: string, content?: Maybe<string>, description?: Maybe<string>, skillType: SkillsType, certificateType: EnglishCertificateType, explaination?: Maybe<string>, result: string, answers: Array<{ __typename?: 'Answers', keyAnswer?: Maybe<string>, answerContent?: Maybe<string> }> };
 
 export type CreateQuestionMutationVariables = Exact<{
   data: NewQuestionInput;
@@ -1239,7 +2232,7 @@ export type GetQuestionsQuery = { __typename?: 'Query', questions: { __typename?
       & QuestionFragment
     )> } };
 
-export type TestFragment = { __typename?: 'Test', id: string, testName: string, description: string, skillType: SkillsType, certificateType: EnglishCertificateType, isPublished: boolean, order: number, partAndAudioSecs?: Maybe<Array<{ __typename?: 'PartAndAudioSeconds', partId?: Maybe<string>, autdioSecs?: Maybe<number> }>>, testQuestions?: Maybe<Array<(
+export type TestFragment = { __typename?: 'Test', id: string, testName: string, description: string, skillType: SkillsType, certificateType: EnglishCertificateType, explaination: string, audioUrl: string, isPublished: boolean, displayOrder: number, displayOrderCategory: number, partAndAudioSecs?: Maybe<Array<{ __typename?: 'PartAndAudioSeconds', partId?: Maybe<string>, autdioSecs?: Maybe<number>, displayOrder?: Maybe<number> }>>, testQuestions?: Maybe<Array<(
     { __typename?: 'TestQuestion' }
     & TestQuestionFragment
   )>> };
@@ -1254,6 +2247,36 @@ export type CreateTestMutation = { __typename?: 'Mutation', createTest: (
     & TestFragment
   ) };
 
+export type UpdateTestMutationVariables = Exact<{
+  data: NewTestInput;
+}>;
+
+
+export type UpdateTestMutation = { __typename?: 'Mutation', updateTest: (
+    { __typename?: 'Test' }
+    & TestFragment
+  ) };
+
+export type UpdateTestsMutationVariables = Exact<{
+  data: TestsUpdateInput;
+}>;
+
+
+export type UpdateTestsMutation = { __typename?: 'Mutation', updateTests: Array<(
+    { __typename?: 'Test' }
+    & TestFragment
+  )> };
+
+export type RemoveFromCatMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type RemoveFromCatMutation = { __typename?: 'Mutation', removeFromCat: (
+    { __typename?: 'Test' }
+    & TestFragment
+  ) };
+
 export type GetTestQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -1264,7 +2287,128 @@ export type GetTestQuery = { __typename?: 'Query', test: (
     & TestFragment
   ) };
 
-export type TestQuestionFragment = { __typename?: 'TestQuestion', id: string, order: number, question: (
+export type RemoveTestMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type RemoveTestMutation = { __typename?: 'Mutation', removeTest: string };
+
+export type GetTestsQueryVariables = Exact<{
+  data: TestFilterInput;
+}>;
+
+
+export type GetTestsQuery = { __typename?: 'Query', getTests: { __typename?: 'Tests', total: number, nextCursor?: Maybe<string>, tests: Array<(
+      { __typename?: 'Test' }
+      & TestFragment
+    )> } };
+
+export type TestCategoryFragment = { __typename?: 'TestCategory', id: string, testCategoryName: string, certificateType: EnglishCertificateType, isPublished: boolean, displayOrder: number, displayOrderGroup: number, tests?: Maybe<Array<(
+    { __typename?: 'Test' }
+    & TestFragment
+  )>> };
+
+export type CreateTestCategoryMutationVariables = Exact<{
+  data: NewTestCategoryInput;
+}>;
+
+
+export type CreateTestCategoryMutation = { __typename?: 'Mutation', createTestCategory: (
+    { __typename?: 'TestCategory' }
+    & TestCategoryFragment
+  ) };
+
+export type UpdateTestCategoryMutationVariables = Exact<{
+  data: NewTestCategoryInput;
+}>;
+
+
+export type UpdateTestCategoryMutation = { __typename?: 'Mutation', updateTestCategory: (
+    { __typename?: 'TestCategory' }
+    & TestCategoryFragment
+  ) };
+
+export type GetTestCategoryQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetTestCategoryQuery = { __typename?: 'Query', getTestCategory: (
+    { __typename?: 'TestCategory' }
+    & TestCategoryFragment
+  ) };
+
+export type RemoveTestCategoryMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type RemoveTestCategoryMutation = { __typename?: 'Mutation', removeTestCategory: string };
+
+export type GetTestCategoriesQueryVariables = Exact<{
+  data: TestCategoryFilterInput;
+}>;
+
+
+export type GetTestCategoriesQuery = { __typename?: 'Query', getTestCategories: { __typename?: 'TestCategories', total: number, nextCursor?: Maybe<string>, testCategories: Array<(
+      { __typename?: 'TestCategory' }
+      & TestCategoryFragment
+    )> } };
+
+export type TestGroupFragment = { __typename?: 'TestGroup', id: string, testGroupName: string, certificateType: EnglishCertificateType, isPublished: boolean, displayOrder: number, testCategories?: Maybe<Array<(
+    { __typename?: 'TestCategory' }
+    & TestCategoryFragment
+  )>> };
+
+export type CreateTestGroupMutationVariables = Exact<{
+  data: NewTestGroupInput;
+}>;
+
+
+export type CreateTestGroupMutation = { __typename?: 'Mutation', createTestGroup: (
+    { __typename?: 'TestGroup' }
+    & TestGroupFragment
+  ) };
+
+export type UpdateTestGroupMutationVariables = Exact<{
+  data: NewTestGroupInput;
+}>;
+
+
+export type UpdateTestGroupMutation = { __typename?: 'Mutation', updateTestGroup: (
+    { __typename?: 'TestGroup' }
+    & TestGroupFragment
+  ) };
+
+export type GetTestGroupQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetTestGroupQuery = { __typename?: 'Query', getTestGroup: (
+    { __typename?: 'TestGroup' }
+    & TestGroupFragment
+  ) };
+
+export type GetTestGroupsQueryVariables = Exact<{
+  data: TestGroupFilterInput;
+}>;
+
+
+export type GetTestGroupsQuery = { __typename?: 'Query', getTestGroups: { __typename?: 'TestGroups', total: number, nextCursor?: Maybe<string>, testGroups: Array<(
+      { __typename?: 'TestGroup' }
+      & TestGroupFragment
+    )> } };
+
+export type RemoveTestGroupMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type RemoveTestGroupMutation = { __typename?: 'Mutation', removeTestGroup: string };
+
+export type TestQuestionFragment = { __typename?: 'TestQuestion', id: string, displayOrder: number, question: (
     { __typename?: 'Question' }
     & QuestionFragment
   ), part: (
@@ -1308,6 +2452,16 @@ export type RemoveTestQuestionMutationVariables = Exact<{
 
 
 export type RemoveTestQuestionMutation = { __typename?: 'Mutation', removeTestQuestion: string };
+
+export type UpdateTestQuestionMutationVariables = Exact<{
+  data: TestQuestionInputId;
+}>;
+
+
+export type UpdateTestQuestionMutation = { __typename?: 'Mutation', updateTestQuestion: (
+    { __typename?: 'TestQuestion' }
+    & TestQuestionFragment
+  ) };
 
 export type UserFragment = { __typename?: 'User', id: string, firstName: string, lastName?: Maybe<string>, email: string };
 

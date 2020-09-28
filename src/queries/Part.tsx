@@ -8,7 +8,7 @@ export const PART_FRAGMENT = gql`
     description
     skillType
     certificateType
-    order
+    displayOrder
   }
 `;
 
@@ -31,8 +31,21 @@ export const GET_PART = gql `
 `;
 
 export const GET_PARTS = gql `
-  query getParts($certificateType: String!) {
-      parts(certificateType: $certificateType) {
+  query getParts($data: PartFilterInput!) {
+      getParts(data: $data) {
+        parts{
+          ...Part
+        }
+        total
+        nextCursor
+      }
+  }
+  ${PART_FRAGMENT}
+`;
+
+export const GET_PARTS_FROM_IDS = gql `
+  query getPartsFromIds($data: PartIdsInput!) {
+    getPartsFromIds(data: $data) {
         ...Part
       }
   }
@@ -47,3 +60,9 @@ export const UPDATE_PART = gql `
   }
   ${PART_FRAGMENT}
 `;
+
+export const REMOVE_PART = gql `
+  mutation removePart($id: String!){
+    removePart(id: $id)
+  }
+`

@@ -2,7 +2,7 @@ import React from "react";
 import ImageUploader from "react-images-upload";
 import { Spinner } from "reactstrap";
 import config from "../../../../config";
-import { MediaType, useUploadMediaMutation } from "../../../../schema/schema";
+import { MediaType } from "../../../../schema/schema";
 import "./index.css";
 interface ImageUploadProps {
   url?: string;
@@ -22,36 +22,29 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   React.useEffect(() => {
     url && setPathPreview(url);
   }, [url]);
-  console.log(pathPreview);
-  const [createUploadUrlMutation] = useUploadMediaMutation();
   const handleImageChange = async (e: any, p: any) => {
-    console.log(p, e)
-    const response = await createUploadUrlMutation({
-      variables: {
-        data: {
-          name: e[0].name,
-          type: e[0].type,
-          typeFolder: type,
-        },
-      },
-    });
-
+    const data = new FormData();
+    data.append("file", e[0]);
+    data.append("name", e[0].name);
+    data.append("type", e[0].type);
+    data.append("typeFolder", type.toLowerCase());
     setLoading(true);
-    const { url, path } = response.data!.uploadMedia!;
-    const res = await fetch(url!, {
-      method: "PUT",
-      body: e[0],
-      headers: {
-        "Content-Type": e[0].type,
-        "x-amz-acl": "public-read",
-      },
-    });
 
-    if (res.ok) {
-      setLoading(false);
-      setPath && setPath(path);
-      setPathPreview(config.PATH_IMAGE + path);
-    }
+    await fetch(config.UPLOAD_MEDIA + "media", {
+      method: "POST",
+      body: data,
+      headers: {
+        Accept: "application/json",
+      },
+    }).then((response) =>
+      response.json().then((res) => {
+        if (res.success) {
+          setLoading(false);
+          setPath && setPath(res.data.path);
+          setPathPreview(config.PATH_IMAGE + res.data.path);
+        }
+      })
+    );
   };
 
   return (
@@ -75,7 +68,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             className="position-absolute"
             onClick={() => {
               setPathPreview("");
-              setPath && setPath('');
+              setPath && setPath("");
             }}
           >
             X

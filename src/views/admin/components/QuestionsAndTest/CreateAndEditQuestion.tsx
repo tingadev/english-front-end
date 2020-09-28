@@ -13,9 +13,11 @@ import {
   CustomInput,
 } from "reactstrap";
 import { notificationAdd } from "../../utils/Notification";
-import { EnglishCertificateOptions, SkillsTypeOptions } from "./CreateAndEditPart";
 import {
-  EnglishCertificateType,
+  EnglishCertificateOptions,
+  SkillsTypeOptions,
+} from "./CreateAndEditPart";
+import {
   NewQuestionInput,
   QuestionType,
   useCreateQuestionMutation,
@@ -23,7 +25,10 @@ import {
   AnswersInput,
   useGetPartsLazyQuery,
   useGetQuestionLazyQuery,
-  useUpdateQuestionMutation, MediaType
+  useUpdateQuestionMutation,
+  MediaType,
+  TestQuestionInputId,
+  EnglishCertificateType,
 } from "../../../../schema/schema";
 import Select from "react-select";
 import { useFormik } from "formik";
@@ -33,48 +38,57 @@ import ErrorMessage from "../Error";
 import TinyMCETextarea from "../TinyMCETextarea";
 import ImageUpload from "../ImageUploader/index";
 import config from "../../../../config";
+import { QuestionContext } from "./QuestionContext";
 
-const answersKey : AnswersInput[] = [
+const answersKey: AnswersInput[] = [
   {
     keyAnswer: "A",
-    answerContent: ""
+    answerContent: "",
   },
   {
     keyAnswer: "B",
-    answerContent: ""
+    answerContent: "",
   },
   {
     keyAnswer: "C",
-    answerContent: ""
+    answerContent: "",
   },
   {
     keyAnswer: "D",
-    answerContent: ""
+    answerContent: "",
   },
 ];
 let PartsOptions = [
   {
-    value: '0',
+    value: "0",
     label: "Chose part",
   },
 ];
 interface CreateAndEditQuestionProps {
-  modal?: boolean
-  partId?: string,
-  skillType?: SkillsType,
-  certificateType?: EnglishCertificateType
+  modal?: boolean;
+  skillType?: SkillsType;
+  dataTestQuestionInput?: TestQuestionInputId;
+  refetchTestQuestions?: any;
 }
 
-const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({modal, skillType, certificateType}) => {
-  const [path, setPath] = React.useState<string | null>(null);
+const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({
+  modal,
+  skillType,
+  dataTestQuestionInput,
+  refetchTestQuestions,
+}) => {
+  const questionContext = React.useContext(QuestionContext);
   React.useEffect(() => {
-    if(path){
-      formik.setFieldValue("image", path);
+    if (questionContext.path) {
+      formik.setFieldValue("image", questionContext.path);
     }
-  },[path])
+  }, [questionContext.path]);
   const { questionId } = useParams();
   let notification = notificationAdd("Question");
-  if (questionId) {
+  const questionIdFinal = questionId
+    ? questionId
+    : questionContext.questionIdModal;
+  if (questionIdFinal) {
     notification = notificationAdd("Question", "Updated");
   }
 
@@ -84,93 +98,98 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({modal, ski
   const [skillTypeSelect, setSkillTypeSelect] = React.useState(
     SkillsTypeOptions[0]
   );
- 
-  const [partSelect, setPartSelect] = React.useState(
-    PartsOptions[0]
-  );
-  const [partsQuery, partsResponse] = useGetPartsLazyQuery()
-  const parts = partsResponse.data?.parts;
+
+  const [partSelect, setPartSelect] = React.useState(PartsOptions[0]);
+  const [partsQuery, partsResponse] = useGetPartsLazyQuery();
+  const parts = partsResponse.data?.getParts.parts;
   React.useEffect(() => {
     partsQuery({
       variables: {
-        certificateType: certificateTypeSelect.value
-      }
-    })
+        data: {
+          certificateType: certificateTypeSelect.value as EnglishCertificateType,
+        },
+      },
+    });
     PartsOptions = [
       {
-        value: '0',
+        value: "0",
         label: "Chose part",
       },
     ];
-    if(parts){
-      parts.filter(part => part.skillType === skillTypeSelect.value).map((part) =>{
-       const optionPart = {
-         value: part.id,
-         label: part.partName
-       }
-        PartsOptions = [...PartsOptions, optionPart];
-      })
-      
-     }
-     
-  },[certificateTypeSelect, skillTypeSelect, parts])
+    if (parts) {
+      parts
+        .filter((part) => part.skillType === skillTypeSelect.value)
+        .map((part) => {
+          const optionPart = {
+            value: part.id,
+            label: part.partName,
+          };
+          PartsOptions = [...PartsOptions, optionPart];
+        });
+    }
+  }, [certificateTypeSelect, skillTypeSelect, parts]);
   let initialValues: NewQuestionInput = {
     questionName: "",
     explaination: "",
     audioSec: 0,
+    audioSecVN: 0,
     questionType: QuestionType.SingleChoice,
     content: "",
     answers: answersKey,
-    certificateType:certificateType? certificateType : EnglishCertificateOptions[0]
-      .value as EnglishCertificateType,
-    skillType: skillType ? skillType : SkillsTypeOptions[0].value as SkillsType,
+    certificateType: questionContext.certificateType,
+    skillType: skillType
+      ? skillType
+      : (SkillsTypeOptions[0].value as SkillsType),
     result: "",
     image: "",
     description: "",
+    testId: dataTestQuestionInput?.testId,
+    partId: dataTestQuestionInput?.partId,
   };
-  const [isCheckedResult, setIsCheckedResult] = React.useState(initialValues.result)
+  const [isCheckedResult, setIsCheckedResult] = React.useState(
+    initialValues.result
+  );
   const [getQuestionQuery, getQuestionRespone] = useGetQuestionLazyQuery();
-  
+
   React.useEffect(() => {
-    if (!questionId) {
+    if (!questionIdFinal) {
       return;
     }
     getQuestionQuery({
       variables: {
-        id: questionId,
+        id: questionIdFinal,
       },
     });
-  }, [questionId]);
-  let urlDefault: string = '';
+  }, [questionIdFinal]);
+  let urlDefault: string = "";
   if (getQuestionRespone.data) {
     const { __typename, ...data } = getQuestionRespone.data.question;
     const answers = data.answers.map((answer) => {
-      const { __typename, ...answerData } = answer
+      const { __typename, ...answerData } = answer;
       return answerData;
     });
-    urlDefault = config.PATH_IMAGE + data.image; 
-    
-    initialValues = { 
+    urlDefault = config.PATH_IMAGE + data.image;
+
+    initialValues = {
       ...data,
-      answers
-    }
+      answers,
+    };
   }
   React.useEffect(() => {
-      if (getQuestionRespone.data) {
-        SkillsTypeOptions.find((prop, key) => {
-          if (prop.value === initialValues.skillType) {
-            setSkillTypeSelect(SkillsTypeOptions[key]);
-          }
-        });
-        EnglishCertificateOptions.find((prop, key) => {
-          if (prop.value === initialValues.certificateType) {
-            setCertificateTypeSelect(EnglishCertificateOptions[key]);
-          }
-        });
-        setIsCheckedResult(getQuestionRespone.data.question.result)
-      }
-      
-    }, [getQuestionRespone]);
+    if (getQuestionRespone.data) {
+      SkillsTypeOptions.find((prop, key) => {
+        if (prop.value === initialValues.skillType) {
+          setSkillTypeSelect(SkillsTypeOptions[key]);
+        }
+      });
+      EnglishCertificateOptions.find((prop, key) => {
+        if (prop.value === initialValues.certificateType) {
+          setCertificateTypeSelect(EnglishCertificateOptions[key]);
+        }
+      });
+      setIsCheckedResult(getQuestionRespone.data.question.result);
+    }
+  }, [getQuestionRespone]);
   const [createQuestion] = useCreateQuestionMutation();
   const [updateQuestion] = useUpdateQuestionMutation();
   const [shouldValidate, setShouldValidate] = React.useState(false);
@@ -189,25 +208,26 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({modal, ski
       skillType: yup.string().required("Skill Type is a required field"),
       result: yup.string().required("Result is a required field"),
       answers: yup.array().of(
-        yup.object().test('', 'This field is required', function(e: any) {
-          if(e.answerContent){
+        yup.object().test("", "This field is required", function (e: any) {
+          if (e.answerContent) {
             return true;
           }
           return false;
         })
       ),
-      audioSec: yup.number().required('Audio Seconds must be number')
+      audioSec: yup.number().required("Audio Seconds must be number"),
     }),
     onSubmit: async (values) => {
-      if (questionId) {
+      if (questionIdFinal) {
         const result = await updateQuestion({
           variables: {
-            data: values
+            data: values,
           },
         });
         if (result.data?.updateQuestion) {
           store.addNotification(notification);
           getQuestionRespone.refetch && getQuestionRespone.refetch();
+          refetchTestQuestions && refetchTestQuestions();
         }
       } else {
         const result = await createQuestion({
@@ -219,8 +239,9 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({modal, ski
           store.addNotification(notification);
           formik.resetForm();
           setCertificateTypeSelect(EnglishCertificateOptions[0]);
-          setSkillTypeSelect(SkillsTypeOptions[0])
+          setSkillTypeSelect(SkillsTypeOptions[0]);
           setPartSelect(PartsOptions[0]);
+          refetchTestQuestions && refetchTestQuestions();
         }
       }
     },
@@ -233,7 +254,9 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({modal, ski
           <Col>
             <Card>
               <CardHeader className="d-flex justify-content-between align-items-center">
-                <h5 className="title">{!questionId ? 'Create Question' : 'Update Question'}</h5>
+                <h5 className="title">
+                  {!questionId ? "Create Question" : "Update Question"}
+                </h5>
                 <div>
                   <Button
                     type="button"
@@ -245,12 +268,14 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({modal, ski
                   >
                     Submit
                   </Button>
-                  {!modal &&<Link
-                    to={`/admin/toiec/questions`}
-                    className="bg-danger btn font-weight-bold font-10"
-                  >
-                    Cancel
-                  </Link>}
+                  {!modal && (
+                    <Link
+                      to={`/admin/toiec/questions`}
+                      className="bg-danger btn font-weight-bold font-10"
+                    >
+                      Cancel
+                    </Link>
+                  )}
                 </div>
               </CardHeader>
               <CardBody>
@@ -269,73 +294,70 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({modal, ski
                     </FormGroup>
                     <ErrorMessage message={formik.errors.questionName} />
                   </Col>
-                  <Col className="pl-1" md="6">
-                    <FormGroup>
-                      <label>Test</label>
-                      <Input placeholder="Chose test " type="text" />
-                    </FormGroup>
-                  </Col>
+                  <Input type="hidden" name="testId" />
                 </Row>
-                {!modal && <Row>
-                  <Col md="4" className="pr-1">
-                    <FormGroup>
-                      <label>Type of test</label>
-                      <Select
-                        className="react-select react-select-primary"
-                        onChange={(opt: any) => {
-                          setPartSelect(PartsOptions[0])
-                          setCertificateTypeSelect(opt);
-                          formik.setFieldValue("certificateType", opt.value);
-                        }}
-                        value={certificateTypeSelect}
-                        classNamePrefix="react-select"
-                        placeholder="Chose type of Test"
-                        name="certificateType"
-                        options={EnglishCertificateOptions}
-                      ></Select>
-                      <ErrorMessage message={formik.errors.certificateType} />
-                    </FormGroup>
-                  </Col>
-                  <Col md="4" className="pr-1 pl-1">
-                    <FormGroup>
-                      <label>Skill</label>
-                      <Select
-                        className="react-select react-select-primary"
-                        onChange={(opt: any) => {
-                          setPartSelect(PartsOptions[0])
-                          setSkillTypeSelect(opt);
-                          formik.setFieldValue("skillType", opt.value);
-                        }}
-                        classNamePrefix="react-select"
-                        placeholder="Single Select"
-                        value={skillTypeSelect}
-                        name="skillType"
-                        options={SkillsTypeOptions}
-                      ></Select>
-                      <ErrorMessage message={formik.errors.skillType} />
-                    </FormGroup>
-                  </Col>
-                  <Col md="4" className="pl-1">
-                    <FormGroup>
-                      <label>Part</label>
-                      <Select
-                        className="react-select react-select-primary"
-                        onChange={(opt: any) => {
-                          setPartSelect(opt)
-                          formik.setFieldValue("partId", opt.value);
-                        }}
-                        classNamePrefix="react-select"
-                        placeholder="Single Select"
-                        value={partSelect}
-                        name="partId"
-                        options={PartsOptions}
-                      ></Select>
-                      <ErrorMessage message={formik.errors.partId} />
-                    </FormGroup>
-                  </Col>
-                </Row>}
+                {!modal && (
+                  <Row>
+                    <Col md="4" className="pr-1">
+                      <FormGroup>
+                        <label>Type of test</label>
+                        <Select
+                          className="react-select react-select-primary"
+                          onChange={(opt: any) => {
+                            setPartSelect(PartsOptions[0]);
+                            setCertificateTypeSelect(opt);
+                            formik.setFieldValue("certificateType", opt.value);
+                          }}
+                          value={certificateTypeSelect}
+                          classNamePrefix="react-select"
+                          placeholder="Chose type of Test"
+                          name="certificateType"
+                          options={EnglishCertificateOptions}
+                        ></Select>
+                        <ErrorMessage message={formik.errors.certificateType} />
+                      </FormGroup>
+                    </Col>
+                    <Col md="4" className="pr-1 pl-1">
+                      <FormGroup>
+                        <label>Skill</label>
+                        <Select
+                          className="react-select react-select-primary"
+                          onChange={(opt: any) => {
+                            setPartSelect(PartsOptions[0]);
+                            setSkillTypeSelect(opt);
+                            formik.setFieldValue("skillType", opt.value);
+                          }}
+                          classNamePrefix="react-select"
+                          placeholder="Single Select"
+                          value={skillTypeSelect}
+                          name="skillType"
+                          options={SkillsTypeOptions}
+                        ></Select>
+                        <ErrorMessage message={formik.errors.skillType} />
+                      </FormGroup>
+                    </Col>
+                    <Col md="4" className="pl-1">
+                      <FormGroup>
+                        <label>Part</label>
+                        <Select
+                          className="react-select react-select-primary"
+                          onChange={(opt: any) => {
+                            setPartSelect(opt);
+                            formik.setFieldValue("partId", opt.value);
+                          }}
+                          classNamePrefix="react-select"
+                          placeholder="Single Select"
+                          value={partSelect}
+                          name="partId"
+                          options={PartsOptions}
+                        ></Select>
+                        <ErrorMessage message={formik.errors.partId} />
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                )}
                 <Row>
-                <Col className="pr-1 " md="6">
+                  <Col className="pr-1 " md="6">
                     <FormGroup>
                       <label>Audio Second</label>
                       <Input
@@ -349,7 +371,20 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({modal, ski
                     </FormGroup>
                     <ErrorMessage message={formik.errors.audioSec} />
                   </Col>
-                  
+                  <Col className="pr-1 " md="6">
+                    <FormGroup>
+                      <label>Audio Second Vietnam</label>
+                      <Input
+                        placeholder="Audio Second Vietnam"
+                        name="audioSecVN"
+                        type="number"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.audioSecVN}
+                      />
+                    </FormGroup>
+                    <ErrorMessage message={formik.errors.audioSecVN} />
+                  </Col>
                 </Row>
                 <Row>
                   <Col className="" md="12">
@@ -365,8 +400,8 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({modal, ski
                     </FormGroup>
                     <ErrorMessage message={formik.errors.content} />
                   </Col>
-                  </Row>
-                  <Row>
+                </Row>
+                <Row>
                   <Col className="" md="12">
                     <FormGroup>
                       <label>Explaination</label>
@@ -381,61 +416,81 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({modal, ski
                     <ErrorMessage message={formik.errors.explaination} />
                   </Col>
                 </Row>
-                
+
                 <Row>
                   <Col className="pr-1" md="6">
                     <FormGroup className="d-flex justify-content-between">
                       <label>Answers Key</label>
-                      <label className="position-relative">Result<ErrorMessage style={{
-                        position: "absolute",
-                        left: "60px",
-                        top: "-6px",
-                        minWidth: '200px',
-                        fontWeight: 'normal',
-                      }} message={formik.errors.result} /></label>
+                      <label className="position-relative">
+                        Result
+                        <ErrorMessage
+                          style={{
+                            position: "absolute",
+                            left: "60px",
+                            top: "-6px",
+                            minWidth: "200px",
+                            fontWeight: "normal",
+                          }}
+                          message={formik.errors.result}
+                        />
+                      </label>
                     </FormGroup>
                     {answersKey.map((answer: AnswersInput, index: number) => {
-                        return (
-                          <FormGroup className="d-flex align-items-center" key={index}>
-                            <label className="mr-2">{answer.keyAnswer}</label>
-                            <div className="w-100">
+                      return (
+                        <FormGroup
+                          className="d-flex align-items-center"
+                          key={index}
+                        >
+                          <label className="mr-2">{answer.keyAnswer}</label>
+                          <div className="w-100">
                             <Input
                               type="text"
                               onChange={(opt: any) => {
-                                answersKey[index].answerContent = opt.target.value
+                                answersKey[index].answerContent =
+                                  opt.target.value;
                                 formik.setFieldValue("answers", answersKey);
                               }}
                               onBlur={formik.handleBlur}
                               name="answers"
-                              value={initialValues.answers[index].answerContent!}
+                              value={
+                                initialValues.answers[index].answerContent!
+                              }
                             />
-                            {formik.errors.answers && <ErrorMessage message={formik.errors.answers[index] as string} />}
-                            
-                            </div>
-                            <CustomInput
-                              type="radio"
-                              className="ml-3 mr-3"
-                              id={`result${answer.keyAnswer}`}
-                              value={answer.keyAnswer!}
-                              name="result"
-                              checked={answer.keyAnswer === isCheckedResult}
-                              onChange={(e) => {
-                                formik.handleChange(e)
-                                setIsCheckedResult(answer.keyAnswer!);
-                              }}
-                              onBlur={formik.handleBlur}
-                            />
-                          </FormGroup>
-                        )
+                            {formik.errors.answers && (
+                              <ErrorMessage
+                                message={formik.errors.answers[index] as string}
+                              />
+                            )}
+                          </div>
+                          <CustomInput
+                            type="radio"
+                            className="ml-3 mr-3"
+                            id={`result${answer.keyAnswer}`}
+                            value={answer.keyAnswer!}
+                            name="result"
+                            checked={answer.keyAnswer === isCheckedResult}
+                            onChange={(e) => {
+                              formik.handleChange(e);
+                              setIsCheckedResult(answer.keyAnswer!);
+                            }}
+                            onBlur={formik.handleBlur}
+                          />
+                        </FormGroup>
+                      );
                     })}
                   </Col>
                   <Col className="pl-1 mt-4" md="6">
-                      <Input
-                        placeholder="Chose file"
-                        name="image"
-                        type="hidden"
-                      />
-                      <ImageUpload type={MediaType.Image} setPath={setPath} url={urlDefault} singleImage/>
+                    <Input
+                      placeholder="Chose file"
+                      name="image"
+                      type="hidden"
+                    />
+                    <ImageUpload
+                      type={MediaType.Image}
+                      setPath={questionContext.setPath}
+                      url={urlDefault}
+                      singleImage
+                    />
                     <ErrorMessage message={formik.errors.image} />
                   </Col>
                 </Row>

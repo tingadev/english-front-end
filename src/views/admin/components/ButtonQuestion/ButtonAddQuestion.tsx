@@ -1,16 +1,14 @@
 import React from "react";
 import { Button } from "reactstrap";
+import { QuestionContext } from "../QuestionsAndTest/QuestionContext";
 interface ButtonAddQuestionProps {
-    setIsOpenModal: (isOpenModal: boolean) => void;
-    setPartId: (partId: string) => void;
     partId: string;
   }
 
 export const ButtonAddQuestion: React.FC<ButtonAddQuestionProps> = ({
-    setIsOpenModal,
-    setPartId,
     partId,
   }) => {
+    const questionContext = React.useContext(QuestionContext);
     return (
       <div>
         <Button
@@ -19,8 +17,8 @@ export const ButtonAddQuestion: React.FC<ButtonAddQuestionProps> = ({
           size="md"
           type="button"
           onClick={() => {
-            setIsOpenModal(true);
-            setPartId(partId);
+            questionContext.setIsOpenModal(true);
+            questionContext.setPartId(partId);
           }}
         >
           <i className="now-ui-icons ui-1_simple-add"></i>

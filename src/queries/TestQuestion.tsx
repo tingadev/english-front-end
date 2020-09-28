@@ -12,7 +12,7 @@ export const TEST_QUESTION_FRAGMENT = gql`
     part{
         ...Part
     }
-    order
+    displayOrder
   }
   ${QUESTION_FRAGMENT}
   ${PART_FRAGMENT}
@@ -49,5 +49,14 @@ export const REMOVE_TEST_QUESTION = gql `
   mutation removeTestQuestion($id: String!){
     removeTestQuestion(id: $id)
   }
+`
+
+export const UPDATE_TEST_QUESTION = gql `
+  mutation updateTestQuestion($data: TestQuestionInputId!){
+    updateTestQuestion(data: $data){
+      ...TestQuestion
+    }
+  }
+  ${TEST_QUESTION_FRAGMENT}
 `
 

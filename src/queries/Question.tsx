@@ -6,6 +6,7 @@ export const QUESTION_FRAGMENT = gql`
     id
     questionName
     audioSec
+    audioSecVN
     questionType
     image
     answers{
