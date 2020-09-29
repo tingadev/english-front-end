@@ -186,7 +186,7 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = ({})
                 </div>
               </div>
             </Col>
-           {defaultValue &&<Col md="6" className="">
+           <Col md="6" className="">
               <FormGroup className="pl-5">
                 <label>Test Group</label>
                 <Select
@@ -205,7 +205,7 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = ({})
                 ></Select>
                 <ErrorMessage message={formik.errors.testGroupId} />
               </FormGroup>
-            </Col>} 
+            </Col>
             <Col sm="12">
               <div className="px-4 mt-5">
                 <div className="d-flex mb-2 px-2 justify-content-between align-items-center">
