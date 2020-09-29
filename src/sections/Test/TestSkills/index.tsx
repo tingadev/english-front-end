@@ -6,35 +6,23 @@ import { Container, Row, Col, Table } from "reactstrap";
 import { useParams, Link, Switch, Route, useRouteMatch } from "react-router-dom";
 import TestTaken from "../TestTake";
 import LeaderBoard from "../../../components/LeaderBoard";
+import { SkillsType, TestCategoryFragment } from "../../../schema/schema";
 interface TestSkillsProps {
   setIsTaken?: (value: boolean) => void;
+  testCategories?: TestCategoryFragment[] | null;
 }
-const TestSkills: React.FC<TestSkillsProps> = ({ setIsTaken }) => {
-  const { testId } = useParams();
+const TestSkills: React.FC<TestSkillsProps> = ({ setIsTaken, testCategories }) => {
+  const { testCategoryId } = useParams();
+ 
   const match = useRouteMatch();
-  const dataT1 = [
-    {
-      title: "ETS 2020Test: 1- Test 10",
-      id: "1",
-      times: "500",
-    },
-    {
-      title: "ETS 2019Test: 1- Test 10",
-      id: "2",
-      times: "300",
-    },
-    {
-      title: "ETS 2019Test: 1- Test 10",
-      id: "3",
-      times: "600",
-    },
-  ];
-  const testDetail = dataT1.find((d) => d.id === testId);
+ 
+  const testCategory = testCategories?.find((testCategory) => testCategory.id === testCategoryId);
+  const tests = testCategory?.tests
   return (
     <Container>
       <Switch>
-      <Route path={`${match.path}/:typeSkill`}>
-          <TestTaken testDetail={testDetail} setIsTaken={setIsTaken}/>
+      <Route path={`${match.path}/test/:testId`}>
+          <TestTaken testsData={tests} setIsTaken={setIsTaken}/>
         </Route>
       <Route path={`${match.path}`}>
       <section>
@@ -45,7 +33,7 @@ const TestSkills: React.FC<TestSkillsProps> = ({ setIsTaken }) => {
             <img src={require("../../../assets/img/toiec.png")} alt="" />
           </Col>
           <Col md="9">
-            <h2 className="font-weight-bold mb-1">{testDetail?.title}</h2>
+            <h2 className="font-weight-bold mb-1">{testCategory?.testCategoryName}</h2>
             <div className="d-flex align-items-center">
               <i className="now-ui-icons ui-1_calendar-60 mr-1"></i>
               <p className="mb-0 font-9">Published on: 14/08/2020</p>
@@ -66,63 +54,35 @@ const TestSkills: React.FC<TestSkillsProps> = ({ setIsTaken }) => {
               <tr>
                 <th className="font-weight-bold">Skills</th>
                 <th className="font-weight-bold">
-                  <i className="now-ui-icons education_glasses mr-2"></i>Reading
+                <i className="now-ui-icons tech_headphones mr-2"></i>Listening
                 </th>
                 <th className="font-weight-bold">
-                  <i className="now-ui-icons tech_headphones mr-2"></i>Listening
+                  
+                  <i className="now-ui-icons education_glasses mr-2"></i>Reading
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">Test 1</th>
-                <td className="text-center py-0">
-                  <Link
-                    to={`${match.url}/reading`}
-                    className="d-block rounded border border-none bg-success text-white p-2 width-8rem mx-auto"
-                    style={{
-                      textDecoration: "none",
-                    }}
-                  >
-                    Take Test
-                  </Link>
-                </td>
-                <td className="text-center py-0">
-                  <Link
-                    to={`${match.url}/listening`}
-                    className="d-block rounded border border-none bg-info text-white p-2 width-8rem mx-auto"
-                    style={{
-                      textDecoration: "none",
-                    }}
-                  >
-                    Take Test
-                  </Link>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">Test 2</th>
-                <td className="text-center py-0">
-                  <Link
-                    to=""
-                    className="d-block rounded border border-none bg-success text-white p-2 width-8rem mx-auto"
-                    style={{
-                      textDecoration: "none",
-                    }}
-                  >
-                    Take Test
-                  </Link>
-                </td>
-                <td className="text-center py-0">
-                  <Link
-                    to=""
-                    className="d-block rounded border border-none bg-info text-white p-2 width-8rem mx-auto"
-                    style={{
-                      textDecoration: "none",
-                    }}
-                  >
-                    Take Test
-                  </Link>
-                </td>
+            <tr>
+                  <th scope="row">{testCategory?.testCategoryName}</th>
+              {tests && tests.map((test) => {
+                
+                return (
+                
+                  <td className="text-center py-0">
+                    <Link
+                      to={`${match.url}/test/${test.id}`}
+                      className={`d-block rounded border border-none ${test.skillType === SkillsType.Reading ? 'bg-success' : 'bg-info'} text-white p-2 width-8rem mx-auto`}
+                      style={{
+                        textDecoration: "none",
+                      }}
+                    >
+                      Take Test
+                    </Link>
+                  </td>
+                
+                )
+              })}
               </tr>
             </tbody>
           </Table>

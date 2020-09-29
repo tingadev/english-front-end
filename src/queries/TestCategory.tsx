@@ -10,6 +10,9 @@ export const TEST_CATEGORY_FRAGMENT = gql`
     tests{
         ...Test
     }
+    testGroup{
+      id
+    }
     isPublished
     displayOrder
     displayOrderGroup

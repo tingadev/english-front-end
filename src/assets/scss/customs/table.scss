@@ -2,3 +2,11 @@
     padding: 12px 7px !important;
     width: auto !important;
 }
+
+.table-responsive-h100{
+    > .table-responsive{
+        height: 100%;
+    }
+    height: calc(100% - 75px) !important;
+    padding-bottom: 20px;
+}

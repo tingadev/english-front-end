@@ -18,8 +18,12 @@ import {
   NewTestCategoryInput,
   useUpdateTestCategoryMutation,
   EnglishCertificateType,
-  useUpdateTestMutation, 
-  useRemoveFromCatMutation, SkillsType
+  useUpdateTestMutation,
+  useRemoveFromCatMutation,
+  SkillsType,
+  useGetTestGroupsLazyQuery,
+  OrderDirection,
+  TestGroupFragment, useGetTestGroupsQuery
 } from "../../../../schema/schema";
 import { Link, useParams } from "react-router-dom";
 import { QuestionContext } from "./QuestionContext";
@@ -30,6 +34,9 @@ import { notificationAdd } from "../../utils/Notification";
 import ErrorMessage from "../Error";
 import { ButtonAddTest } from "../ButtonQuestion/ButtonAddTest";
 import ModalTest from "./ModalTest";
+import { ListOfTestGroups } from "../../views/TestGroup/CreateAndEditTestGroup";
+import Select from "react-select";
+import _ from "lodash";
 
 interface CreateAndEditTestCategoryProps {}
 
@@ -38,6 +45,9 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = ({})
   const notification = notificationAdd("Test Category", "Update");
   const { id } = useParams();
   // create and mark it draft
+  const [listOfTestGroupsSelect, setListOfTestGroupsSelect] = React.useState(
+    ListOfTestGroups
+  );
   const [
     getTestCategoryQuery,
     getTestCategoryResponse,
@@ -51,7 +61,17 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = ({})
     removeTestFromCatMutation,
     removeTestFromCatMutationResult,
   ] = useRemoveFromCatMutation();
+
+  const getTestGroupsQuery = useGetTestGroupsQuery({
+    variables: {
+      data: {
+        orderDirection: OrderDirection.Asc,
+      },
+    },
+  });
+  
   const [idRemove, setIdRemove] = React.useState("");
+
   React.useEffect(() => {
     id &&
       getTestCategoryQuery({
@@ -60,11 +80,30 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = ({})
         },
       });
   }, [id]);
+  let testsGroupData: TestGroupFragment[] | undefined;
+  if (getTestGroupsQuery.data) {
+    testsGroupData = getTestGroupsQuery.data.getTestGroups.testGroups;
+  }
+
+  React.useEffect(() => {
+    if(!getTestGroupsQuery.loading){
+      testsGroupData?.map((tg) => {
+        const data = {
+          value: tg.id,
+          label: tg.testGroupName,
+        };
+        ListOfTestGroups.push(data)
+      });
+    }
+  },[getTestGroupsQuery.loading])
+  let defaultValue: any;
+ 
   let testCategoryData: TestCategoryFragment | undefined;
   if (getTestCategoryResponse.data) {
     testCategoryData = getTestCategoryResponse.data.getTestCategory;
+    defaultValue = ListOfTestGroups.find(e => e.value === testCategoryData?.testGroup?.id)
   }
-  const tests = testCategoryData?.tests;
+  const tests = _.cloneDeep(testCategoryData?.tests);
   const refetchTestCategory = () => {
     getTestCategoryResponse.refetch && getTestCategoryResponse.refetch();
   };
@@ -74,7 +113,10 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = ({})
       removeTestFromCatMutationResult.data &&
         setIdRemove(removeTestFromCatMutationResult.data.removeFromCat.id);
     }
-  }, [updateTestMutationResult.loading, removeTestFromCatMutationResult.loading]);
+  }, [
+    updateTestMutationResult.loading,
+    removeTestFromCatMutationResult.loading,
+  ]);
   let initialValues: NewTestCategoryInput = {
     id: testCategoryData?.id,
     certificateType: testCategoryData?.certificateType,
@@ -84,7 +126,9 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = ({})
     enableReinitialize: true,
     initialValues: initialValues,
     validationSchema: yup.object().shape({
-        testCategoryName: yup.string().required("Test Category name is a required field"),
+      testCategoryName: yup
+        .string()
+        .required("Test Category name is a required field"),
     }),
     onSubmit: async (values) => {
       const result = await updateTestCategory({
@@ -142,7 +186,26 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = ({})
                 </div>
               </div>
             </Col>
-
+           {defaultValue &&<Col md="6" className="">
+              <FormGroup className="pl-5">
+                <label>Test Group</label>
+                <Select
+                  className="react-select react-select-primary"
+                  onChange={(opt: any) => {
+                    // setListOfTestGroupsSelect(opt)
+                    formik.setFieldValue("testGroupId", opt.value);
+                  }}
+                  defaultValue={
+                    defaultValue
+                  }
+                  classNamePrefix="react-select"
+                  placeholder="Chose type of Test"
+                  name="testGroupId"
+                  options={listOfTestGroupsSelect}
+                ></Select>
+                <ErrorMessage message={formik.errors.testGroupId} />
+              </FormGroup>
+            </Col>} 
             <Col sm="12">
               <div className="px-4 mt-5">
                 <div className="d-flex mb-2 px-2 justify-content-between align-items-center">
@@ -180,8 +243,8 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = ({})
                 <div>
                   <>
                     {tests &&
-                      tests.map((t, t_index) => {
-                        let t_order = t.displayOrder;
+                      tests.sort((a, b) => a.displayOrder - b.displayOrder).map((t, t_index) => {
+                        
                         return (
                           <div
                             className="d-flex mb-2 px-2 justify-content-between align-items-center"
@@ -195,26 +258,33 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = ({})
                                 defaultValue={t.displayOrder}
                                 type="number"
                                 onChange={(e) => {
-                                  t_order = parseInt(e.target.value);
+                                  t.displayOrder = parseInt(e.target.value);
                                 }}
                               />
                             </span>
                             <span
                               style={{ width: "20%" }}
-                              className="font-10 text-center text-primary font-weight-semi"
+                              className="font-10 text-center font-weight-semi"
                             >
-                              {t.testName}
+                              <Link
+                                to={`/admin/toiec/create-test-toiec/${t.skillType.toLowerCase()}/${
+                                  t.id
+                                }`}
+                                className="text-primary"
+                              >
+                                {t.testName}
+                              </Link>
                             </span>
                             <span
                               style={{ width: "20%" }}
                               className="text-center"
                             >
-                      {t.skillType === SkillsType.Reading ? (
-                        <Badge color="success">{t.skillType}</Badge>
-                      ) : (
-                        <Badge color="info">{t.skillType}</Badge>
-                      )}
-                    </span>
+                              {t.skillType === SkillsType.Reading ? (
+                                <Badge color="success">{t.skillType}</Badge>
+                              ) : (
+                                <Badge color="info">{t.skillType}</Badge>
+                              )}
+                            </span>
                             <span
                               style={{ width: "20%" }}
                               className="text-center"
@@ -240,7 +310,7 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = ({})
                                     variables: {
                                       data: {
                                         id: t.id,
-                                        displayOrder: t_order,
+                                        displayOrder: t.displayOrder,
                                       },
                                     },
                                   });
@@ -248,9 +318,14 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = ({})
                               >
                                 <i className="now-ui-icons users_single-02"></i>
                               </Button>
-                              <Button className="btn btn-sm mr-1 btn-warning btn-icon btn-round">
+                              <Link
+                                to={`/admin/toiec/create-test-toiec/${t.skillType.toLowerCase()}/${
+                                  t.id
+                                }`}
+                                className="btn btn-sm mr-1 btn-warning btn-icon btn-round"
+                              >
                                 <i className="now-ui-icons ui-2_settings-90"></i>
-                              </Button>
+                              </Link>
                               <Button
                                 className="btn-icon btn-round text-center"
                                 color="danger"
@@ -281,7 +356,11 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = ({})
                 </div>{" "}
               </div>
             </Col>
-            <ModalTest testCategoryId={testCategoryData?.id} refetchTestCategory={refetchTestCategory} tests={testCategoryData?.tests}/>
+            <ModalTest
+              testCategoryId={testCategoryData?.id}
+              refetchTestCategory={refetchTestCategory}
+              tests={testCategoryData?.tests}
+            />
           </Row>
         </Form>
       </CardBody>

@@ -2,10 +2,11 @@
 import React from "react";
 import { Button, Modal, ModalBody } from "reactstrap";
 import { Link, useRouteMatch } from "react-router-dom";
+import { TestQuestionFragment } from "../../../schema/schema";
 
 // reactstrap components;
 interface QuestionPaletteProps {
-  questions: any;
+  questions?: TestQuestionFragment[] | null;
   answered: any;
   setIsSubmit: (value: boolean) => void;
 }
@@ -28,10 +29,10 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
     >
       <h4 className="mt-0">Question Palette</h4>
       <div className="d-flex flex-wrap justify-content-start">
-        {questions.map((question: any, index: number) => {
+        {questions?.map((question: TestQuestionFragment, index: number) => {
           let isChecked = false;
           answered.map((e: any) => {
-            if (e.id === question.id) {
+            if (e.id === question.question.id) {
               isChecked = true;
             }
           });
@@ -109,7 +110,7 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
           </div>
           <ModalBody>
             <h5>
-              Answered : {answered.length}/{questions.length}
+              Answered : {answered.length}/{questions?.length}
             </h5>
             <div className="d-flex flex-wrap">
               {answered.map((ele: any, index: any) => {
@@ -151,7 +152,7 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
             <p>
               Are you sure?{" "}
               <i>
-                (Answered : {answered.length}/{questions.length})
+                (Answered : {answered.length}/{questions?.length})
               </i>
             </p>
           </ModalBody>

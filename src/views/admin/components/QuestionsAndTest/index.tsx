@@ -18,7 +18,7 @@ import ListTestCategory from "./ListTestCategory";
 // import { Route, Switch, Redirect } from "react-router-dom";
 // interface ToiecAdminProps {}
 
-const ToiecPage: React.FC<{}> = () => {
+const TestPage: React.FC<{}> = () => {
   const match = useRouteMatch();
   const [iconPills, setIconPills] = React.useState("test-category");
   const [createTestMutation, resultCreateTestMutation] = useCreateTestMutation();
@@ -194,4 +194,4 @@ const ToiecPage: React.FC<{}> = () => {
   );
 };
 
-export default ToiecPage;
+export default TestPage;

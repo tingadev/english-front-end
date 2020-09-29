@@ -79,7 +79,7 @@ const Index: React.FC<LayoutProps> = ({ children }) => {
       <IndexNavbar navbarColor={navbarColor} topFixed={topFixed} />
       <div className="wrapper">
           <Switch>
-            <Route path={`${match.path}/toiec`}>
+            <Route path={`${match.path}/toiec/:link`}>
               <Test setNavbarColor={setNavbarColor}/>
             </Route>
             <Route path={match.path}>

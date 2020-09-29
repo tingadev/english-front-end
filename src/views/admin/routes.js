@@ -21,7 +21,7 @@ import ToiecAdmin from "./views/Toiec";
 import Typography from "./views/Typography.js";
 import TableList from "./views/TableList.js";
 import Maps from "./views/Maps.js";
-import Upgrade from "./views/Upgrade.js";
+import TestGroup from "./views/TestGroup";
 import UserPage from "./views/UserPage.js";
 
 var dashRoutes = [
@@ -33,19 +33,20 @@ var dashRoutes = [
     layout: "/admin",
   },
   {
+    path: "/test-group",
+    name: "Test Group",
+    icon: "location_map-big",
+    component: TestGroup,
+    layout: "/admin",
+  },
+  {
     path: "/toiec",
     name: "Toiec",
     icon: "design_image",
     component: ToiecAdmin,
     layout: "/admin",
   },
-  // {
-  //   path: "/maps",
-  //   name: "Maps",
-  //   icon: "location_map-big",
-  //   component: Maps,
-  //   layout: "/admin",
-  // },
+
   // {
   //   path: "/notifications",
   //   name: "Notifications",

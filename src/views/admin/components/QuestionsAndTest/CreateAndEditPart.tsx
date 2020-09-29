@@ -43,6 +43,14 @@ export const EnglishCertificateOptions = [
     value: EnglishCertificateType.Ielts,
     label: EnglishCertificateType.Ielts,
   },
+  {
+    value: EnglishCertificateType.Custom,
+    label: EnglishCertificateType.Custom,
+  },
+  {
+    value: EnglishCertificateType.Blog,
+    label: EnglishCertificateType.Blog,
+  },
 ];
 
 export const SkillsTypeOptions = [

@@ -8,16 +8,19 @@ import QuestionsItem from "../../../components/Questions/QuestionsItem";
 import Score from "../../../components/Score";
 import { Switch, Route, useRouteMatch, useParams } from "react-router-dom";
 import ReactAudioPlayer from "react-audio-player";
-import QuestionsGroup from "../../../components/Questions/QuestionsGroup";
+import { SkillsType, TestFragment, TestQuestionFragment } from "../../../schema/schema";
+import config from "../../../config";
+import { map } from "lodash";
 interface TestTakenProps {
   setIsTaken?: (value: boolean) => void;
-  testDetail: any;
+  testsData?: TestFragment[] | null;
 }
-const TestTaken: React.FC<TestTakenProps> = ({ testDetail }) => {
+const TestTaken: React.FC<TestTakenProps> = ({ testsData }) => {
   const [arrChecked, setArrChecked] = React.useState<any[]>([]);
   const [isSubmit, setIsSubmit] = React.useState(false);
-  console.log(isSubmit);
-  const { typeSkill } = useParams();
+  const { testId } = useParams();
+  const testDetail = testsData?.find(test => test.id === testId)
+  console.log(useParams());
   const detailsTest = [
     {
       id: "1",
@@ -980,30 +983,24 @@ const TestTaken: React.FC<TestTakenProps> = ({ testDetail }) => {
       ],
     },
   ];
-  let isAudio = false;
   const match = useRouteMatch();
-
+  const parts = testDetail?.partAndAudioSecs;
   let toiecReadingTest: any;
   let toiecListeningTest: any;
-  let questions: any[] = [];
-  switch (typeSkill) {
-    case "reading":
-      toiecReadingTest = detailsTest.find((ele) => ele.skill === typeSkill);
-      questions = toiecReadingTest.questions;
-      break;
-    case "listening":
-      toiecListeningTest = detailsTest.find((ele) => ele.skill === typeSkill);
-      toiecListeningTest.questions.forEach((e: any) => {
-        questions = questions.concat(e.questions);
-      });
-      break;
-  }
-  console.log('questions', questions);
-  if (toiecListeningTest && toiecListeningTest.audio) {
-    isAudio = true;
-  }
-  const questionsReading = toiecReadingTest?.questions;
-  const questionsListening = toiecListeningTest?.questions;
+  // switch (typeSkill) {
+  //   case "reading":
+  //     toiecReadingTest = detailsTest.find((ele) => ele.skill === typeSkill);
+  //     questions = toiecReadingTest.questions;
+  //     break;
+  //   case "listening":
+  //     toiecListeningTest = detailsTest.find((ele) => ele.skill === typeSkill);
+  //     toiecListeningTest.questions.forEach((e: any) => {
+  //       questions = questions.concat(e.questions);
+  //     });
+  //     break;
+  // }
+
+  const questions = testDetail?.testQuestions;
 
   return (
     <>
@@ -1018,47 +1015,45 @@ const TestTaken: React.FC<TestTakenProps> = ({ testDetail }) => {
           </Route>
           <Route path={`${match.path}`}>
             <Col md="8">
-              {typeSkill === "listening" && isAudio && (
+              {testDetail?.skillType === SkillsType.Listening && testDetail.audioUrl && (
                 <ReactAudioPlayer
-                  src={require("../../../assets/audios/audio_listenning1.mp3")}
+                  src={config.PATH_IMAGE + testDetail.audioUrl}
                   className="mb-4"
                   controls
                   controlsList={"nodownload"}
                   id='audio1listening'
                 />
               )}
-              {typeSkill === "listening" && (
+              {/* {typeSkill === "listening" && (
                 <div className="mb-4">
                   <i className="font-12 ">{questionsListening?.description}</i>
                 </div>
-              )}
-              {questionsReading &&
-                questionsReading!.map(
-                  (question: any, index: string | number | undefined) => {
-                    return (
-                      <QuestionsItem
-                        questionProps={question}
-                        arrChecked={arrChecked}
-                        setArrChecked={setArrChecked}
-                        key={index}
-                      />
-                    );
-                  }
-                )}
+              )} */}
+              {parts && parts.map((part, index_part) => {
+                const partDetail = questions?.find(qp => qp.part.id === part.partId)
+                return (
+                  <div key={index_part}>
+                    <h3>{partDetail?.part.partName}</h3>
+                    <p dangerouslySetInnerHTML={{__html: partDetail?.part.description || ''}}/>
+                  {questions &&
+                  questions.map(
+                    (question: TestQuestionFragment, index: number) => {
+                      if(question.part.id === part.partId)
+                      return (
+                        <QuestionsItem
+                        testQuestion={question}
+                          arrChecked={arrChecked}
+                          setArrChecked={setArrChecked}
+                          key={index}
+                        />
+                      );
+                    }
+                  )}
+                  </div>
+                )
+              })}
+              
 
-              {questionsListening &&
-                questionsListening!.map(
-                  (question: any, index: string | number | undefined) => {
-                    return (
-                      <QuestionsGroup
-                        questionsGroup={question}
-                        arrChecked={arrChecked}
-                        setArrChecked={setArrChecked}
-                        key={index}
-                      />
-                    );
-                  }
-                )}
             </Col>
             <Col md="4">
               <QuestionPalette

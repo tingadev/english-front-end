@@ -1,18 +1,23 @@
+
 /*eslint-disable*/
 import React from "react";
 import { Label, Input } from "reactstrap";
+import config from "../../config";
+import { TestQuestionFragment } from "../../schema/schema";
 
 interface QuestionsItemProps {
-  questionProps: any;
+  testQuestion: TestQuestionFragment;
   arrChecked: any[];
   setArrChecked: (value: any) => void;
 }
 const QuestionsItem: React.FC<QuestionsItemProps> = ({
-  questionProps,
+  testQuestion,
   arrChecked,
   setArrChecked,
 }) => {
+  const questionProps = testQuestion.question;
   const handleCheck = (questionId: string, ele: any) => {
+    console.log(questionId)
     const answeredObject = {
       id: questionId,
       keyAnswer: ele.keyAnswer,
@@ -45,38 +50,22 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
 
   return (
     <div className="mb-3">
-      {questionProps.title && (
-        <h5 className="font-weight-bold">{questionProps.title}</h5>
+      {questionProps && (
+        <h5 className="font-weight-bold">{questionProps.questionName}</h5>
       )}
       {questionProps.description && (
         <p>
           <i className="font-weight-normal">{questionProps.description}</i>
         </p>
       )}
-      {questionProps.question && !questionProps.child && (
-        <p className="font-weight-normal">
-          {!questionProps.multiple && (
-            <b className="text-primary font-weight-semi">
-              {questionProps.id + ". "}{" "}
-            </b>
-          )}
-          {questionProps.question}
-        </p>
-      )}
+     
       <div
         className="font-11 text-black font-weight-normal"
-        dangerouslySetInnerHTML={{ __html: questionProps.text }}
+        dangerouslySetInnerHTML={{ __html: questionProps.content || '' }}
       />
-      {questionProps.multiple && (
-        <p className="font-weight-normal">
-          <b className="text-primary font-weight-semi">
-            {questionProps.id + ". "}
-          </b>{" "}
-          {questionProps.question}
-        </p>
-      )}
-      {questionProps.img && <div className="img">
-        <img  src={process.env.PUBLIC_URL + questionProps.img} />
+      
+      {questionProps.image && <div className="img">
+        <img  src={config.PATH_IMAGE + questionProps.image} />
       </div> }
       <div className="pl-4">
         {questionProps.answers.map((ele: any, index: any) => {

@@ -38,14 +38,7 @@ const QuestionsGroup: React.FC<QuestionsGroupProps> = ({
                 </div>
             </div>
             {questionsGroup.questions.map((question: any, index: any) => {
-                return (
-                    <QuestionsItem
-                    questionProps={question}
-                    arrChecked={arrChecked}
-                    setArrChecked={setArrChecked}
-                    key={index}
-                  />
-                )
+                
             })}
      
     </div>

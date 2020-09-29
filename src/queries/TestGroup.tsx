@@ -6,7 +6,9 @@ export const TEST_GROUP_FRAGMENT = gql`
   fragment TestGroup on TestGroup {
     id
     testGroupName
+    parentId
     certificateType
+    link
     testCategories{
         ...TestCategory
     }

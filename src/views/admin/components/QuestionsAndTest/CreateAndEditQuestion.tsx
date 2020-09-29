@@ -201,7 +201,6 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({
     validationSchema: yup.object().shape({
       questionName: yup.string().required("Part Name is a required field"),
       explaination: yup.string().required("Explaination is a required field"),
-      content: yup.string().required("Content is a required field"),
       certificateType: yup
         .string()
         .required("Certificate Type is a required field"),

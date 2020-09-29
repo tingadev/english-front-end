@@ -34,7 +34,7 @@ const elementsNav = [
       },
       {
         title: "T1 - Test 1-40",
-        link: "/home/toiec",
+        link: "/home/toiec/t1-toiec-2",
         id: "ielts",
       },
       {

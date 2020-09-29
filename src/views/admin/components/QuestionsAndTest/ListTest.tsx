@@ -97,7 +97,7 @@ const ListTest: React.FC<ListTestProps> = ({ setIconPills, modal, setTestIds, te
                       )}
                     {!modal && <td>{index + 1}</td>}
                     <td className="text-left font-weight-semi">
-                      <Link to={`create-test-toiec/${test.skillType}/${test.id}`}>
+                      <Link to={`create-test-toiec/${test.skillType.toLowerCase()}/${test.id}`}>
                         {test.testName}
                       </Link>
                     </td>
