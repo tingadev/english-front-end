@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "http://powper.vn/precache-manifest.82c63252ad1500cd1bafa93d899fd553.js"
+  "http://powper.vn/precache-manifest.52ab86ffe1bcf32ff6736209d3c5d361.js"
 );
 
 self.addEventListener('message', (event) => {
