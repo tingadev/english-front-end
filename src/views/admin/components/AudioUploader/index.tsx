@@ -1,3 +1,4 @@
+import { url } from "inspector";
 import React from "react";
 import ReactAudioPlayer from "react-audio-player";
 import { Button, Spinner } from "reactstrap";
@@ -18,7 +19,10 @@ const AudioUpload: React.FC<ImageUploadProps> = ({
   onClick
 }) => {
   const [loading, setLoading] = React.useState(false);
-  const [pathPreview, setPathPreview] = React.useState(url);
+  const [pathPreview, setPathPreview] = React.useState<string>();
+  React.useEffect(() => {
+    setPathPreview(url);
+  },[url])
 
   const handleChange = async (e: any) => {
     const file = e.target.files[0];

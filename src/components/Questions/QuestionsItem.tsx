@@ -1,7 +1,6 @@
-
 /*eslint-disable*/
 import React from "react";
-import { Label, Input } from "reactstrap";
+import { Label, Input, Button } from "reactstrap";
 import config from "../../config";
 import { TestQuestionFragment } from "../../schema/schema";
 
@@ -16,8 +15,15 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
   setArrChecked,
 }) => {
   const questionProps = testQuestion.question;
+  const seekAudio = (secs: number) => {
+    const audio = document.getElementById(
+      "audio1listening"
+    ) as HTMLAudioElement;
+    audio!.currentTime = secs;
+    audio!.play();
+  };
   const handleCheck = (questionId: string, ele: any) => {
-    console.log(questionId)
+    console.log(questionId);
     const answeredObject = {
       id: questionId,
       keyAnswer: ele.keyAnswer,
@@ -50,23 +56,35 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
 
   return (
     <div className="mb-3">
-      {questionProps && (
-        <h5 className="font-weight-bold">{questionProps.questionName}</h5>
-      )}
+      <div className="d-flex justify-content-between align-items-center flex-wrap">
+        {questionProps && (
+          <h5 className="font-weight-bold">{questionProps.questionName}</h5>
+        )}
+       {!!questionProps.audioSec && <Button
+          className="rounded-fill bg-transparent border border-primary border-radius-fill text-primary"
+          onClick={() => {
+            seekAudio(questionProps.audioSec);
+          }}
+        >
+          Listen from here
+        </Button> } 
+      </div>
       {questionProps.description && (
         <p>
           <i className="font-weight-normal">{questionProps.description}</i>
         </p>
       )}
-     
+
       <div
         className="font-11 text-black font-weight-normal"
-        dangerouslySetInnerHTML={{ __html: questionProps.content || '' }}
+        dangerouslySetInnerHTML={{ __html: questionProps.content || "" }}
       />
-      
-      {questionProps.image && <div className="img">
-        <img  src={config.PATH_IMAGE + questionProps.image} />
-      </div> }
+
+      {questionProps.image && (
+        <div className="img">
+          <img src={config.PATH_IMAGE + questionProps.image} />
+        </div>
+      )}
       <div className="pl-4">
         {questionProps.answers.map((ele: any, index: any) => {
           return (
@@ -78,7 +96,7 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
                 }}
                 name={`radio` + questionProps.id}
               />{" "}
-              {ele.keyAnswer} . {ele.answer}
+              {ele.keyAnswer} . {ele.answerContent}
             </Label>
           );
         })}
