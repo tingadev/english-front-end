@@ -33,6 +33,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     await fetch(config.UPLOAD_MEDIA + "media", {
       method: "POST",
       body: data,
+      credentials: 'same-origin',
       headers: {
         Accept: "application/json",
       },
