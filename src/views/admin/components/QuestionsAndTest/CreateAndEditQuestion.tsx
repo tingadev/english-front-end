@@ -440,7 +440,7 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({
                           <div className="w-100">
                             <Input
                               type="text"
-                              onChange={(opt: any) => {
+                              onKeyUp={(opt: any) => {
                                 const res = answersKeyState.map((a) => {
                                   if(a.keyAnswer === answer.keyAnswer){
                                     a.answerContent = opt.target.value;

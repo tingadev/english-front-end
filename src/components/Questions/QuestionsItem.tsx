@@ -88,7 +88,7 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
       <div className="pl-4">
         {questionProps.answers.map((ele: any, index: any) => {
           return (
-            ele.answerContent.trim() && <Label className="w-100 font-12" key={index}>
+            ele.answerContent && <Label className="w-100 font-12" key={index}>
               <Input
                 type="radio"
                 onClick={() => {
