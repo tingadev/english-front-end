@@ -28,7 +28,7 @@ import {
   useUpdateQuestionMutation,
   MediaType,
   TestQuestionInputId,
-  EnglishCertificateType,
+  EnglishCertificateType
 } from "../../../../schema/schema";
 import Select from "react-select";
 import { useFormik } from "formik";
@@ -84,6 +84,7 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({
     }
   }, [questionContext.path]);
   const { questionId } = useParams();
+  const [answersKeyState, setAnswerKeyState] = React.useState(answersKey);
   let notification = notificationAdd("Question");
   const questionIdFinal = questionId
     ? questionId
@@ -162,9 +163,10 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({
     });
   }, [questionIdFinal]);
   let urlDefault: string = "";
+  let answers: any
   if (getQuestionRespone.data) {
     const { __typename, ...data } = getQuestionRespone.data.question;
-    const answers = data.answers.map((answer) => {
+     answers = data.answers.map((answer) => {
       const { __typename, ...answerData } = answer;
       return answerData;
     });
@@ -188,6 +190,7 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({
         }
       });
       setIsCheckedResult(getQuestionRespone.data.question.result);
+      setAnswerKeyState(answers)
     }
   }, [getQuestionRespone]);
   const [createQuestion] = useCreateQuestionMutation();
@@ -206,21 +209,16 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({
         .required("Certificate Type is a required field"),
       skillType: yup.string().required("Skill Type is a required field"),
       result: yup.string().required("Result is a required field"),
-      answers: yup.array().of(
-        yup.object().test("", "This field is required", function (e: any) {
-          if (e.answerContent) {
-            return true;
-          }
-          return false;
-        })
-      ),
       audioSec: yup.number().required("Audio Seconds must be number"),
     }),
     onSubmit: async (values) => {
       if (questionIdFinal) {
         const result = await updateQuestion({
           variables: {
-            data: values,
+            data: {
+              ...values,
+              answers: answersKeyState,
+            },
           },
         });
         if (result.data?.updateQuestion) {
@@ -445,14 +443,19 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({
                             <Input
                               type="text"
                               onChange={(opt: any) => {
-                                answersKey[index].answerContent =
-                                  opt.target.value;
-                                formik.setFieldValue("answers", answersKey);
+                                const res = answersKeyState.map((a) => {
+                                  if(a.keyAnswer === answer.keyAnswer){
+                                    a.answerContent = opt.target.value;
+                                  }
+                                  return a;
+                                })
+                                console.log(answersKeyState);
+                                setAnswerKeyState(res);
                               }}
                               onBlur={formik.handleBlur}
                               name="answers"
-                              value={
-                                initialValues.answers[index].answerContent!
+                              defaultValue={
+                                formik.values.answers[index].answerContent || ''
                               }
                             />
                             {formik.errors.answers && (
