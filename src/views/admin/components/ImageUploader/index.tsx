@@ -62,7 +62,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         singleImage={singleImage}
       />
       {loading && <Spinner color="primary" />}
-      {!loading && pathPreview && (
+      {!loading && pathPreview !== config.PATH_IMAGE && (
         <div className="position-relative wrapper-img">
           <img className="img" src={pathPreview} alt="" />
           <span

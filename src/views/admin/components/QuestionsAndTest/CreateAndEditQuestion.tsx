@@ -79,9 +79,7 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({
 }) => {
   const questionContext = React.useContext(QuestionContext);
   React.useEffect(() => {
-    if (questionContext.path) {
-      formik.setFieldValue("image", questionContext.path);
-    }
+    formik.setFieldValue("image", questionContext.path);
   }, [questionContext.path]);
   const { questionId } = useParams();
   const [answersKeyState, setAnswerKeyState] = React.useState(answersKey);
