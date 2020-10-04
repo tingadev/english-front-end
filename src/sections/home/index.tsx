@@ -19,8 +19,8 @@ const HomePage : React.FC<HomePageProps> = ({
           <div className="section section-basic" id="home-page">
                 <TestingTrial/>
                 <Testimonials/>
-                <Features/>
-                <Pricing/>
+                {/* <Features/>
+                <Pricing/> */}
                 <ContactUs/>
           </div>
         </>

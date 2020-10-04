@@ -168,6 +168,14 @@
         }
     }
 
+    &.icon-brand{
+        color: $brand-brand;
+
+        &.icon-brand{
+            box-shadow: 0px 9px 30px -6px $brand-color-opacity;
+        }
+    }
+
     &.icon-white{
         color: $white-color;
     }

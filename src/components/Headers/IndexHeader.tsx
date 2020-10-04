@@ -37,24 +37,29 @@ const IndexHeader = () => {
           ref={pageHeader}
         ></div>
         <Container>
-          <Row style={{
-            marginTop: '8rem',
-          }}>
+          <Row
+            style={{
+              marginTop: "8rem",
+            }}
+          >
             <Col className="mr-auto text-left" md="7">
-              <h1 className="title">OMEGA ENGLISH</h1>
+              <h1 className="title">POWPER ENGLISH</h1>
               <h4 className="description">
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book
+                Tổ chức giáo dục POWPER ENGLISH cung cấp một trong những thư
+                viện tài nguyên luyện thi tiếng Anh trực tuyến lớn nhất Việt
+                Nam. Thư viện có hơn 3 vạn câu hỏi và đề mục chuyên đề luyện thi
+                tiếng Anh TOEIC, IELTS và Luyện thi đại học quốc gia.
               </h4>
               <br></br>
               <div className="buttons">
-              <Button
+                <Button
                   className="mr-3 font-12 border border-white bg-transparent"
                   color=""
                   href="#pablo"
                   onClick={(e) => e.preventDefault()}
                   size="lg"
                 >
-                  About me
+                  Về chúng tôi
                 </Button>
                 <Button
                   className="mr-3 font-12"
@@ -63,7 +68,7 @@ const IndexHeader = () => {
                   onClick={(e) => e.preventDefault()}
                   size="lg"
                 >
-                  Testing Online
+                  Thi thử Online
                 </Button>
               </div>
             </Col>

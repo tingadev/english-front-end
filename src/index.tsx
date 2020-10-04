@@ -32,8 +32,6 @@ const httpLink = createHttpLink({
     credentials: "include",
   },
 });
-console.log(process.env.NODE_ENV)
-console.log('config.GRAPHQL_SERVER_URL', config.GRAPHQL_SERVER_URL)
 const client = new ApolloClient({
   link: ApolloLink.from([httpLink]),
   cache: new InMemoryCache(),

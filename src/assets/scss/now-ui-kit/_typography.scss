@@ -121,6 +121,10 @@ p{
   color: $light-black;
 }
 
+.text-brand{
+    color: $brand-brand !important;
+  }
+
 .blockquote{
     border-left: none;
     border: 1px solid $default-color;

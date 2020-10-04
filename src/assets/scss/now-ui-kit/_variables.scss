@@ -53,6 +53,7 @@ $primary-color-alert:        rgba(194, 17, 161, .8) !default;
 
 
 $brand-color:                  #33075A !default;
+$brand-color-opacity:      rgba(#33075A, .3) !default;
 
 $success-color:              #18ce0f !default;
 $success-states-color:       lighten($success-color, 6%) !default;
@@ -82,6 +83,7 @@ $brand-success:              $success-color !default;
 $brand-warning:              $warning-color !default;
 $brand-danger:               $danger-color !default;
 $brand-inverse:              $black-color !default;
+$brand-brand:                $brand-color !default;
 
 $link-disabled-color:        #666666 !default;
 
