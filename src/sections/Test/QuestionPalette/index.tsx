@@ -19,6 +19,7 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
   const [modal1, setModal1] = React.useState(false);
   const [modal2, setModal2] = React.useState(false);
   answered.sort((a: any, b: any) => a.id - b.id);
+  const questionsClone = questions?.slice(); 
   return (
     
     <section
@@ -29,7 +30,7 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
     >
       <h4 className="mt-0">Question Palette</h4>
       <div className="d-flex flex-wrap justify-content-start">
-        {questions?.map((question: TestQuestionFragment, index: number) => {
+        {questionsClone?.sort((a, b) => a.displayOrder - b.displayOrder).map((question: TestQuestionFragment, index: number) => {
           let isChecked = false;
           answered.map((e: any) => {
             if (e.id === question.question.id) {
@@ -52,8 +53,12 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
                 marginBottom: "5px",
                 marginRight: "6px",
               }}
+              onClick={() => {
+                const target = document.getElementById('question' + question.question.id);
+                target && window.scrollTo({top: target.offsetTop + 200, behavior: 'smooth'})
+              }}
             >
-              {index + 1}
+              {question.displayOrder}
             </span>
           );
         })}

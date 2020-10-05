@@ -24,7 +24,6 @@ const TestTaken: React.FC<TestTakenProps> = ({ testsData }) => {
   const [isSubmit, setIsSubmit] = React.useState(false);
   const { testId } = useParams();
   const testDetail = testsData?.find((test) => test.id === testId);
-  console.log(useParams());
 
   const match = useRouteMatch();
   const parts = testDetail?.partAndAudioSecs;
@@ -35,8 +34,8 @@ const TestTaken: React.FC<TestTakenProps> = ({ testsData }) => {
     audio!.currentTime = secs;
     audio!.play();
   };
-
-  const questions = testDetail?.testQuestions;
+  const questionsSorted = testDetail?.testQuestions?.slice();
+  const questions = questionsSorted?.sort((a, b) => a.displayOrder - b.displayOrder);
 
   return (
     <>

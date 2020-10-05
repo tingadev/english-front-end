@@ -291,6 +291,7 @@ const IndexNavbar: React.FC<IndexNavbarProps> = ({ navbarColor, topFixed }) => {
         expand="lg"
         color="primary"
         style={{ top: topFixed }}
+        id="navbarFixed"
       >
         <div className="navbar-translate">
           {/* <UncontrolledTooltip target="#navbar-brand">

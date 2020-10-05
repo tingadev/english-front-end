@@ -55,7 +55,7 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
   React.useEffect(() => {}, [arrChecked.length]);
 
   return (
-    <div className="mb-3">
+    <div className="mb-3" id={'question' + questionProps.id}>
       <div className="d-flex justify-content-between align-items-center flex-wrap">
         {questionProps && (
           <h5 className="font-weight-bold">{questionProps.questionName}</h5>

@@ -1,4 +1,5 @@
 import React from "react";
+import { store } from "react-notifications-component";
 import { Badge, Button, Input, Spinner } from "reactstrap";
 import {
   EnglishCertificateType,
@@ -6,6 +7,7 @@ import {
   useRemoveTestQuestionMutation,
   useUpdateTestQuestionMutation,
 } from "../../../../../schema/schema";
+import { notificationAdd } from "../../../utils/Notification";
 import { QuestionContext } from "../QuestionContext";
 
 interface ListQuestionExam {
@@ -19,6 +21,7 @@ const ListQuestionExam: React.FC<ListQuestionExam> = ({
   refetchTestQuestions,
 }) => {
   const questionContext = React.useContext(QuestionContext);
+  const notification = notificationAdd("Question", "Updated")
   const [
     updateTestQuestionMutation,
     updateTestQuestionMutationResult,
@@ -37,6 +40,7 @@ const ListQuestionExam: React.FC<ListQuestionExam> = ({
     }
     if (updateTestQuestionMutationResult.data?.updateTestQuestion) {
       refetchTestQuestions && refetchTestQuestions();
+      store.addNotification(notification);
     }
   }, [
     removeTestQuestionMutationResult.loading,
@@ -82,6 +86,7 @@ const ListQuestionExam: React.FC<ListQuestionExam> = ({
           {questions &&
             questions.map((q, q_index) => {
               let q_order = q.displayOrder;
+              
               if (q.part.id === partId) {
                 return (
                   <div
@@ -93,6 +98,7 @@ const ListQuestionExam: React.FC<ListQuestionExam> = ({
                       className="font-10 text-center text-primary font-weight-semi"
                     >
                       <Input
+                      key={q.id}
                         defaultValue={q.displayOrder}
                         type="number"
                         onChange={(e) => {

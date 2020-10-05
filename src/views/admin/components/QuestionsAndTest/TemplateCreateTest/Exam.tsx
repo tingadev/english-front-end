@@ -90,6 +90,8 @@ const Exam: React.FC<ExamProps> = ({
       });
       if (result.data?.updateTest) {
         store.addNotification(notification);
+        partAndAudioSeconds.sort((a, b) => a.displayOrder! - b.displayOrder!);
+        setPartAndAudioSeconds(partAndAudioSeconds);
       }
     },
   });
@@ -97,6 +99,7 @@ const Exam: React.FC<ExamProps> = ({
   return (
     <Form onSubmit={formik.handleSubmit}>
       <Row>
+      
         <Col md={12}>
           <div className="d-flex justify-content-between pl-5 align-items-end">
             <FormGroup className="w-50">
@@ -133,6 +136,7 @@ const Exam: React.FC<ExamProps> = ({
       <Row>
         <Col>
           <div className="w-50 pl-5 d-flex">
+            
             <FormGroup>
               <label>Audio</label>
               <Input placeholder="Chose file" name="audioUrl" type="hidden" />
@@ -148,15 +152,14 @@ const Exam: React.FC<ExamProps> = ({
               />
             </FormGroup>
           </div>
+         
         </Col>
       </Row>
       <Row>
         <Col>
           <ul className="list-style-none mt-4">
             {partAndAudioSeconds &&
-              partAndAudioSeconds
-                .sort((a, b) => a.displayOrder! - b.displayOrder!)
-                .map((p, index: number) => {
+              partAndAudioSeconds.map((p, index: number) => {
                   const part =
                     dataParts && dataParts.find((part) => part.id === p.partId);
                   return (
@@ -249,6 +252,7 @@ const Exam: React.FC<ExamProps> = ({
                       </li>
                       <ButtonAddQuestion partId={p.partId!} />
                       <ButtonCreateQuestion partId={p.partId!} />
+                      
                       <ListQuestionExam questions={questions} partId={p.partId!} refetchTestQuestions={refetchTestQuestions} />
                     </div>
                   );
