@@ -25,7 +25,7 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
     <section
       className="rounded bg-brand text-white text-center p-4 d-flex flex-wrap sticky-top-130"
       style={{
-        height: "400px",
+        height: "600px",
       }}
     >
       <h4 className="mt-0">Question Palette</h4>
@@ -122,7 +122,7 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
                 return (
                   <span className="mr-5" key={index}>
                     <b className="font-weight-bold text-primary">
-                      Question {ele.id}
+                      Question {ele.displayOrder}
                     </b>{" "}
                     : {ele.keyAnswer}
                   </span>

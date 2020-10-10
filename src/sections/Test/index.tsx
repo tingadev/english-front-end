@@ -19,10 +19,8 @@ const Test: React.FC<TestProps> = ({ setNavbarColor }) => {
   }, []);
   return (
     <div className="noHeader pb-5">
-      <Container>
         <BreadcrumbMain/>
         <TestCategory />
-      </Container>
     </div>
   );
 };

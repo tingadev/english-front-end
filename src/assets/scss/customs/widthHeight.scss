@@ -5,16 +5,25 @@ $unit: rem;
   .width-#{$i}#{$unit} {
     width: $i + rem !important;
   }
+  .height-#{$i}#{$unit} {
+    height: $i + rem !important;
+  }
 }
 @for $i from 1 through $number {
     .min-width-#{$i}#{$unit} {
       width: 10 + rem !important;
+    }
+    .min-height-#{$i}#{$unit} {
+      height: 10 + rem !important;
     }
   }
 
   @for $i from 1 through $number {
     .max-width-#{$i}#{$unit} {
       width: 10 + rem !important;
+    }
+    .max-height-#{$i}#{$unit} {
+      height: 10 + rem !important;
     }
   }
 $min-widths: 5rem, 6rem, 7rem;
@@ -27,6 +36,10 @@ $min-widths: 5rem, 6rem, 7rem;
 
 .min-w-full{
   min-width: 100% !important;
+}
+
+.min-h-full{
+  min-height: 100% !important;
 }
 
 .height-modal-80vh{

@@ -19,12 +19,13 @@ const TestSkills: React.FC<TestSkillsProps> = ({ setIsTaken, testCategories }) =
   const testCategory = testCategories?.find((testCategory) => testCategory.id === testCategoryId);
   const tests = testCategory?.tests
   return (
-    <Container>
+   
       <Switch>
       <Route path={`${match.path}/test/:testId`}>
           <TestTaken testsData={tests} setIsTaken={setIsTaken}/>
         </Route>
       <Route path={`${match.path}`}>
+      <Container>
       <section>
         <Row>
           <Col md='8'>
@@ -95,10 +96,11 @@ const TestSkills: React.FC<TestSkillsProps> = ({ setIsTaken, testCategories }) =
         </Row>
         
       </section>
+      </Container>
       </Route>
       
       </Switch>
-    </Container>
+   
   );
 };
 

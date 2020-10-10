@@ -1,29 +1,34 @@
 /*eslint-disable*/
 import React from "react";
-import { Row, Col } from "reactstrap";
+import { Row, Col, Container } from "reactstrap";
+import { TestQuestionFragment } from "../../schema/schema";
+import Explaination from "../Explaination";
 import LeaderBoard from "../LeaderBoard";
 // reactstrap components
 interface ScoreProps {
   testDetail?: any;
-  questions: any;
+  questions?: TestQuestionFragment[];
   arrChecked: any;
+  setArrChecked: any;
 }
-const Score: React.FC<ScoreProps> = ({ testDetail, questions, arrChecked }) => {
+const Score: React.FC<ScoreProps> = ({ testDetail, questions, arrChecked, setArrChecked }) => {
   
     let rightAnswer = 0;
-    questions.forEach((question: any) => {
+    questions && questions.forEach((testQuestion: TestQuestionFragment) => {
         arrChecked.forEach((e: any) => {
-            if(question.id === e.id && question.result === e.keyAnswer)
+            if(testQuestion.question.id === e.id && testQuestion.question.result === e.keyAnswer)
                 {
                     rightAnswer = rightAnswer + 1;
                 }
         })
         
     })
-    const notPoint = (rightAnswer/questions.length).toFixed(3)
+    const notPoint = (rightAnswer/questions?.length!).toFixed(3)
     const point = parseFloat(notPoint) * 10;
   return (
     <>
+    <Container>
+    <Row>
       <Col md="8">
         <Row>
           <Col md="3">
@@ -57,7 +62,7 @@ const Score: React.FC<ScoreProps> = ({ testDetail, questions, arrChecked }) => {
                   >
                       <span className="font-weight-bold">Correct</span>
                       <span className="font-weight-bold">Answered</span>
-                      <span className="font-weight-bold text-success">{rightAnswer}/{questions.length}</span>
+                      <span className="font-weight-bold text-success">{rightAnswer}/{questions?.length}</span>
                   </div>
 
                   <div className="rounded-circle border-2 border-primary d-flex justify-content-center align-items-center flex-wrap"
@@ -78,17 +83,23 @@ const Score: React.FC<ScoreProps> = ({ testDetail, questions, arrChecked }) => {
         </div>
         <div className="mt-5">
             <h3><i className="now-ui-icons objects_key-25"></i>Answer Keys:</h3>
+            <div className="d-flex align-items-center">
+            <p className="d-flex align-items-center">Your answer <span className="ml-1 bg-info width-1rem height-1rem d-inline-block"></span></p>
+            <p className="d-flex align-items-center ml-4">Answer Key <span className="ml-1 bg-warning width-1rem height-1rem d-inline-block"></span></p>
+            <p className="d-flex align-items-center ml-4">No Answer <span className="ml-1 font-italic">N/A</span></p>
+            </div>
             <div className="d-flex flex-wrap">
-                {questions.map((question: any, index: any) => {
+                {questions && questions.map((testQuestion: TestQuestionFragment, index: any) => {
                     const isCorrect = arrChecked.find((e: any) => {
-                        return (e.id === question.id && e.keyAnswer === question.result)
+                        return (e.id === testQuestion.question.id && e.keyAnswer === testQuestion.question.result)
                     })
                     return (
                         <div key={index} className="d-flex align-items-center" style={{width: '50%'}}>
                             <p className="mr-3 d-flex justify-content-center align-items-center text-white font-weight-bold bg-brand" style={{width: '30px', height: '30px'}}>
-                                {question.id}
+                                {testQuestion.displayOrder}
                             </p>
-                            <p className="text-black font-weight-bold mr-3">{question.result}</p>
+                    <p className="text-black font-italic text-info">{isCorrect?.keyAnswer ? isCorrect?.keyAnswer : 'N/A'} </p> <p className="text-center width-2rem">-</p>
+                            <p className="text-black font-weight-bold mr-3 text-warning"> {testQuestion.question.result}</p>
                             <p className="pt-1">{isCorrect ? <i className="now-ui-icons ui-1_check text-success"></i> : <i className="now-ui-icons ui-1_simple-remove text-danger"></i>}</p>
                         </div>
                     )
@@ -100,6 +111,10 @@ const Score: React.FC<ScoreProps> = ({ testDetail, questions, arrChecked }) => {
       <Col md="4">
         <LeaderBoard />
       </Col>
+      </Row>
+      </Container>
+      <Explaination testDetail={testDetail!} questions={questions!} setArrChecked={setArrChecked} arrChecked={arrChecked}/>
+    
     </>
   );
 };
