@@ -9,22 +9,18 @@ import {
   createHttpLink,
   ApolloLink,
 } from "@apollo/client";
-import {
-  Switch,
-  Redirect,
-  Route,
-  HashRouter,
-} from "react-router-dom";
-import config from "./config"
+import { Switch, Redirect, Route, HashRouter } from "react-router-dom";
+import config from "./config";
 // styles for this kit
 import "./assets/css/bootstrap.min.css";
 import "./assets/scss/now-ui-kit.scss?v=1.4.0";
 import "./assets/demo/demo.css?v=1.4.0";
 import "./assets/demo/nucleo-icons-page-styles.css?v=1.4.0";
-import 'react-notifications-component/dist/theme.css'
+import "react-notifications-component/dist/theme.css";
 // pages for this kit
 import routes from "./router.js";
-import ReactNotification from 'react-notifications-component'
+import ReactNotification from "react-notifications-component";
+import Loading from "./components/Loading";
 const httpLink = createHttpLink({
   uri: config.GRAPHQL_SERVER_URL,
   fetch,
@@ -39,22 +35,18 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-      <HashRouter basename='/'>
-      <ReactNotification/>
-          <Switch>
+      <HashRouter basename="/">
+        <ReactNotification />
+        <Loading/>
+        <Switch>
           {routes.map((prop, key) => {
-              return (
-                <Route
-                  path={prop.path}
-                  component={prop.component}
-                  key={key}
-                />
-              );
-            })}
-            <Redirect to="/home" />
-            <Redirect from="/" to="/home" />
-            
-          </Switch>
+            return (
+              <Route path={prop.path} component={prop.component} key={key} />
+            );
+          })}
+          <Redirect to="/home" />
+          <Redirect from="/" to="/home" />
+        </Switch>
       </HashRouter>
       ,
     </ApolloProvider>

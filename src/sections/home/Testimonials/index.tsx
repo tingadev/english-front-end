@@ -155,9 +155,11 @@ const Testimonials: React.FC<{}> = ({}) => {
         <Row>
           <Col md="12">
           <Slider {...settingsSlick}>
-          {items.map((item) => {
+          {items.map((item, index) => {
                 return (
-                    item.content
+                  <div key={index}>
+                    {item.content}
+                    </div>
                 );
               })}
 
