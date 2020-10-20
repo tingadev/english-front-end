@@ -24,7 +24,7 @@ const ModalCreateQuestion: React.FC<ModalCreateQuestionProps> = ({
         centered
         isOpen={questionContext.isOpenModalCreateQuestion}
         toggle={() => questionContext.setIsOpenModalCreateQuestion(false)}
-        key={dataTestQuestionInput.questionId!}
+        key={questionContext.isOpenModalCreateQuestion.toString()}
       >
         <div className="modal-header justify-content-center">
           <button

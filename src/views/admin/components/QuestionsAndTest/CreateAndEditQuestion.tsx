@@ -28,7 +28,7 @@ import {
   useUpdateQuestionMutation,
   MediaType,
   TestQuestionInputId,
-  EnglishCertificateType
+  EnglishCertificateType,
 } from "../../../../schema/schema";
 import Select from "react-select";
 import { useFormik } from "formik";
@@ -40,6 +40,19 @@ import ImageUpload from "../ImageUploader/index";
 import config from "../../../../config";
 import { QuestionContext } from "./QuestionContext";
 
+interface CreateAndEditQuestionProps {
+  modal?: boolean;
+  skillType?: SkillsType;
+  dataTestQuestionInput?: TestQuestionInputId;
+  refetchTestQuestions?: any;
+  setIdForced?: (value: number) => void;
+}
+let PartsOptions = [
+  {
+    value: "0",
+    label: "Chose part",
+  },
+];
 const answersKey: AnswersInput[] = [
   {
     keyAnswer: "A",
@@ -58,31 +71,40 @@ const answersKey: AnswersInput[] = [
     answerContent: "",
   },
 ];
-let PartsOptions = [
-  {
-    value: "0",
-    label: "Chose part",
-  },
-];
-interface CreateAndEditQuestionProps {
-  modal?: boolean;
-  skillType?: SkillsType;
-  dataTestQuestionInput?: TestQuestionInputId;
-  refetchTestQuestions?: any;
-}
-
-const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({
+const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
   modal,
   skillType,
   dataTestQuestionInput,
   refetchTestQuestions,
+  setIdForced,
 }) => {
+  
+
+  const answersKeyVcl: AnswersInput[] = [
+    {
+      keyAnswer: "A",
+      answerContent: "",
+    },
+    {
+      keyAnswer: "B",
+      answerContent: "",
+    },
+    {
+      keyAnswer: "C",
+      answerContent: "",
+    },
+    {
+      keyAnswer: "D",
+      answerContent: "",
+    },
+  ];
   const questionContext = React.useContext(QuestionContext);
+
   React.useEffect(() => {
     formik.setFieldValue("image", questionContext.path);
   }, [questionContext.path]);
   const { questionId } = useParams();
-  const [answersKeyState, setAnswerKeyState] = React.useState(answersKey);
+  const [answersKeyState, setAnswerKeyState] = React.useState(answersKeyVcl);
   let notification = notificationAdd("Question");
   const questionIdFinal = questionId
     ? questionId
@@ -161,10 +183,10 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({
     });
   }, [questionIdFinal]);
   let urlDefault: string = "";
-  let answers: any
+  let answers: any;
   if (getQuestionRespone.data) {
     const { __typename, ...data } = getQuestionRespone.data.question;
-     answers = data.answers.map((answer) => {
+    answers = data.answers.map((answer) => {
       const { __typename, ...answerData } = answer;
       return answerData;
     });
@@ -188,7 +210,7 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({
         }
       });
       setIsCheckedResult(getQuestionRespone.data.question.result);
-      setAnswerKeyState(answers)
+      setAnswerKeyState(answers);
     }
   }, [getQuestionRespone]);
   const [createQuestion] = useCreateQuestionMutation();
@@ -227,15 +249,16 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({
       } else {
         const result = await createQuestion({
           variables: {
-            data: values,
+            data: {
+              ...values,
+              answers: answersKeyState,
+            },
           },
         });
         if (result.data?.createQuestion) {
           store.addNotification(notification);
-          formik.resetForm();
-          setCertificateTypeSelect(EnglishCertificateOptions[0]);
-          setSkillTypeSelect(SkillsTypeOptions[0]);
-          setPartSelect(PartsOptions[0]);
+          setIdForced && setIdForced(parseInt(result.data?.createQuestion.id));
+          setAnswerKeyState(answersKeyVcl);
           refetchTestQuestions && refetchTestQuestions();
         }
       }
@@ -243,7 +266,7 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({
   });
 
   return (
-    <>
+    <div>
       <Form onSubmit={formik.handleSubmit}>
         <Row>
           <Col>
@@ -430,7 +453,7 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({
                         />
                       </label>
                     </FormGroup>
-                    {answersKey.map((answer: AnswersInput, index: number) => {
+                    {answersKeyVcl.map((answer: AnswersInput, index: number) => {
                       return (
                         <FormGroup
                           className="d-flex align-items-center"
@@ -442,18 +465,18 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({
                               type="text"
                               onKeyUp={(opt: any) => {
                                 const res = answersKeyState.map((a) => {
-                                  if(a.keyAnswer === answer.keyAnswer){
+                                  if (a.keyAnswer === answer.keyAnswer) {
                                     a.answerContent = opt.target.value;
                                   }
                                   return a;
-                                })
-                                console.log(answersKeyState);
+                                });
                                 setAnswerKeyState(res);
+                                console.log(answersKeyState)
                               }}
                               onBlur={formik.handleBlur}
                               name="answers"
                               defaultValue={
-                                formik.values.answers[index].answerContent || ''
+                                formik.values.answers[index].answerContent || ""
                               }
                             />
                             {formik.errors.answers && (
@@ -499,7 +522,27 @@ const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({
           </Col>
         </Row>
       </Form>
-    </>
+    </div>
+  );
+};
+const CreateAndEditQuestion: React.FC<CreateAndEditQuestionProps> = ({
+  modal,
+  skillType,
+  dataTestQuestionInput,
+  refetchTestQuestions,
+}) => {
+  const [idForced, setIdForced] = React.useState(0);
+  return (
+    <div>
+      <CreateAndEditQuestionForm
+        key={idForced}
+        modal={modal}
+        skillType={skillType}
+        dataTestQuestionInput={dataTestQuestionInput}
+        refetchTestQuestions={refetchTestQuestions}
+        setIdForced={setIdForced}
+      />
+    </div>
   );
 };
 
