@@ -15,84 +15,94 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
   answered,
   setIsSubmit,
 }) => {
-  const match = useRouteMatch()
+  const match = useRouteMatch();
   const [modal1, setModal1] = React.useState(false);
   const [modal2, setModal2] = React.useState(false);
   answered.sort((a: any, b: any) => a.id - b.id);
-  const questionsClone = questions?.slice(); 
+  const questionsClone = questions?.slice();
   return (
-    
     <section
       className="rounded bg-brand text-white text-center p-4 d-flex flex-wrap sticky-top-130"
       style={{
-        height: "600px",
+        maxHeight: "600px",
       }}
     >
       <h4 className="mt-0">Question Palette</h4>
-      <div className="d-flex flex-wrap justify-content-start">
-        {questionsClone?.sort((a, b) => a.displayOrder - b.displayOrder).map((question: TestQuestionFragment, index: number) => {
-          let isChecked = false;
-          answered.map((e: any) => {
-            if (e.id === question.question.id) {
-              isChecked = true;
-            }
-          });
-          return (
-            <span
-              key={index}
-              className={`+ ${
-                isChecked ? "bg-warning text-white" : "bg-white text-black"
-              } font-weight-bold`}
-              style={{
-                width: "30px",
-                height: "30px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: "100%",
-                marginBottom: "5px",
-                marginRight: "6px",
-              }}
-              onClick={() => {
-                const target = document.getElementById('question' + question.question.id);
-                target && window.scrollTo({top: target.offsetTop + 200, behavior: 'smooth'})
-              }}
-            >
-              {question.displayOrder}
-            </span>
-          );
-        })}
-        <div className="w-100 d-flex">
-          <div className="d-flex align-items-center mr-2">
-            <span
-              className={"bg-warning text-white"}
-              style={{
-                width: "30px",
-                height: "30px",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: "100%",
-                marginBottom: "5px",
-                marginRight: "6px",
-              }}
-            ></span>
-            Answered
-          </div>
-          <div className="d-flex align-items-center">
-            <span
-              className={"bg-white text-black"}
-              style={{
-                width: "30px",
-                height: "30px",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: "100%",
-                marginBottom: "5px",
-                marginRight: "6px",
-              }}
-            ></span>
-            Unanswered
-          </div>
+      <div
+        className="d-flex flex-wrap justify-content-start"
+        style={{ maxHeight: 315, overflowY: "auto" }}
+      >
+        {questionsClone
+          ?.sort((a, b) => a.displayOrder - b.displayOrder)
+          .map((question: TestQuestionFragment, index: number) => {
+            let isChecked = false;
+            answered.map((e: any) => {
+              if (e.id === question.question.id) {
+                isChecked = true;
+              }
+            });
+            return (
+              <span
+                key={index}
+                className={`+ ${
+                  isChecked ? "bg-warning text-white" : "bg-white text-black"
+                } font-weight-bold`}
+                style={{
+                  width: "30px",
+                  height: "30px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: "100%",
+                  marginBottom: "5px",
+                  marginRight: "6px",
+                }}
+                onClick={() => {
+                  const target = document.getElementById(
+                    "question" + question.question.id
+                  );
+                  target &&
+                    window.scrollTo({
+                      top: target.offsetTop + 200,
+                      behavior: "smooth",
+                    });
+                }}
+              >
+                {question.displayOrder}
+              </span>
+            );
+          })}
+      </div>
+      <div className="w-100 d-flex">
+        <div className="d-flex align-items-center mr-2">
+          <span
+            className={"bg-warning text-white"}
+            style={{
+              width: "30px",
+              height: "30px",
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: "100%",
+              marginBottom: "5px",
+              marginRight: "6px",
+            }}
+          ></span>
+          Answered
+        </div>
+        <div className="d-flex align-items-center">
+          <span
+            className={"bg-white text-black"}
+            style={{
+              width: "30px",
+              height: "30px",
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: "100%",
+              marginBottom: "5px",
+              marginRight: "6px",
+            }}
+          ></span>
+          Unanswered
         </div>
       </div>
       <div className="mt-auto">
@@ -165,7 +175,10 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
             <Link
               className="btn-transparent"
               to={`${match.url}/result`}
-              onClick={() => {setModal2(false); setIsSubmit(true)}}
+              onClick={() => {
+                setModal2(false);
+                setIsSubmit(true);
+              }}
             >
               Submit
             </Link>
