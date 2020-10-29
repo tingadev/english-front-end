@@ -8,6 +8,7 @@ import {
   useUpdateTestQuestionMutation,
 } from "../../../../../schema/schema";
 import { notificationAdd } from "../../../utils/Notification";
+import ModalDelete from "../../Modal/Delete";
 import { QuestionContext } from "../QuestionContext";
 
 interface ListQuestionExam {
@@ -20,8 +21,9 @@ const ListQuestionExam: React.FC<ListQuestionExam> = ({
   partId,
   refetchTestQuestions,
 }) => {
+  const [isOpenModalDelete, setIsOpenModalDelete] = React.useState(false);
   const questionContext = React.useContext(QuestionContext);
-  const notification = notificationAdd("Question", "Updated")
+  const notification = notificationAdd("Question", "Updated");
   const [
     updateTestQuestionMutation,
     updateTestQuestionMutationResult,
@@ -32,11 +34,19 @@ const ListQuestionExam: React.FC<ListQuestionExam> = ({
   ] = useRemoveTestQuestionMutation();
 
   const [idRemove, setIdRemove] = React.useState("");
+  const removeTestQuestion = () => {
+    removeTestQuestionMutation({
+      variables: {
+        id: idRemove,
+      },
+    });
+  };
 
   React.useEffect(() => {
     if (removeTestQuestionMutationResult.data?.removeTestQuestion) {
-      setIdRemove(removeTestQuestionMutationResult.data?.removeTestQuestion);
       refetchTestQuestions && refetchTestQuestions();
+      const notificationD = notificationAdd("Question", "Deleted", "danger");
+      store.addNotification(notificationD);
     }
     if (updateTestQuestionMutationResult.data?.updateTestQuestion) {
       refetchTestQuestions && refetchTestQuestions();
@@ -86,7 +96,7 @@ const ListQuestionExam: React.FC<ListQuestionExam> = ({
           {questions &&
             questions.map((q, q_index) => {
               let q_order = q.displayOrder;
-              
+
               if (q.part.id === partId) {
                 return (
                   <div
@@ -98,7 +108,7 @@ const ListQuestionExam: React.FC<ListQuestionExam> = ({
                       className="font-10 text-center text-primary font-weight-semi"
                     >
                       <Input
-                      key={q.id}
+                        key={q.id}
                         defaultValue={q.displayOrder}
                         type="number"
                         onChange={(e) => {
@@ -164,21 +174,12 @@ const ListQuestionExam: React.FC<ListQuestionExam> = ({
                         color="danger"
                         size="sm"
                         type="button"
-                        onClick={async (e) => {
-                          e.preventDefault();
-                          await removeTestQuestionMutation({
-                            variables: {
-                              id: q.id,
-                            },
-                          });
+                        onClick={() => {
+                          setIdRemove(q.id);
+                          setIsOpenModalDelete(true);
                         }}
                       >
-                        {removeTestQuestionMutationResult.loading &&
-                        idRemove === q.id ? (
-                          <Spinner color="primary" />
-                        ) : (
-                          <i className="now-ui-icons ui-1_simple-remove"></i>
-                        )}
+                        <i className="now-ui-icons ui-1_simple-remove"></i>
                       </Button>
                     </div>
                   </div>
@@ -186,6 +187,12 @@ const ListQuestionExam: React.FC<ListQuestionExam> = ({
               }
             })}
         </>
+        <ModalDelete
+          isOpen={isOpenModalDelete}
+          onClose={setIsOpenModalDelete}
+          callback={removeTestQuestion}
+          loading={removeTestQuestionMutationResult.loading}
+        />
       </div>{" "}
     </>
   );
