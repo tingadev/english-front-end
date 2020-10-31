@@ -15,6 +15,7 @@ import {
   useUpdateTestCategoryMutation,
 } from "../../../../schema/schema";
 import { Link } from "react-router-dom";
+import ModalDelete from "../Modal/Delete";
 interface ListTestCategoryProps {
   setIconPills: (val: string) => void;
 }
@@ -22,6 +23,7 @@ interface ListTestCategoryProps {
 const ListTestCategory: React.FC<ListTestCategoryProps> = ({
   setIconPills,
 }) => {
+  const [isOpenModalDelete, setIsOpenModalDelete] = React.useState(false);
   const { data, loading, refetch } = useGetTestCategoriesQuery({
     variables: {
       data: {
@@ -38,6 +40,15 @@ const ListTestCategory: React.FC<ListTestCategoryProps> = ({
     removeTestCategoryMutation,
     removeTestCategoryMutationResult,
   ] = useRemoveTestCategoryMutation();
+
+  const [testCategoryIdRemoved, setTestCategoryIdRemoved] = React.useState('');
+  const removeTestCategory = async () => {
+    await removeTestCategoryMutation({
+      variables: {
+        id: testCategoryIdRemoved
+      },
+    });
+  }
   React.useEffect(() => {
     setIconPills("test-categories");
     refetch();
@@ -45,7 +56,10 @@ const ListTestCategory: React.FC<ListTestCategoryProps> = ({
 
   React.useEffect(() => {
     updateTestCategoryMutationResult.data?.updateTestCategory && refetch();
-    removeTestCategoryMutationResult.data?.removeTestCategory && refetch();
+    if(removeTestCategoryMutationResult.data?.removeTestCategory){
+      refetch();
+      setIsOpenModalDelete(false);
+    }
   }, [
     updateTestCategoryMutationResult.loading,
     removeTestCategoryMutationResult.loading,
@@ -134,11 +148,9 @@ const ListTestCategory: React.FC<ListTestCategoryProps> = ({
                         size="sm"
                         type="button"
                         onClick={async () => {
-                          await removeTestCategoryMutation({
-                            variables: {
-                              id: testCategory.id,
-                            },
-                          });
+                          setTestCategoryIdRemoved(testCategory.id);
+                          setIsOpenModalDelete(true);
+                          console.log('isOpenModalDelete', isOpenModalDelete)
                         }}
                       >
                         <i className="now-ui-icons ui-1_simple-remove"></i>
@@ -149,6 +161,7 @@ const ListTestCategory: React.FC<ListTestCategoryProps> = ({
               })}
           </tbody>
         </Table>
+        <ModalDelete isOpen={isOpenModalDelete} callback={removeTestCategory} loading={removeTestCategoryMutationResult.loading}/>
       </CardBody>
     </>
   );

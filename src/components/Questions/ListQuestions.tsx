@@ -15,7 +15,6 @@ interface ListQuestionsProps {
 }
 
 const ListQuestions : React.FC<ListQuestionsProps> = ({testDetail, questions, arrChecked, setArrChecked, isSuccessful}) => {
-    const [isSubmit, setIsSubmit] = React.useState(false);
     const parts = testDetail?.partAndAudioSecs;
     const seekAudio = (secs: number) => {
         const audio = document.getElementById(
@@ -89,7 +88,6 @@ const ListQuestions : React.FC<ListQuestionsProps> = ({testDetail, questions, ar
             </Col>
             {!isSuccessful &&<Col md="4">
               <QuestionPalette
-                setIsSubmit={setIsSubmit}
                 questions={questions}
                 answered={arrChecked}
               />

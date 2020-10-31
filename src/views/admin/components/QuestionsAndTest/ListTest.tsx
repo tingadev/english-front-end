@@ -13,9 +13,11 @@ import {
   SkillsType,
   TestIdsInput,
   useGetTestsQuery,
+  useRemoveTestMutation,
   useUpdateTestMutation
 } from "../../../../schema/schema";
 import { Link } from "react-router-dom";
+import ModalDelete from "../Modal/Delete";
 interface ListTestProps {
   setIconPills?: (val: string) => void;
   modal?: boolean;
@@ -25,7 +27,8 @@ interface ListTestProps {
 }
 
 const ListTest: React.FC<ListTestProps> = ({ setIconPills, modal, setTestIds, testIds, testIdsForget }) => {
-  console.log('testIdsForget', testIdsForget)
+  const [isOpenModalDelete, setIsOpenModalDelete] = React.useState(false);
+  const [testIdRemoved, setTestRemove] = React.useState('');
   const {data, loading, refetch} = useGetTestsQuery({
     variables: {
       data: {
@@ -36,13 +39,23 @@ const ListTest: React.FC<ListTestProps> = ({ setIconPills, modal, setTestIds, te
       }
     },
   });
-  console.log(testIds);
   const [updateTestMutation, updateTestMutationResult] = useUpdateTestMutation()
   React.useEffect(() => {
     setIconPills && setIconPills("tests");
     refetch();
   }, []);
- 
+  
+  const [removeTestMutation, removeTestMutationResult] = useRemoveTestMutation()
+  
+  const removeTest = async () => {
+    await removeTestMutation({
+      variables: {
+        id: testIdRemoved
+      }
+    })
+  }
+
+
   React.useEffect(() => {
     updateTestMutationResult.data?.updateTest && refetch();
   },[updateTestMutationResult.loading])
@@ -147,6 +160,10 @@ const ListTest: React.FC<ListTestProps> = ({ setIconPills, modal, setTestIds, te
                         color="danger"
                         size="sm"
                         type="button"
+                        onClick={() => {
+                          setTestRemove(test.id)
+                          setIsOpenModalDelete(true);
+                        }}
                       >
                         <i className="now-ui-icons ui-1_simple-remove"></i>
                       </Button>
@@ -156,6 +173,7 @@ const ListTest: React.FC<ListTestProps> = ({ setIconPills, modal, setTestIds, te
               })}
           </tbody>
         </Table>
+        <ModalDelete isOpen={isOpenModalDelete} onClose={setIsOpenModalDelete} callback={removeTest} loading={removeTestMutationResult.loading}/>
       </CardBody>
     </>
   );

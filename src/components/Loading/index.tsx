@@ -38,9 +38,11 @@ const Loading: React.FC<LoadingProps> = ({ className, isQuery }) => {
       css={css`
         position: fixed;
         width: 100%;
+        top:0;
+        left:0;
         height: 100vh;
         background: white;
-        z-index: 9999999;
+        z-index: 9999999999;
         justify-content: center;
         align-items: center;
         flex-direction: column;

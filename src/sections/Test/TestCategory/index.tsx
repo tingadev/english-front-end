@@ -2,7 +2,7 @@
 import React from "react";
 
 // reactstrap components
-import { Row, Col } from "reactstrap";
+import { Row, Col, Container } from "reactstrap";
 import { Link, useRouteMatch, Switch, Route, useParams } from "react-router-dom";
 import Divider from "../../../components/Divider";
 import TestSkills from "../TestSkills";
@@ -32,6 +32,7 @@ const TestCategory: React.FC<TestCategoryProps> = ({}) => {
           <TestSkills testCategories={dataT1}/>
         </Route>
         <Route path={`${match.path}`}>
+          <Container>
           <Row>
             <Col md="8">
               <section className="py-5">
@@ -62,6 +63,7 @@ const TestCategory: React.FC<TestCategoryProps> = ({}) => {
               <LeaderBoard />
             </Col>
           </Row>
+          </Container>
         </Route>
         
       </Switch>

@@ -17,12 +17,14 @@ const Brand: React.FC<BrandProps> = ({
         <Container>
           <Row className="w-100">
             <Col md="2">
+              <a href="/" >
               <img
                 width="100px"
                 className="img"
                 src={require("../../assets/img/logo.png")}
                 alt="..."
               />
+              </a>
             </Col>
             <Col md="4">
               <div className="d-flex align-items-center text-white h-100">

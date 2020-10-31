@@ -8,12 +8,12 @@ import { TestQuestionFragment } from "../../../schema/schema";
 interface QuestionPaletteProps {
   questions?: TestQuestionFragment[] | null;
   answered: any;
-  setIsSubmit: (value: boolean) => void;
+  isResult?: boolean;
 }
 const QuestionPalette: React.FC<QuestionPaletteProps> = ({
   questions,
   answered,
-  setIsSubmit,
+  isResult
 }) => {
   const match = useRouteMatch();
   const [modal1, setModal1] = React.useState(false);
@@ -105,7 +105,7 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
           Unanswered
         </div>
       </div>
-      <div className="mt-auto">
+      {!isResult && <div className="mt-auto">
         <Button
           className="bg-primary mx-auto font-weight-bold d-block"
           onClick={() => setModal1(true)}
@@ -177,7 +177,6 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
               to={`${match.url}/result`}
               onClick={() => {
                 setModal2(false);
-                setIsSubmit(true);
               }}
             >
               Submit
@@ -192,7 +191,7 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
             </Button>
           </div>
         </Modal>
-      </div>
+      </div>}
     </section>
   );
 };
