@@ -57,8 +57,8 @@ const ListTest: React.FC<ListTestProps> = ({ setIconPills, modal, setTestIds, te
 
 
   React.useEffect(() => {
-    updateTestMutationResult.data?.updateTest && refetch();
-  },[updateTestMutationResult.loading])
+    (updateTestMutationResult.data?.updateTest || removeTestMutationResult.data) && refetch();
+  },[updateTestMutationResult.loading, removeTestMutationResult.loading])
   if (loading) {
     return <>{"Loading...."}</>;
   }

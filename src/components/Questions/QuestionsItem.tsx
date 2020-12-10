@@ -92,7 +92,7 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
       <Collapse isOpen={isOpenExplaination === questionProps.id}>
         <CardBody>
           <div
-            className="ffont-11 text-black font-weight-normal border border-info p-3 rounded"
+            className="font-11 text-black font-weight-normal border border-info p-3 rounded"
             dangerouslySetInnerHTML={{
               __html: questionProps.explaination || "",
             }}
