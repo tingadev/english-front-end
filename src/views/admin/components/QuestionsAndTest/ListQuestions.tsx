@@ -1,10 +1,10 @@
+
+import { css } from "@emotion/core";
 import React from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import {
-  Card,
   CardHeader,
   CardTitle,
-  CardBody,
   Table,
   Badge,
   Button,
@@ -17,16 +17,18 @@ import {
   SkillsType,
   QuestionFilterTypeInput,
   useCreateTestQuestionMutation,
-  TestQuestionInputId, PartIdAndQuestionIdsInput
+  TestQuestionInputId,
+  PartIdAndQuestionIdsInput,
 } from "../../../../schema/schema";
+import LazyLoad from "../LazyLoad";
 // import { Route, Switch, Redirect } from "react-router-dom";
 interface ListQuestionsProps {
   setIconPills?: (val: string) => void;
   modal?: boolean;
   skillType?: SkillsType;
   dataTestQuestionInput?: TestQuestionInputId;
-  refetchTestQuestions?: any,
-  arrQuestionIds?: PartIdAndQuestionIdsInput; 
+  refetchTestQuestions?: any;
+  arrQuestionIds?: PartIdAndQuestionIdsInput;
   setArrQuestionIds?: (val: PartIdAndQuestionIdsInput) => void;
 }
 const ListQuestions: React.FC<ListQuestionsProps> = ({
@@ -36,41 +38,79 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
   dataTestQuestionInput,
   refetchTestQuestions,
   arrQuestionIds,
-  setArrQuestionIds
+  setArrQuestionIds,
 }) => {
   const match = useRouteMatch();
-  
-  const [createTestQuestionMutation, resultCreateTestMutation] = useCreateTestQuestionMutation();
+
+  const [
+    createTestQuestionMutation,
+    resultCreateTestMutation,
+  ] = useCreateTestQuestionMutation();
   const [searchName, setSearchName] = React.useState("");
   const questionsFilter: QuestionFilterTypeInput = {
     certificateType: EnglishCertificateType.Toiec,
     skillType,
     testId: dataTestQuestionInput?.testId,
   };
-  const { data, loading, refetch } = useGetQuestionsQuery({
+  const questionsQuery = useGetQuestionsQuery({
     variables: {
       data: questionsFilter,
     },
   });
+  const fetchMoreQuestions = React.useCallback((): void => {
+    if (
+      questionsQuery.loading ||
+      !questionsQuery.data ||
+      !questionsQuery.data.questions ||
+      !questionsQuery.data.questions.nextCursor
+    )
+      return;
+    questionsQuery.fetchMore({
+      variables: {
+        data: {
+          ...questionsFilter,
+          cursor:
+            questionsQuery.data && questionsQuery.data.questions?.nextCursor,
+        },
+      },
+      updateQuery: (prev, next) => {
+        return {
+          ...prev,
+          questions: {
+            ...prev.questions,
+            questions: [
+              ...prev.questions.questions,
+              ...(next.fetchMoreResult
+                ? next.fetchMoreResult.questions.questions
+                : []),
+            ],
+            nextCursor: next?.fetchMoreResult?.questions?.nextCursor ?? null,
+          },
+        };
+      },
+    });
+  }, [questionsFilter, questionsQuery]);
+
   React.useEffect(() => {
     setIconPills && setIconPills("questions");
-    refetch();
-    setArrQuestionIds && setArrQuestionIds({
-      partId: dataTestQuestionInput?.partId,
-      questionIds: []
-    })
+    questionsQuery.refetch();
+    setArrQuestionIds &&
+      setArrQuestionIds({
+        partId: dataTestQuestionInput?.partId,
+        questionIds: [],
+      });
   }, []);
 
   React.useEffect(() => {
-    if(!resultCreateTestMutation.data?.createTestQuestion){
+    if (!resultCreateTestMutation.data?.createTestQuestion) {
       refetchTestQuestions && refetchTestQuestions();
     }
-  },[resultCreateTestMutation.loading])
+  }, [resultCreateTestMutation.loading]);
 
-  if (loading) {
+  if (questionsQuery.loading) {
     return <>{"Loading...."}</>;
   }
-  const questions = data?.questions.questions;
+  const questions = questionsQuery.data?.questions.questions;
   return (
     <>
       {!modal && (
@@ -78,13 +118,15 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
           <CardTitle tag="h4">List Of Questions</CardTitle>
         </CardHeader>
       )}
-      <CardBody>
-        <Input
-          placeholder="Search by name"
-          onChange={(e) => {
-            setSearchName(e.target.value);
-          }}
-        />
+      <LazyLoad className='p-0' refetchQuery={fetchMoreQuestions}>
+        <div className='sticky-top bg-white p-2'>
+          <Input
+            placeholder="Search by name"
+            onChange={(e) => {
+              setSearchName(e.target.value);
+            }}
+          />
+        </div>
         <Table responsive>
           <thead className="text-primary">
             <tr>
@@ -128,24 +170,28 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
                             <Input
                               type="checkbox"
                               onChange={async (e) => {
-                                if(!arrQuestionIds){
+                                if (!arrQuestionIds) {
                                   return;
                                 }
                                 if (e.target.checked) {
-                                  const arrQuestionId = arrQuestionIds.questionIds;
+                                  const arrQuestionId =
+                                    arrQuestionIds.questionIds;
                                   arrQuestionId.push(q.id);
-                                  setArrQuestionIds && setArrQuestionIds({
-                                    ...arrQuestionIds,
-                                    questionIds: arrQuestionId
-                                  })
-                                }
-                                else{
-                                  const arrQuestionId = arrQuestionIds.questionIds;
-                                  setArrQuestionIds && setArrQuestionIds({
-                                    ...arrQuestionIds,
-                                    questionIds: arrQuestionId.filter(a => a !== q.id)
-                                  })
-                                  
+                                  setArrQuestionIds &&
+                                    setArrQuestionIds({
+                                      ...arrQuestionIds,
+                                      questionIds: arrQuestionId,
+                                    });
+                                } else {
+                                  const arrQuestionId =
+                                    arrQuestionIds.questionIds;
+                                  setArrQuestionIds &&
+                                    setArrQuestionIds({
+                                      ...arrQuestionIds,
+                                      questionIds: arrQuestionId.filter(
+                                        (a) => a !== q.id
+                                      ),
+                                    });
                                 }
                               }}
                             />
@@ -195,9 +241,7 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
                             color="danger"
                             size="sm"
                             type="button"
-                            onClick={async () => {
-                              
-                            }}
+                            onClick={async () => {}}
                           >
                             <i className="now-ui-icons ui-1_simple-remove"></i>
                           </Button>
@@ -208,7 +252,7 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
                 })}
           </tbody>
         </Table>
-      </CardBody>
+      </LazyLoad>
     </>
   );
 };
