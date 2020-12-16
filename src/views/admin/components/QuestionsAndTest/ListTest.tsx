@@ -53,7 +53,7 @@ const ListTest: React.FC<ListTestProps> = ({
   React.useEffect(() => {
     setIconPills && setIconPills("tests");
     testsQuery.refetch();
-  }, [setIconPills, testsQuery]);
+  }, []);
 
   const [
     removeTestMutation,

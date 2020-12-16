@@ -87,7 +87,7 @@ const ListTestCategory: React.FC<ListTestCategoryProps> = ({
   React.useEffect(() => {
     setIconPills("test-categories");
     testCategoriesQuery.refetch();
-  }, [setIconPills, testCategoriesQuery]);
+  }, []);
 
   React.useEffect(() => {
     updateTestCategoryMutationResult.data?.updateTestCategory &&
