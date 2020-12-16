@@ -2,11 +2,11 @@ import React from "react";
 import {
   CardHeader,
   CardTitle,
-  CardBody,
   Table,
   Badge,
   Button,
-  Label, Input
+  Label,
+  Input,
 } from "reactstrap";
 import {
   EnglishCertificateType,
@@ -14,10 +14,11 @@ import {
   TestIdsInput,
   useGetTestsQuery,
   useRemoveTestMutation,
-  useUpdateTestMutation
+  useUpdateTestMutation,
 } from "../../../../schema/schema";
 import { Link } from "react-router-dom";
 import ModalDelete from "../Modal/Delete";
+import LazyLoad from "../LazyLoad";
 interface ListTestProps {
   setIconPills?: (val: string) => void;
   modal?: boolean;
@@ -26,49 +27,106 @@ interface ListTestProps {
   testIdsForget?: string[];
 }
 
-const ListTest: React.FC<ListTestProps> = ({ setIconPills, modal, setTestIds, testIds, testIdsForget }) => {
+const ListTest: React.FC<ListTestProps> = ({
+  setIconPills,
+  modal,
+  setTestIds,
+  testIds,
+  testIdsForget,
+}) => {
   const [isOpenModalDelete, setIsOpenModalDelete] = React.useState(false);
-  const [testIdRemoved, setTestRemove] = React.useState('');
-  const {data, loading, refetch} = useGetTestsQuery({
+  const [testIdRemoved, setTestRemove] = React.useState("");
+  const testsQuery = useGetTestsQuery({
     variables: {
       data: {
         certificateType: EnglishCertificateType.Toiec,
         testIds: {
-          ids: testIdsForget || []
+          ids: testIdsForget || [],
         },
-      }
+      },
     },
   });
-  const [updateTestMutation, updateTestMutationResult] = useUpdateTestMutation()
+  const [
+    updateTestMutation,
+    updateTestMutationResult,
+  ] = useUpdateTestMutation();
   React.useEffect(() => {
     setIconPills && setIconPills("tests");
-    refetch();
-  }, []);
-  
-  const [removeTestMutation, removeTestMutationResult] = useRemoveTestMutation()
-  
+    testsQuery.refetch();
+  }, [setIconPills, testsQuery]);
+
+  const [
+    removeTestMutation,
+    removeTestMutationResult,
+  ] = useRemoveTestMutation();
+
   const removeTest = async () => {
     await removeTestMutation({
       variables: {
-        id: testIdRemoved
-      }
-    })
-  }
+        id: testIdRemoved,
+      },
+    });
+  };
 
+  const fetchMoreTests = React.useCallback((): void => {
+    if (
+      testsQuery.loading ||
+      !testsQuery.data ||
+      !testsQuery.data.getTests ||
+      !testsQuery.data.getTests.nextCursor
+    )
+      return;
+    testsQuery.fetchMore({
+      variables: {
+        data: {
+          certificateType: EnglishCertificateType.Toiec,
+          testIds: {
+            ids: testIdsForget || [],
+          },
+          cursor: testsQuery.data && testsQuery.data.getTests?.nextCursor,
+        },
+      },
+      updateQuery: (prev, next) => {
+        return {
+          ...prev,
+          getTestCategories: {
+            ...prev.getTests,
+            getTests: [
+              ...prev.getTests.tests,
+              ...(next.fetchMoreResult
+                ? next.fetchMoreResult.getTests.tests
+                : []),
+            ],
+            nextCursor: next?.fetchMoreResult?.getTests?.nextCursor ?? null,
+          },
+        };
+      },
+    });
+  }, [testIdsForget, testsQuery]);
 
   React.useEffect(() => {
-    (updateTestMutationResult.data?.updateTest || removeTestMutationResult.data) && refetch();
-  },[updateTestMutationResult.loading, removeTestMutationResult.loading])
-  if (loading) {
+    (updateTestMutationResult.data?.updateTest ||
+      removeTestMutationResult.data) &&
+      testsQuery.refetch();
+  }, [
+    updateTestMutationResult.loading,
+    removeTestMutationResult.loading,
+    updateTestMutationResult.data,
+    removeTestMutationResult.data,
+    testsQuery,
+  ]);
+  if (testsQuery.loading) {
     return <>{"Loading...."}</>;
   }
-  const tests = data?.getTests.tests;
+  const tests = testsQuery.data?.getTests.tests;
   return (
     <>
-      {!modal && <CardHeader>
-        <CardTitle tag="h4">List of Tests</CardTitle>
-      </CardHeader> }
-      <CardBody>
+      {!modal && (
+        <CardHeader>
+          <CardTitle tag="h4">List of Tests</CardTitle>
+        </CardHeader>
+      )}
+      <LazyLoad className='p-0' refetchQuery={fetchMoreTests}>
         <Table responsive>
           <thead className="text-primary font-10">
             <tr>
@@ -86,31 +144,40 @@ const ListTest: React.FC<ListTestProps> = ({ setIconPills, modal, setTestIds, te
                 return (
                   <tr key={index}>
                     {modal && (
-                        <td className="form-check m-0 p-td-initial">
-                          <Label check>
-                            <Input
-                              type="checkbox"
-                              onChange={async (e) => {
-                                if (e.target.checked) {
-                                  testIds && setTestIds && setTestIds({
-                                      ids: [...testIds.ids, test.id]
-                                    })
-                                }
-                                else{
-                                  const res = testIds?.ids.filter(t => t !== test.id);
-                                  res && setTestIds && setTestIds({
-                                    ids: res
+                      <td className="form-check m-0 p-td-initial">
+                        <Label check>
+                          <Input
+                            type="checkbox"
+                            onChange={async (e) => {
+                              if (e.target.checked) {
+                                testIds &&
+                                  setTestIds &&
+                                  setTestIds({
+                                    ids: [...testIds.ids, test.id],
                                   });
-                                }
-                              }}
-                            />
-                            <span className="form-check-sign"></span>
-                          </Label>
-                        </td>
-                      )}
+                              } else {
+                                const res = testIds?.ids.filter(
+                                  (t) => t !== test.id
+                                );
+                                res &&
+                                  setTestIds &&
+                                  setTestIds({
+                                    ids: res,
+                                  });
+                              }
+                            }}
+                          />
+                          <span className="form-check-sign"></span>
+                        </Label>
+                      </td>
+                    )}
                     {!modal && <td>{index + 1}</td>}
                     <td className="text-left font-weight-semi">
-                      <Link to={`create-test-toiec/${test.skillType.toLowerCase()}/${test.id}`}>
+                      <Link
+                        to={`create-test-toiec/${test.skillType.toLowerCase()}/${
+                          test.id
+                        }`}
+                      >
                         {test.testName}
                       </Link>
                     </td>
@@ -128,7 +195,9 @@ const ListTest: React.FC<ListTestProps> = ({ setIconPills, modal, setTestIds, te
                         <Badge color="info">{test.skillType}</Badge>
                       )}
                     </td>
-                      <td className="text-center font-weight-semi">{test.isPublished ? 'Published' : 'Draft'}</td>
+                    <td className="text-center font-weight-semi">
+                      {test.isPublished ? "Published" : "Draft"}
+                    </td>
                     <td className="text-center">
                       <Button
                         className="btn-icon btn-round mr-1"
@@ -136,15 +205,15 @@ const ListTest: React.FC<ListTestProps> = ({ setIconPills, modal, setTestIds, te
                         size="sm"
                         type="button"
                         onClick={async () => {
-                            await updateTestMutation({
-                                variables: {
-                                    data : {
-                                        id: test.id,
-                                        isPublished: !test.isPublished,
-                                        testName: test.testName
-                                    }
-                                }
-                            })
+                          await updateTestMutation({
+                            variables: {
+                              data: {
+                                id: test.id,
+                                isPublished: !test.isPublished,
+                                testName: test.testName,
+                              },
+                            },
+                          });
                         }}
                       >
                         <i className="now-ui-icons users_single-02"></i>
@@ -161,7 +230,7 @@ const ListTest: React.FC<ListTestProps> = ({ setIconPills, modal, setTestIds, te
                         size="sm"
                         type="button"
                         onClick={() => {
-                          setTestRemove(test.id)
+                          setTestRemove(test.id);
                           setIsOpenModalDelete(true);
                         }}
                       >
@@ -173,8 +242,13 @@ const ListTest: React.FC<ListTestProps> = ({ setIconPills, modal, setTestIds, te
               })}
           </tbody>
         </Table>
-        <ModalDelete isOpen={isOpenModalDelete} onClose={setIsOpenModalDelete} callback={removeTest} loading={removeTestMutationResult.loading}/>
-      </CardBody>
+        <ModalDelete
+          isOpen={isOpenModalDelete}
+          onClose={setIsOpenModalDelete}
+          callback={removeTest}
+          loading={removeTestMutationResult.loading}
+        />
+      </LazyLoad>
     </>
   );
 };

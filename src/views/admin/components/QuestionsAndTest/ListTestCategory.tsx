@@ -2,20 +2,19 @@ import React from "react";
 import {
   CardHeader,
   CardTitle,
-  CardBody,
   Table,
   Badge,
   Button,
 } from "reactstrap";
 import {
   EnglishCertificateType,
-  SkillsType,
   useGetTestCategoriesQuery,
   useRemoveTestCategoryMutation,
   useUpdateTestCategoryMutation,
 } from "../../../../schema/schema";
 import { Link } from "react-router-dom";
 import ModalDelete from "../Modal/Delete";
+import LazyLoad from "../LazyLoad";
 interface ListTestCategoryProps {
   setIconPills: (val: string) => void;
 }
@@ -24,7 +23,7 @@ const ListTestCategory: React.FC<ListTestCategoryProps> = ({
   setIconPills,
 }) => {
   const [isOpenModalDelete, setIsOpenModalDelete] = React.useState(false);
-  const { data, loading, refetch } = useGetTestCategoriesQuery({
+  const testCategoriesQuery = useGetTestCategoriesQuery({
     variables: {
       data: {
         certificateType: EnglishCertificateType.Toiec,
@@ -41,39 +40,80 @@ const ListTestCategory: React.FC<ListTestCategoryProps> = ({
     removeTestCategoryMutationResult,
   ] = useRemoveTestCategoryMutation();
 
-  const [testCategoryIdRemoved, setTestCategoryIdRemoved] = React.useState('');
+  const fetchMoreTestCategories = React.useCallback((): void => {
+    if (
+      testCategoriesQuery.loading ||
+      !testCategoriesQuery.data ||
+      !testCategoriesQuery.data.getTestCategories ||
+      !testCategoriesQuery.data.getTestCategories.nextCursor
+    )
+      return;
+    testCategoriesQuery.fetchMore({
+      variables: {
+        data: {
+          certificateType: EnglishCertificateType.Toiec,
+          cursor:
+            testCategoriesQuery.data &&
+            testCategoriesQuery.data.getTestCategories?.nextCursor,
+        },
+      },
+      updateQuery: (prev, next) => {
+        return {
+          ...prev,
+          getTestCategories: {
+            ...prev.getTestCategories,
+            getTestCategories: [
+              ...prev.getTestCategories.testCategories,
+              ...(next.fetchMoreResult
+                ? next.fetchMoreResult.getTestCategories.testCategories
+                : []),
+            ],
+            nextCursor:
+              next?.fetchMoreResult?.getTestCategories?.nextCursor ?? null,
+          },
+        };
+      },
+    });
+  }, [testCategoriesQuery]);
+
+  const [testCategoryIdRemoved, setTestCategoryIdRemoved] = React.useState("");
   const removeTestCategory = async () => {
     await removeTestCategoryMutation({
       variables: {
-        id: testCategoryIdRemoved
+        id: testCategoryIdRemoved,
       },
     });
-  }
+  };
   React.useEffect(() => {
     setIconPills("test-categories");
-    refetch();
-  }, []);
+    testCategoriesQuery.refetch();
+  }, [setIconPills, testCategoriesQuery]);
 
   React.useEffect(() => {
-    updateTestCategoryMutationResult.data?.updateTestCategory && refetch();
-    if(removeTestCategoryMutationResult.data?.removeTestCategory){
-      refetch();
+    updateTestCategoryMutationResult.data?.updateTestCategory &&
+      testCategoriesQuery.refetch();
+    if (removeTestCategoryMutationResult.data?.removeTestCategory) {
+      testCategoriesQuery.refetch();
       setIsOpenModalDelete(false);
     }
   }, [
     updateTestCategoryMutationResult.loading,
     removeTestCategoryMutationResult.loading,
+    updateTestCategoryMutationResult.data,
+    removeTestCategoryMutationResult.data,
+    testCategoriesQuery,
   ]);
-  if (loading) {
+  if (testCategoriesQuery.loading) {
     return <>{"Loading...."}</>;
   }
-  const testCategories = data?.getTestCategories.testCategories;
+  const testCategories =
+    testCategoriesQuery.data?.getTestCategories.testCategories;
   return (
     <>
       <CardHeader>
         <CardTitle tag="h4">List of Tests</CardTitle>
       </CardHeader>
-      <CardBody>
+      <LazyLoad className='p-0' refetchQuery={fetchMoreTestCategories}>
         <Table responsive>
           <thead className="text-primary font-10">
             <tr>
@@ -150,7 +190,7 @@ const ListTestCategory: React.FC<ListTestCategoryProps> = ({
                         onClick={async () => {
                           setTestCategoryIdRemoved(testCategory.id);
                           setIsOpenModalDelete(true);
-                          console.log('isOpenModalDelete', isOpenModalDelete)
+                          console.log("isOpenModalDelete", isOpenModalDelete);
                         }}
                       >
                         <i className="now-ui-icons ui-1_simple-remove"></i>
@@ -161,8 +201,12 @@ const ListTestCategory: React.FC<ListTestCategoryProps> = ({
               })}
           </tbody>
         </Table>
-        <ModalDelete isOpen={isOpenModalDelete} callback={removeTestCategory} loading={removeTestCategoryMutationResult.loading}/>
-      </CardBody>
+        <ModalDelete
+          isOpen={isOpenModalDelete}
+          callback={removeTestCategory}
+          loading={removeTestCategoryMutationResult.loading}
+        />
+      </LazyLoad>
     </>
   );
 };
