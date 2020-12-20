@@ -89,7 +89,7 @@ const ListTest: React.FC<ListTestProps> = ({
       updateQuery: (prev, next) => {
         return {
           ...prev,
-          getTestCategories: {
+          getTests: {
             ...prev.getTests,
             tests: [
               ...prev.getTests.tests,
