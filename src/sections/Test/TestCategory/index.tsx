@@ -8,6 +8,7 @@ import Divider from "../../../components/Divider";
 import TestSkills from "../TestSkills";
 import LeaderBoard from "../../../components/LeaderBoard";
 import { useGetTestGroupQuery } from "../../../schema/schema";
+import CardCategory from "./CardCategory";
 interface TestCategoryProps {
 }
 const TestCategory: React.FC<TestCategoryProps> = ({}) => {
@@ -40,21 +41,13 @@ const TestCategory: React.FC<TestCategoryProps> = ({}) => {
                   <i className="now-ui-icons education_atom font-5 text-primary font-weight-bold"></i>
                   T1-TEST 1-40
                 </h3>
-                <ul className="d-flex flex-wrap">
-                  {dataT1 && dataT1.map((testCategories, index) => {
+                <div className="d-flex flex-wrap align-items-start">
+                  {dataT1 && dataT1.map((testCategory, index) => {
                     return (
-                      <li className="w-50 mb-2" key={index}>
-                        <Link
-                          style={{ textDecoration: "none" }}
-                          className="font-12 font-weight-bold"
-                          to={`${match.url}/test-category/` + testCategories.id}
-                        >
-                          {testCategories.testCategoryName}
-                        </Link>
-                      </li>
+                      <CardCategory key={index} testCategory={testCategory} />
                     );
                   })}
-                </ul>
+                </div>
               </section>
               <Divider></Divider>
               

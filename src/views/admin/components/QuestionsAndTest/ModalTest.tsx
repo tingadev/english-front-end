@@ -55,6 +55,7 @@ const ModalTest: React.FC<ModalPartProps> = ({
         centered
         isOpen={questionContext.isOpenModalAddTest}
         toggle={() => questionContext.setIsOpenModalAddTest(false)}
+        zIndex={9999}
       >
         <div className="modal-header justify-content-center">
           <button
