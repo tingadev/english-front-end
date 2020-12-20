@@ -91,7 +91,7 @@ const ListTest: React.FC<ListTestProps> = ({
           ...prev,
           getTestCategories: {
             ...prev.getTests,
-            getTests: [
+            tests: [
               ...prev.getTests.tests,
               ...(next.fetchMoreResult
                 ? next.fetchMoreResult.getTests.tests

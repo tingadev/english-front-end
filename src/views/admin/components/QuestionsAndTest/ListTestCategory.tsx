@@ -62,7 +62,7 @@ const ListTestCategory: React.FC<ListTestCategoryProps> = ({
           ...prev,
           getTestCategories: {
             ...prev.getTestCategories,
-            getTestCategories: [
+            testCategories: [
               ...prev.getTestCategories.testCategories,
               ...(next.fetchMoreResult
                 ? next.fetchMoreResult.getTestCategories.testCategories
