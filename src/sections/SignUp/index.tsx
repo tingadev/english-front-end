@@ -1,29 +1,30 @@
 import { useFormik } from "formik";
 import React from "react";
-import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import {
   Button,
   Card,
   CardBody,
+  CardHeader,
   Col,
   Form,
   FormGroup,
   Input,
   Row,
 } from "reactstrap";
-import { Logo } from "../../components/Brand";
 import { useCreateUserMutation, UserRole } from "../../schema/schema";
 import * as yup from "yup";
 import ErrorMessage from "../../views/admin/components/Error";
+import Layout from "../../views/layout/Layout";
 
 interface SignUpProps {}
 export const SignUp: React.FC = () => {
-
   return (
+    <Layout>
       <SignUpForm />
-  )
-} 
+    </Layout>
+  );
+};
 const SignUpForm: React.FC<SignUpProps> = () => {
   const [createUser] = useCreateUserMutation();
   const history = useHistory();
@@ -45,42 +46,38 @@ const SignUpForm: React.FC<SignUpProps> = () => {
       lastName: yup.string().trim().required(),
       email: yup.string().trim().email().required(),
       password: yup.string().trim().required(),
-      }),
+    }),
     onSubmit: async (values) => {
-      try{
+      try {
         const result = await createUser({
           variables: {
             data: values,
           },
         });
         if (result.data?.createUser) {
-          history.push('/home');
+          history.push("/home");
         }
-      } catch (e){
+      } catch (e) {
         if (
           e.graphQLErrors &&
-          e.graphQLErrors[0]?.extensions?.code === 'INVITED_USER' &&
+          e.graphQLErrors[0]?.extensions?.code === "INVITED_USER" &&
           e.graphQLErrors[0].extensions.exception?.invitedUser
         ) {
           return;
         }
       }
-      
     },
   });
   return (
     <div className="wrapper">
       <div className="section pt-3 container">
-        <div className="mb-3 text-brand d-flex justify-content-between align-items-center">
-          <Logo className="width-5rem" />
-          <Link className="font-weight-bold" to={"/login"}>
-            Login
-          </Link>
-        </div>
         <div className="content">
           <Row>
             <Col md="12">
               <Card>
+              <CardHeader>
+                  <h5 className="title">Register</h5>
+                </CardHeader>
                 <CardBody>
                   <Form>
                     <Row>
@@ -95,9 +92,7 @@ const SignUpForm: React.FC<SignUpProps> = () => {
                             name="email"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            className={
-                              formik.errors.email && "input-error"
-                            }
+                            className={formik.errors.email && "input-error"}
                           />
                           <ErrorMessage message={formik.errors.email} />
                         </FormGroup>
@@ -113,9 +108,7 @@ const SignUpForm: React.FC<SignUpProps> = () => {
                             name="password"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            className={
-                              formik.errors.password && "input-error"
-                            }
+                            className={formik.errors.password && "input-error"}
                           />
                           <ErrorMessage message={formik.errors.password} />
                         </FormGroup>
@@ -131,9 +124,7 @@ const SignUpForm: React.FC<SignUpProps> = () => {
                             name="firstName"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            className={
-                              formik.errors.firstName && "input-error"
-                            }
+                            className={formik.errors.firstName && "input-error"}
                           />
                           <ErrorMessage message={formik.errors.firstName} />
                         </FormGroup>
@@ -147,9 +138,7 @@ const SignUpForm: React.FC<SignUpProps> = () => {
                             name="lastName"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            className={
-                              formik.errors.lastName && "input-error"
-                            }
+                            className={formik.errors.lastName && "input-error"}
                           />
                           <ErrorMessage message={formik.errors.lastName} />
                         </FormGroup>
@@ -165,9 +154,7 @@ const SignUpForm: React.FC<SignUpProps> = () => {
                             name="address"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            className={
-                              formik.errors.address && "input-error"
-                            }
+                            className={formik.errors.address && "input-error"}
                           />
                           <ErrorMessage message={formik.errors.address} />
                         </FormGroup>
