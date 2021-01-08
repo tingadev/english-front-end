@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 // reactstrap components
 import {
-  // Button,
   Collapse,
   DropdownToggle,
   DropdownMenu,
@@ -10,18 +9,8 @@ import {
   UncontrolledDropdown,
   Navbar,
   Nav,
-  Modal,
-  Card,
-  Form,
-  CardBody,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  Input,
-  ModalFooter,
-  Button,
-  // UncontrolledTooltip,
 } from "reactstrap";
+import { NavbarContext } from "./NavbarContext";
 
 const elementsNav = [
   {
@@ -237,13 +226,14 @@ interface ElementMenuProps {
 }
 interface DropdownMenuChildProps {
   elements: ElementMenuProps[];
+  className?: string;
 }
 
-const DropdownMenuChild: React.FC<DropdownMenuChildProps> = ({ elements }) => {
+export const DropdownMenuChild: React.FC<DropdownMenuChildProps> = ({ elements, className }) => {
   return (
     <DropdownMenu
       className={
-        "bg-brand border border-white rounded min-w-6rem text-left mt-3 min-w-full"
+        `bg-brand border border-white rounded min-w-6rem text-left mt-3 min-w-full ${className}`
       }
     >
       {elements.map((eleChild, index) => {
@@ -252,7 +242,7 @@ const DropdownMenuChild: React.FC<DropdownMenuChildProps> = ({ elements }) => {
             key={index}
             to={eleChild.link}
             tag={Link}
-            className={"font-11 text-white font-weight-bold"}
+            className={"text-white font-weight-bold"}
           >
             {eleChild.title.toUpperCase()}
           </DropdownItem>
@@ -261,20 +251,17 @@ const DropdownMenuChild: React.FC<DropdownMenuChildProps> = ({ elements }) => {
     </DropdownMenu>
   );
 };
+
 interface IndexNavbarProps {
-  navbarColor?: string;
-  topFixed?: string;
+  isGeneral?: boolean;
 }
-const IndexNavbar: React.FC<IndexNavbarProps> = ({ navbarColor, topFixed }) => {
+const IndexNavbar: React.FC<IndexNavbarProps> = ({ isGeneral }) => {
+  const {
+    navbarColor,
+    topFixed
+  } = React.useContext(NavbarContext);
   const [collapseOpen, setCollapseOpen] = React.useState(false);
 
-  // const scrollToElement = () => {
-  //   document.getElementById("download-section")?.scrollIntoView();
-  // };
-  const [modalLogin, setModalLogin] = React.useState(false);
-  const [nameFocus, setNameFocus] = React.useState(false);
-  const [passwordFocus, setPasswordFocus] = React.useState(false);
-  
   return (
     <>
       {collapseOpen ? (
@@ -336,101 +323,6 @@ const IndexNavbar: React.FC<IndexNavbarProps> = ({ navbarColor, topFixed }) => {
                 </UncontrolledDropdown>
               );
             })}
-            <DropdownToggle
-              color="default"
-              href="#pablo"
-              nav
-              onClick={(e) => {e.preventDefault(); setModalLogin(true)}}
-              className="border border-white rounded-pill min-w-6rem text-center font-11 px-3"
-            >
-              <p className="font-weight-bold">Đăng nhập/ Đăng ký</p>
-            </DropdownToggle>
-            <Modal
-                className="modal-login"
-                modalClassName="modal-brand"
-                isOpen={modalLogin}
-                toggle={() => setModalLogin(false)}
-              >
-                <Card
-                  className="card-login card-plain"
-                  data-background-color=""
-                >
-                  <div className="modal-header justify-content-center">
-                    <button
-                      aria-hidden={true}
-                      className="close"
-                      onClick={() => setModalLogin(false)}
-                      type="button"
-                    >
-                      <i className="now-ui-icons ui-1_simple-remove"></i>
-                    </button>
-                    <div className="header header-info text-center">
-                      <div className="logo-container">
-                        <img
-                          alt="..."
-                          src={require("../../assets/img/logo.png")}
-                        ></img>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="modal-body">
-                    <Form action="" className="form" method="">
-                      <CardBody>
-                        <InputGroup
-                          className={
-                            nameFocus
-                              ? "no-border input-lg input-group-focus"
-                              : "no-border input-lg"
-                          }
-                        >
-                          <InputGroupAddon addonType="prepend">
-                            <InputGroupText>
-                              <i className="now-ui-icons users_circle-08"></i>
-                            </InputGroupText>
-                          </InputGroupAddon>
-                          <Input
-                            placeholder="First Name..."
-                            type="text"
-                            onFocus={() => setNameFocus(true)}
-                            onBlur={() => setNameFocus(false)}
-                          ></Input>
-                        </InputGroup>
-                        <InputGroup
-                          className={
-                            passwordFocus
-                              ? "no-border input-lg input-group-focus"
-                              : "no-border input-lg"
-                          }
-                        >
-                          <InputGroupAddon addonType="prepend">
-                            <InputGroupText>
-                              <i className="now-ui-icons ui-1_lock-circle-open"></i>
-                            </InputGroupText>
-                          </InputGroupAddon>
-                          <Input
-                            placeholder="Password..."
-                            type="text"
-                            onFocus={() => setPasswordFocus(true)}
-                            onBlur={() => setPasswordFocus(false)}
-                          ></Input>
-                        </InputGroup>
-                      </CardBody>
-                    </Form>
-                  </div>
-                  <ModalFooter className="text-center">
-                    <Button
-                      block
-                      className="bg-primary btn-round"
-                      color="info"
-                      href="#pablo"
-                      onClick={(e) => e.preventDefault()}
-                      size="lg"
-                    >
-                      Login
-                    </Button>
-                  </ModalFooter>
-                </Card>
-              </Modal>
           </Nav>
         </Collapse>
       </Navbar>

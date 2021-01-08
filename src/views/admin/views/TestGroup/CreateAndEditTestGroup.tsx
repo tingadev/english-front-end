@@ -14,7 +14,6 @@ import Select from "react-select";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import {
-  EnglishCertificateType,
   NewTestGroupInput,
     TestGroupFragment,
   useCreateTestGroupMutation,
@@ -46,9 +45,6 @@ const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({testsGro
   if (testGroupId) {
     notification = notificationAdd("Test Group", "Updated");
   }
-  const [listOfTestGroupsSelect, setListOfTestGroupsSelect] = React.useState(
-    ListOfTestGroups
-  );
   const [certificateTypeSelect, setCertificateTypeSelect] = React.useState(
     EnglishCertificateOptions[0]
   );
@@ -82,18 +78,20 @@ const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({testsGro
     const { __typename, testCategories, ...data } = getTestGroupQueryRespone.data.getTestGroup;
     initialValues = data;
   }
-  React.useEffect(() => {
-    testsGroupData?.map((tg) => {
+  const defaultListTestGroup = React.useMemo(() => {
+    if (!testsGroupData) {
+      return ListOfTestGroups;
+    }
+    return [
+      ...ListOfTestGroups,
+      ...testsGroupData.map((tg) => {
         const data = {
-            value: tg.id,
-            label: tg.testGroupName,
-        }
-        setListOfTestGroupsSelect([
-            ...listOfTestGroupsSelect,
-            data,
-        ])
-    })
-   
+          value: tg.id,
+          label: tg.testGroupName,
+        };
+        return data;
+      }),
+    ];
   }, [testsGroupData]);
 
   React.useEffect(() => {
@@ -190,26 +188,25 @@ const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({testsGro
                       <ErrorMessage message={formik.errors.testGroupName} />
                     </FormGroup>
                   </Col>
-                  {/* <Col md="6" className="pl-1">
+                  <Col md="6" className="pl-1">
                     <FormGroup>
                       <label>Children of</label>
                       <Select
                         className="react-select react-select-primary"
                         onChange={(opt: any) => {
-                            setListOfTestGroupsSelect(opt)
                           formik.setFieldValue("parentId", opt.value);
                         }}
-                        value={listOfTestGroupsSelect[0]}
+                        value={defaultListTestGroup[0]}
                         classNamePrefix="react-select"
                         placeholder="Chose type of Test"
                         name="parentId"
-                        options={listOfTestGroupsSelect}
+                        options={defaultListTestGroup}
                       ></Select>
                       <ErrorMessage message={formik.errors.parentId} />
                     </FormGroup>
-                  </Col> */}
+                  </Col>
 
-                  <Col md="6" className="pl-1">
+                  <Col md="6" className="pr-1">
                     <FormGroup>
                       <label>Label Test</label>
                       <Select
@@ -227,7 +224,7 @@ const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({testsGro
                       <ErrorMessage message={formik.errors.certificateType} />
                     </FormGroup>
                   </Col>
-                  <Col className="pr-1" md="3">
+                  <Col className="pl-1" md="3">
                     <FormGroup>
                       <label>Link</label>
                       <Input

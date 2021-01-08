@@ -5,12 +5,14 @@ import React from "react";
 interface LazyLoadProps {
   className?: string;
   refetchQuery?: any;
+  isHeightFull?: boolean;
 }
 
 const LazyLoad: React.FC<LazyLoadProps> = ({
   className,
   refetchQuery,
   children,
+  isHeightFull,
 }) => {
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const handleScroll = () => {
@@ -30,8 +32,8 @@ const LazyLoad: React.FC<LazyLoadProps> = ({
       ref={bodyRef}
       className={`${className} card-body`}
       css={css`
-        overflow: auto;
-        max-height: 20rem;
+        overflow-y: auto;
+        ${!isHeightFull ? 'max-height: 20rem;' : 'height: 100%;'}
       `}
       onScroll={handleScroll}
     >

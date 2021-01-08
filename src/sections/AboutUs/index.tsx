@@ -1,8 +1,4 @@
 import React from "react";
-// react plugin used to create DropdownMenu for selecting items
-import Select from "react-select";
-
-// reactstrap components
 import {
   Container,
   Row,
@@ -16,48 +12,9 @@ import AboutUsHeader from "../../components/Headers/AboutUsHeader";
 import IndexNavbar from "../../components/Navbars/IndexNavbar";
 
 const AboutUs = () => {
-  //   const [specialitySelect, setSpecialitySelect] = React.useState(null);
-  //   const [firstFocus, setFirstFocus] = React.useState(false);
-  //   const [emailFocus, setEmailFocus] = React.useState(false);
-  const [navbarColor, setNavbarColor] = React.useState("navbar-transparent");
-  const [topFixed, setTopFixed] = React.useState("0");
-
-  React.useEffect(() => {
-    document.body.classList.add("index-page");
-    document.body.classList.add("sidebar-collapse");
-    document.documentElement.classList.remove("nav-open");
-    // window.scrollTo(0, 0);
-    // document.body.scrollTop = 0;
-    return function cleanup() {
-      document.body.classList.remove("index-page");
-      document.body.classList.remove("sidebar-collapse");
-    };
-  });
-
-  React.useEffect(() => {
-    const updateNavbarColor = () => {
-      if (
-        document.documentElement.scrollTop > 109 ||
-        document.body.scrollTop > 109
-      ) {
-        setNavbarColor("bg-brand");
-        setTopFixed("0px");
-      } else if (
-        document.documentElement.scrollTop < 110 ||
-        document.body.scrollTop < 110
-      ) {
-        setNavbarColor("navbar-transparent");
-        setTopFixed("0");
-      }
-    };
-    window.addEventListener("scroll", updateNavbarColor);
-    return function cleanup() {
-      window.removeEventListener("scroll", updateNavbarColor);
-    };
-  });
   return (
     <>
-      <IndexNavbar navbarColor={navbarColor} topFixed={topFixed} />
+      <IndexNavbar />
       <div className="wrapper">
         <AboutUsHeader />
         <div className="section">

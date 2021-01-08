@@ -1,13 +1,10 @@
 import React from "react";
 import PanelHeader from "../../components/PanelHeader/PanelHeader";
 import { Switch, Route, useRouteMatch, Link } from "react-router-dom";
-import TestPage from "../../components/QuestionsAndTest";
 import CreateAndEditTestGroup from "./CreateAndEditTestGroup";
-import { Button, Card, CardBody, Col, Input, Row, Table } from "reactstrap";
+import { Button, Input, Table } from "reactstrap";
 import {
-  EnglishCertificateType,
   OrderDirection,
-  TestGroupFragment,
   useGetTestGroupsLazyQuery,
   useUpdateTestGroupMutation,
 } from "../../../../schema/schema";
@@ -56,16 +53,10 @@ const TestGroup: React.FC<{}> = () => {
   React.useEffect(() => {
     refetch();
   },[updateTestGroupMutationResult.loading])
-
-  let testsGroupData: TestGroupFragment[] | undefined;
-  // let testsGroupParent: TestGroupFragment[] | undefined;
   if (getTestGroupsQueryRespone.loading) {
     return <div>{`Loading...`}</div>;
   }
-  testsGroupData = getTestGroupsQueryRespone.data?.getTestGroups.testGroups;
-  // testsGroupParent = testsGroupData
-  //   ?.filter((testGroup) => testGroup.parentId == "0")
-  //   .sort((a, b) => a.displayOrder - b.displayOrder);
+  const testsGroupData = getTestGroupsQueryRespone.data?.getTestGroups.testGroups;
   return (
     <>
       <PanelHeader
@@ -133,7 +124,6 @@ const TestGroup: React.FC<{}> = () => {
                                   classNamePrefix="react-select"
                                   onChange={(opt) => {
                                     updateIsPublic = opt
-                                 
                                   }}
                                 >
                                   

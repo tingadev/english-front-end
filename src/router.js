@@ -19,9 +19,10 @@ import Index from "./views/Index";
 import NucleoIcons from "./views/NucleoIcons";
 import LoginPage from "./views/examples/LoginPage";
 import LandingPage from "./views/examples/LandingPage";
-import ProfilePage from "./views/examples/ProfilePage";
 import AboutUs from "./sections/AboutUs";
 import DashboardAdmin from "./views/admin/layouts/Admin";
+import { SignUp } from "./sections/SignUp";
+import { ProfilePage } from "./sections/User/Profile";
 
 var dashRoutes = [
   {
@@ -53,8 +54,8 @@ var dashRoutes = [
     layout: "/",
   },
   {
-    path: "/profile-page",
-    name: "Profile Profile",
+    path: "/profile",
+    name: "Profile",
     icon: "",
     component: ProfilePage,
     layout: "/",
@@ -64,6 +65,13 @@ var dashRoutes = [
     name: "About Toiec",
     icon: "",
     component: AboutUs,
+    layout: "/",
+  },
+  {
+    path: "/signup",
+    name: "Sign Up",
+    icon: "",
+    component: SignUp,
     layout: "/",
   },
   {

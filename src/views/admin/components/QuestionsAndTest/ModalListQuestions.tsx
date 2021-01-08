@@ -31,7 +31,6 @@ const ModalListQuestions: React.FC<ModalListQuestionsProps> = ({
   const [createListTestQuestionsMutation, resultCreateListTestQuestionsMutation] = useCreateListTestQuestionsMutation()
   React.useEffect(() => {
     if(resultCreateListTestQuestionsMutation.data?.createListTestQuestions){
-      console.log('OKAY');
       refetchTestQuestions && refetchTestQuestions();
       questionContext.setIsOpenModal(false);
     }
@@ -57,7 +56,7 @@ const ModalListQuestions: React.FC<ModalListQuestionsProps> = ({
           </button>
           <h4 className="title title-up">List of Questions</h4>
         </div>
-        <ModalBody>
+        <ModalBody className='overflow-hidden'>
           <ListQuestions modal skillType={skillType} dataTestQuestionInput={dataTestQuestionInput} arrQuestionIds={arrQuestionIds} setArrQuestionIds={setArrQuestionIds}/>
         </ModalBody>
         <div className="modal-footer">

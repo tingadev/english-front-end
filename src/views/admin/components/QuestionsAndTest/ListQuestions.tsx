@@ -118,7 +118,7 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
           <CardTitle tag="h4">List Of Questions</CardTitle>
         </CardHeader>
       )}
-      <LazyLoad className='p-0' refetchQuery={fetchMoreQuestions}>
+      <LazyLoad isHeightFull={modal ? true : false} className='p-0' refetchQuery={fetchMoreQuestions}>
         <div className='sticky-top bg-white p-2'>
           <Input
             placeholder="Search by name"

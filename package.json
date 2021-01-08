@@ -28,6 +28,7 @@
     "@types/react-truncate": "^2.3.3",
     "@types/slick-carousel": "^1.6.34",
     "@types/yup": "^0.29.6",
+    "apollo-client": "^2.6.10",
     "chart.js": "^2.9.3",
     "cloudinary": "^1.23.0",
     "formik": "^2.1.5",

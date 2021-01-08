@@ -20,7 +20,6 @@ import "react-notifications-component/dist/theme.css";
 // pages for this kit
 import routes from "./router.js";
 import ReactNotification from "react-notifications-component";
-import Loading from "./components/Loading";
 const httpLink = createHttpLink({
   uri: config.GRAPHQL_SERVER_URL,
   fetch,
@@ -37,7 +36,6 @@ function App() {
     <ApolloProvider client={client}>
       <HashRouter basename="/">
         <ReactNotification />
-        <Loading/>
         <Switch>
           {routes.map((prop, key) => {
             return (

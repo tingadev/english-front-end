@@ -21,12 +21,11 @@ import {
   useUpdateTestMutation,
   useRemoveFromCatMutation,
   SkillsType,
-  useGetTestGroupsLazyQuery,
   OrderDirection,
-  TestGroupFragment, useGetTestGroupsQuery
+  TestGroupFragment,
+  useGetTestGroupsQuery,
 } from "../../../../schema/schema";
 import { Link, useParams } from "react-router-dom";
-import { QuestionContext } from "./QuestionContext";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { store } from "react-notifications-component";
@@ -40,14 +39,9 @@ import _ from "lodash";
 
 interface CreateAndEditTestCategoryProps {}
 
-const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = ({}) => {
-  const questionContext = React.useContext(QuestionContext);
+const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = () => {
   const notification = notificationAdd("Test Category", "Update");
   const { id } = useParams();
-  // create and mark it draft
-  const [listOfTestGroupsSelect, setListOfTestGroupsSelect] = React.useState(
-    ListOfTestGroups
-  );
   const [
     getTestCategoryQuery,
     getTestCategoryResponse,
@@ -69,7 +63,7 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = ({})
       },
     },
   });
-  
+
   const [idRemove, setIdRemove] = React.useState("");
 
   React.useEffect(() => {
@@ -85,23 +79,29 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = ({})
     testsGroupData = getTestGroupsQuery.data.getTestGroups.testGroups;
   }
 
-  React.useEffect(() => {
-    if(!getTestGroupsQuery.loading){
-      testsGroupData?.map((tg) => {
+  const defaultListTestGroup = React.useMemo(() => {
+    if (!testsGroupData) {
+      return ListOfTestGroups;
+    }
+    return [
+      ...ListOfTestGroups,
+      ...testsGroupData.map((tg) => {
         const data = {
           value: tg.id,
           label: tg.testGroupName,
         };
-        ListOfTestGroups.push(data)
-      });
-    }
-  },[getTestGroupsQuery.loading])
+        return data;
+      }),
+    ];
+  }, [testsGroupData]);
   let defaultValue: any;
- 
+
   let testCategoryData: TestCategoryFragment | undefined;
   if (getTestCategoryResponse.data) {
     testCategoryData = getTestCategoryResponse.data.getTestCategory;
-    defaultValue = ListOfTestGroups.find(e => e.value === testCategoryData?.testGroup?.id)
+    defaultValue = defaultListTestGroup.find(
+      (e) => e.value === testCategoryData?.testGroup?.id
+    );
   }
   const tests = _.cloneDeep(testCategoryData?.tests);
   const refetchTestCategory = () => {
@@ -186,22 +186,19 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = ({})
                 </div>
               </div>
             </Col>
-           <Col md="6" className="">
+            <Col md="6" className="">
               <FormGroup className="pl-5">
                 <label>Test Group</label>
                 <Select
                   className="react-select react-select-primary"
                   onChange={(opt: any) => {
-                    // setListOfTestGroupsSelect(opt)
                     formik.setFieldValue("testGroupId", opt.value);
                   }}
-                  defaultValue={
-                    defaultValue
-                  }
+                  defaultValue={defaultValue}
                   classNamePrefix="react-select"
-                  placeholder="Chose type of Test"
+                  placeholder="Chose type of Test Group"
                   name="testGroupId"
-                  options={listOfTestGroupsSelect}
+                  options={defaultListTestGroup}
                 ></Select>
                 <ErrorMessage message={formik.errors.testGroupId} />
               </FormGroup>
@@ -243,114 +240,117 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = ({})
                 <div>
                   <>
                     {tests &&
-                      tests.sort((a, b) => a.displayOrder - b.displayOrder).map((t, t_index) => {
-                        
-                        return (
-                          <div
-                            className="d-flex mb-2 px-2 justify-content-between align-items-center"
-                            key={t_index}
-                          >
-                            <span
-                              style={{ width: "10%" }}
-                              className="font-10 text-center text-primary font-weight-semi"
+                      tests
+                        .sort((a, b) => a.displayOrder - b.displayOrder)
+                        .map((t, t_index) => {
+                          return (
+                            <div
+                              className="d-flex mb-2 px-2 justify-content-between align-items-center"
+                              key={t_index}
                             >
-                              <Input
-                                defaultValue={t.displayOrder}
-                                type="number"
-                                onChange={(e) => {
-                                  t.displayOrder = parseInt(e.target.value);
-                                }}
-                              />
-                            </span>
-                            <span
-                              style={{ width: "20%" }}
-                              className="font-10 text-center font-weight-semi"
-                            >
-                              <Link
-                                to={`/admin/toiec/create-test-toiec/${t.skillType.toLowerCase()}/${
-                                  t.id
-                                }`}
-                                className="text-primary"
+                              <span
+                                style={{ width: "10%" }}
+                                className="font-10 text-center text-primary font-weight-semi"
                               >
-                                {t.testName}
-                              </Link>
-                            </span>
-                            <span
-                              style={{ width: "20%" }}
-                              className="text-center"
-                            >
-                              {t.skillType === SkillsType.Reading ? (
-                                <Badge color="success">{t.skillType}</Badge>
-                              ) : (
-                                <Badge color="info">{t.skillType}</Badge>
-                              )}
-                            </span>
-                            <span
-                              style={{ width: "20%" }}
-                              className="text-center"
-                            >
-                              {t.certificateType ===
-                              EnglishCertificateType.Toiec ? (
-                                <Badge color="primary">
-                                  {t.certificateType}
-                                </Badge>
-                              ) : (
-                                <Badge color="brand">{t.certificateType}</Badge>
-                              )}
-                            </span>
-                            <div className="d-flex">
-                              <Button
-                                className="btn-icon btn-round mr-1"
-                                color="info"
-                                size="sm"
-                                type="button"
-                                onClick={async (e) => {
-                                  e.preventDefault();
-                                  await updateTestMutation({
-                                    variables: {
-                                      data: {
-                                        id: t.id,
-                                        displayOrder: t.displayOrder,
-                                      },
-                                    },
-                                  });
-                                }}
+                                <Input
+                                  defaultValue={t.displayOrder}
+                                  type="number"
+                                  onChange={(e) => {
+                                    t.displayOrder = parseInt(e.target.value);
+                                  }}
+                                />
+                              </span>
+                              <span
+                                style={{ width: "20%" }}
+                                className="font-10 text-center font-weight-semi"
                               >
-                                <i className="now-ui-icons users_single-02"></i>
-                              </Button>
-                              <Link
-                                to={`/admin/toiec/create-test-toiec/${t.skillType.toLowerCase()}/${
-                                  t.id
-                                }`}
-                                className="btn btn-sm mr-1 btn-warning btn-icon btn-round"
+                                <Link
+                                  to={`/admin/toiec/create-test-toiec/${t.skillType.toLowerCase()}/${
+                                    t.id
+                                  }`}
+                                  className="text-primary"
+                                >
+                                  {t.testName}
+                                </Link>
+                              </span>
+                              <span
+                                style={{ width: "20%" }}
+                                className="text-center"
                               >
-                                <i className="now-ui-icons ui-2_settings-90"></i>
-                              </Link>
-                              <Button
-                                className="btn-icon btn-round text-center"
-                                color="danger"
-                                size="sm"
-                                type="button"
-                                onClick={async (e) => {
-                                  e.preventDefault();
-                                  await removeTestFromCatMutation({
-                                    variables: {
-                                      id: t.id,
-                                    },
-                                  });
-                                }}
-                              >
-                                {removeTestFromCatMutationResult.loading &&
-                                idRemove === t.id ? (
-                                  <Spinner color="primary" />
+                                {t.skillType === SkillsType.Reading ? (
+                                  <Badge color="success">{t.skillType}</Badge>
                                 ) : (
-                                  <i className="now-ui-icons ui-1_simple-remove"></i>
+                                  <Badge color="info">{t.skillType}</Badge>
                                 )}
-                              </Button>
+                              </span>
+                              <span
+                                style={{ width: "20%" }}
+                                className="text-center"
+                              >
+                                {t.certificateType ===
+                                EnglishCertificateType.Toiec ? (
+                                  <Badge color="primary">
+                                    {t.certificateType}
+                                  </Badge>
+                                ) : (
+                                  <Badge color="brand">
+                                    {t.certificateType}
+                                  </Badge>
+                                )}
+                              </span>
+                              <div className="d-flex">
+                                <Button
+                                  className="btn-icon btn-round mr-1"
+                                  color="info"
+                                  size="sm"
+                                  type="button"
+                                  onClick={async (e) => {
+                                    e.preventDefault();
+                                    await updateTestMutation({
+                                      variables: {
+                                        data: {
+                                          id: t.id,
+                                          displayOrder: t.displayOrder,
+                                        },
+                                      },
+                                    });
+                                  }}
+                                >
+                                  <i className="now-ui-icons users_single-02"></i>
+                                </Button>
+                                <Link
+                                  to={`/admin/toiec/create-test-toiec/${t.skillType.toLowerCase()}/${
+                                    t.id
+                                  }`}
+                                  className="btn btn-sm mr-1 btn-warning btn-icon btn-round"
+                                >
+                                  <i className="now-ui-icons ui-2_settings-90"></i>
+                                </Link>
+                                <Button
+                                  className="btn-icon btn-round text-center"
+                                  color="danger"
+                                  size="sm"
+                                  type="button"
+                                  onClick={async (e) => {
+                                    e.preventDefault();
+                                    await removeTestFromCatMutation({
+                                      variables: {
+                                        id: t.id,
+                                      },
+                                    });
+                                  }}
+                                >
+                                  {removeTestFromCatMutationResult.loading &&
+                                  idRemove === t.id ? (
+                                    <Spinner color="primary" />
+                                  ) : (
+                                    <i className="now-ui-icons ui-1_simple-remove"></i>
+                                  )}
+                                </Button>
+                              </div>
                             </div>
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
                   </>
                   <ButtonAddTest />
                 </div>{" "}
