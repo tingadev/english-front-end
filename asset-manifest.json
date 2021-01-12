@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "http://powper.vn/static/css/main.429059b1.chunk.css",
-    "main.js": "http://powper.vn/static/js/main.8a7c2649.chunk.js",
-    "main.js.map": "http://powper.vn/static/js/main.8a7c2649.chunk.js.map",
+    "main.css": "http://powper.vn/static/css/main.2b16d0ba.chunk.css",
+    "main.js": "http://powper.vn/static/js/main.07cb3669.chunk.js",
+    "main.js.map": "http://powper.vn/static/js/main.07cb3669.chunk.js.map",
     "runtime-main.js": "http://powper.vn/static/js/runtime-main.3f859762.js",
     "runtime-main.js.map": "http://powper.vn/static/js/runtime-main.3f859762.js.map",
     "static/css/2.def79406.chunk.css": "http://powper.vn/static/css/2.def79406.chunk.css",
     "static/js/2.19ef9c9c.chunk.js": "http://powper.vn/static/js/2.19ef9c9c.chunk.js",
     "static/js/2.19ef9c9c.chunk.js.map": "http://powper.vn/static/js/2.19ef9c9c.chunk.js.map",
     "index.html": "http://powper.vn/index.html",
-    "precache-manifest.6c141944c1298232adf91a6129989a9e.js": "http://powper.vn/precache-manifest.6c141944c1298232adf91a6129989a9e.js",
+    "precache-manifest.85aaf0c0fb7c13f928d261921831aeb1.js": "http://powper.vn/precache-manifest.85aaf0c0fb7c13f928d261921831aeb1.js",
     "service-worker.js": "http://powper.vn/service-worker.js",
     "static/css/2.def79406.chunk.css.map": "http://powper.vn/static/css/2.def79406.chunk.css.map",
-    "static/css/main.429059b1.chunk.css.map": "http://powper.vn/static/css/main.429059b1.chunk.css.map",
+    "static/css/main.2b16d0ba.chunk.css.map": "http://powper.vn/static/css/main.2b16d0ba.chunk.css.map",
     "static/js/2.19ef9c9c.chunk.js.LICENSE.txt": "http://powper.vn/static/js/2.19ef9c9c.chunk.js.LICENSE.txt",
-    "static/js/main.8a7c2649.chunk.js.LICENSE.txt": "http://powper.vn/static/js/main.8a7c2649.chunk.js.LICENSE.txt",
+    "static/js/main.07cb3669.chunk.js.LICENSE.txt": "http://powper.vn/static/js/main.07cb3669.chunk.js.LICENSE.txt",
     "static/media/4772.jpg": "http://powper.vn/static/media/4772.756eeb84.jpg",
     "static/media/UploadIcon.svg": "http://powper.vn/static/media/UploadIcon.1cedb6e9.svg",
     "static/media/a1.png": "http://powper.vn/static/media/a1.a2ca3ce6.png",
@@ -55,7 +55,7 @@
     "static/js/runtime-main.3f859762.js",
     "static/css/2.def79406.chunk.css",
     "static/js/2.19ef9c9c.chunk.js",
-    "static/css/main.429059b1.chunk.css",
-    "static/js/main.8a7c2649.chunk.js"
+    "static/css/main.2b16d0ba.chunk.css",
+    "static/js/main.07cb3669.chunk.js"
   ]
 }
