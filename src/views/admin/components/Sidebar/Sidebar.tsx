@@ -14,6 +14,7 @@ interface SidebarProps {
   routes: any
 }
 class Sidebar extends React.Component<SidebarProps> {
+  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
   constructor(props: Readonly<SidebarProps>) {
     super(props);
     // this.activeRoute.bind(this);
@@ -41,18 +42,16 @@ class Sidebar extends React.Component<SidebarProps> {
       <div className="sidebar">
         <div className="logo">
           <a
-            href="https://www.creative-tim.com?ref=nudr-sidebar"
+            href="#/admin"
             className="simple-text logo-mini"
-            target="_blank"
           >
             <div className="logo-img">
               <img src={logo} alt="react-logo" />
             </div>
           </a>
           <a
-            href="https://www.creative-tim.com?ref=nudr-sidebar"
+            href="#/admin"
             className="simple-text logo-normal"
-            target="_blank"
           >
             Omega English
           </a>

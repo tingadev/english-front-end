@@ -9,6 +9,7 @@ import TestSkills from "../TestSkills";
 import LeaderBoard from "../../../components/LeaderBoard";
 import { useGetTestGroupQuery } from "../../../schema/schema";
 import CardCategory from "./CardCategory";
+import Loading from "../../../components/Loading";
 interface TestCategoryProps {
 }
 const TestCategory: React.FC<TestCategoryProps> = ({}) => {
@@ -16,7 +17,6 @@ const TestCategory: React.FC<TestCategoryProps> = ({}) => {
   let testGroupId = "";
   if(link){
     const temp = link.split("-");
-    console.log(temp);
     testGroupId = temp[temp.length-1];
   }
   const getTestGroupQuery = useGetTestGroupQuery({
@@ -26,6 +26,9 @@ const TestCategory: React.FC<TestCategoryProps> = ({}) => {
   })
 
   const dataT1 = getTestGroupQuery.data?.getTestGroup.testCategories
+  if(!getTestGroupQuery.data){
+    return <Loading />
+  }
   const match = useRouteMatch();
   return (
       <Switch>
