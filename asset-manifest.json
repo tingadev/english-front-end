@@ -1,20 +1,20 @@
 {
   "files": {
     "main.css": "http://powper.vn/static/css/main.429059b1.chunk.css",
-    "main.js": "http://powper.vn/static/js/main.4e6d4478.chunk.js",
-    "main.js.map": "http://powper.vn/static/js/main.4e6d4478.chunk.js.map",
+    "main.js": "http://powper.vn/static/js/main.8a7c2649.chunk.js",
+    "main.js.map": "http://powper.vn/static/js/main.8a7c2649.chunk.js.map",
     "runtime-main.js": "http://powper.vn/static/js/runtime-main.3f859762.js",
     "runtime-main.js.map": "http://powper.vn/static/js/runtime-main.3f859762.js.map",
     "static/css/2.def79406.chunk.css": "http://powper.vn/static/css/2.def79406.chunk.css",
-    "static/js/2.288a8d20.chunk.js": "http://powper.vn/static/js/2.288a8d20.chunk.js",
-    "static/js/2.288a8d20.chunk.js.map": "http://powper.vn/static/js/2.288a8d20.chunk.js.map",
+    "static/js/2.19ef9c9c.chunk.js": "http://powper.vn/static/js/2.19ef9c9c.chunk.js",
+    "static/js/2.19ef9c9c.chunk.js.map": "http://powper.vn/static/js/2.19ef9c9c.chunk.js.map",
     "index.html": "http://powper.vn/index.html",
-    "precache-manifest.3510c0d0734b7a4116e4a72582502053.js": "http://powper.vn/precache-manifest.3510c0d0734b7a4116e4a72582502053.js",
+    "precache-manifest.6c141944c1298232adf91a6129989a9e.js": "http://powper.vn/precache-manifest.6c141944c1298232adf91a6129989a9e.js",
     "service-worker.js": "http://powper.vn/service-worker.js",
     "static/css/2.def79406.chunk.css.map": "http://powper.vn/static/css/2.def79406.chunk.css.map",
     "static/css/main.429059b1.chunk.css.map": "http://powper.vn/static/css/main.429059b1.chunk.css.map",
-    "static/js/2.288a8d20.chunk.js.LICENSE.txt": "http://powper.vn/static/js/2.288a8d20.chunk.js.LICENSE.txt",
-    "static/js/main.4e6d4478.chunk.js.LICENSE.txt": "http://powper.vn/static/js/main.4e6d4478.chunk.js.LICENSE.txt",
+    "static/js/2.19ef9c9c.chunk.js.LICENSE.txt": "http://powper.vn/static/js/2.19ef9c9c.chunk.js.LICENSE.txt",
+    "static/js/main.8a7c2649.chunk.js.LICENSE.txt": "http://powper.vn/static/js/main.8a7c2649.chunk.js.LICENSE.txt",
     "static/media/4772.jpg": "http://powper.vn/static/media/4772.756eeb84.jpg",
     "static/media/UploadIcon.svg": "http://powper.vn/static/media/UploadIcon.1cedb6e9.svg",
     "static/media/a1.png": "http://powper.vn/static/media/a1.a2ca3ce6.png",
@@ -54,8 +54,8 @@
   "entrypoints": [
     "static/js/runtime-main.3f859762.js",
     "static/css/2.def79406.chunk.css",
-    "static/js/2.288a8d20.chunk.js",
+    "static/js/2.19ef9c9c.chunk.js",
     "static/css/main.429059b1.chunk.css",
-    "static/js/main.4e6d4478.chunk.js"
+    "static/js/main.8a7c2649.chunk.js"
   ]
 }
