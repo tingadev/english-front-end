@@ -56,6 +56,7 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
                   borderRadius: "100%",
                   marginBottom: "5px",
                   marginRight: "6px",
+                  cursor: "pointer"
                 }}
                 onClick={() => {
                   const target = document.getElementById(
@@ -63,7 +64,7 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
                   );
                   target &&
                     window.scrollTo({
-                      top: target.offsetTop + 200,
+                      top: target.offsetTop + 100,
                       behavior: "smooth",
                     });
                 }}
