@@ -6,42 +6,42 @@ import CreateAndEditPart from "../../components/QuestionsAndTest/CreateAndEditPa
 import CreateAndEditTest from "../../components/QuestionsAndTest/CreateAndEditTest";
 import QuestionContextProvider from "../../components/QuestionsAndTest/QuestionContext";
 import { EnglishCertificateType } from "../../../../schema/schema";
-import ToiecPage from "../../components/QuestionsAndTest";
+import TestPage from "../../components/QuestionsAndTest";
 import CreateAndEditTestCategory from "../../components/QuestionsAndTest/CreateAndEditTestCategory";
 // import { Route, Switch, Redirect } from "react-router-dom";
-// interface ToiecAdminProps {}
+// interface ToeicAdminProps {}
 
-const ToiecAdmin: React.FC<{}> = () => {
+const ToeicAdmin: React.FC<{}> = () => {
   const match = useRouteMatch();
   return (
     <>
       <PanelHeader
         content={
           <div className="header text-center">
-            <h2 className="title">Toiec</h2>
+            <h2 className="title">Toeic</h2>
             <p className="category">
-              Management Test and Questions of Toiec Category
+              Management Test and Questions of Toeic Category
             </p>
           </div>
         }
       />
       <div className="content">
-        <QuestionContextProvider certificateType={EnglishCertificateType.Toiec}>
+        <QuestionContextProvider certificateType={EnglishCertificateType.Toeic}>
         <Switch>
-        <Route path={`${match.path}/create-test-category/${EnglishCertificateType.Toiec.toLowerCase()}/:id`}>
+        <Route path={`${match.path}/create-test-category/${EnglishCertificateType.Toeic.toLowerCase()}/:id`}>
             <CreateAndEditTestCategory />
           </Route>
-          <Route path={`${match.path}/create-test-toiec/:skillTypeParam/:id`}>
+          <Route path={`${match.path}/create-test-toeic/:skillTypeParam/:id`}>
             <CreateAndEditTest />
           </Route>
-          <Route path={[`${match.path}/create-question-toiec`, `${match.path}/questions/:questionId/edit`]}>
+          <Route path={[`${match.path}/create-question-toeic`, `${match.path}/questions/:questionId/edit`]}>
             <CreateAndEditQuestion />
           </Route>
-          <Route path={[`${match.path}/create-part-toiec`, `${match.path}/part/:partId/edit`]}>
+          <Route path={[`${match.path}/create-part-toeic`, `${match.path}/part/:partId/edit`]}>
             <CreateAndEditPart />
           </Route>
           <Route path={`${match.path}`}>
-            <ToiecPage />
+            <TestPage />
           </Route>
         </Switch>
         </QuestionContextProvider>
@@ -50,4 +50,4 @@ const ToiecAdmin: React.FC<{}> = () => {
   );
 };
 
-export default ToiecAdmin;
+export default ToeicAdmin;

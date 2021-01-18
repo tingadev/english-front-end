@@ -30,7 +30,7 @@ const QuestionsGroup: React.FC<QuestionsGroupProps> = ({
                 <i className="d-block w-100" dangerouslySetInnerHTML={{ __html: questionsGroup.description }}/>
                 <div className="w-100 text-center">
                     {questionsGroup.imgs && questionsGroup.imgs.map((img : any, index: number) => {
-                        // const src = '../../assets/img/toiec/ETS 2020 TEST 1 - Pic 1.png'
+                        // const src = '../../assets/img/toeic/ETS 2020 TEST 1 - Pic 1.png'
                         return (
                             <img key={index} src={process.env.PUBLIC_URL + img} />
                         )

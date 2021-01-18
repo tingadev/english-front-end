@@ -12,7 +12,7 @@ import { notificationAdd } from "../../utils/Notification";
 import { store } from "react-notifications-component";
 import Select from "react-select";
 // import { Route, Switch, Redirect } from "react-router-dom";
-// interface ToiecAdminProps {}
+// interface ToeicAdminProps {}
 const StatusOptions = [
   { 
     value: true,

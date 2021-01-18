@@ -61,8 +61,8 @@ var dashRoutes = [
     layout: "/",
   },
   {
-    path: "/about-toiec",
-    name: "About Toiec",
+    path: "/about-toeic",
+    name: "About toeic",
     icon: "",
     component: AboutUs,
     layout: "/",

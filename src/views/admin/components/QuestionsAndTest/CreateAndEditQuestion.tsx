@@ -288,7 +288,7 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
                   </Button>
                   {!modal && (
                     <Link
-                      to={`/admin/toiec/questions`}
+                      to={`/admin/toeic/questions`}
                       className="bg-danger btn font-weight-bold font-10"
                     >
                       Cancel

@@ -8,7 +8,6 @@ import {
   Row,
   Nav,
   NavItem,
-  NavLink,
 } from "reactstrap";
 import { EnglishCertificateType, NewTestCategoryInput, NewTestInput, SkillsType, useCreateTestCategoryMutation, useCreateTestMutation } from "../../../../schema/schema";
 import ListPart from "./ListPart";
@@ -16,7 +15,7 @@ import ListQuestions from "./ListQuestions";
 import ListTest from "./ListTest";
 import ListTestCategory from "./ListTestCategory";
 // import { Route, Switch, Redirect } from "react-router-dom";
-// interface ToiecAdminProps {}
+// interface ToeicAdminProps {}
 
 const TestPage: React.FC<{}> = () => {
   const match = useRouteMatch();
@@ -30,11 +29,11 @@ const TestPage: React.FC<{}> = () => {
     audioUrl: '',
     description: '',
     explaination: '',
-    certificateType: EnglishCertificateType.Toiec,
+    certificateType: EnglishCertificateType.Toeic,
   }
   const dataCreateCategory: NewTestCategoryInput = {
     testCategoryName: 'Draft Test Category - ' + time,
-    certificateType: EnglishCertificateType.Toiec,
+    certificateType: EnglishCertificateType.Toeic,
     isPublished: false,
   }
   const history = useHistory();
@@ -59,7 +58,7 @@ const TestPage: React.FC<{}> = () => {
   React.useEffect(() => {
     if(resultCreateTestMutation.data){
       const id = resultCreateTestMutation.data.createTest.id
-      const path = `${match.path}/create-test-toiec/${resultCreateTestMutation.data.createTest.skillType.toLowerCase()}/${id}`;
+      const path = `${match.path}/create-test-toeic/${resultCreateTestMutation.data.createTest.skillType.toLowerCase()}/${id}`;
       history.push(path)
     }
   },[resultCreateTestMutation.data])
@@ -107,12 +106,12 @@ const TestPage: React.FC<{}> = () => {
           >
             Create Test Listening
           </a>
-          <Link className="btn-info btn" to={`${match.url}/create-part-toiec`}>
+          <Link className="btn-info btn" to={`${match.url}/create-part-toeic`}>
             Create Part
           </Link>
           <Link
             className="btn-info btn"
-            to={`${match.url}/create-question-toiec`}
+            to={`${match.url}/create-question-toeic`}
           >
             Create Question
           </Link>

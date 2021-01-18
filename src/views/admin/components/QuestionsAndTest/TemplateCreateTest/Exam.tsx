@@ -124,7 +124,7 @@ const Exam: React.FC<ExamProps> = ({
                 Submit
               </Button>
               <Link
-                to={`/admin/toiec/tests`}
+                to={`/admin/toeic/tests`}
                 className="bg-danger btn font-weight-bold font-10"
               >
                 Cancel

@@ -26,7 +26,7 @@ const ListTestCategory: React.FC<ListTestCategoryProps> = ({
   const testCategoriesQuery = useGetTestCategoriesQuery({
     variables: {
       data: {
-        certificateType: EnglishCertificateType.Toiec,
+        certificateType: EnglishCertificateType.Toeic,
       },
     },
   });
@@ -51,7 +51,7 @@ const ListTestCategory: React.FC<ListTestCategoryProps> = ({
     testCategoriesQuery.fetchMore({
       variables: {
         data: {
-          certificateType: EnglishCertificateType.Toiec,
+          certificateType: EnglishCertificateType.Toeic,
           cursor:
             testCategoriesQuery.data &&
             testCategoriesQuery.data.getTestCategories?.nextCursor,
@@ -141,7 +141,7 @@ const ListTestCategory: React.FC<ListTestCategoryProps> = ({
                     </td>
                     <td className="text-center">
                       {testCategory.certificateType ===
-                      EnglishCertificateType.Toiec ? (
+                      EnglishCertificateType.Toeic ? (
                         <Badge color="primary">
                           {testCategory.certificateType}
                         </Badge>

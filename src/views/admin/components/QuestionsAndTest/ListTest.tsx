@@ -39,7 +39,7 @@ const ListTest: React.FC<ListTestProps> = ({
   const testsQuery = useGetTestsQuery({
     variables: {
       data: {
-        certificateType: EnglishCertificateType.Toiec,
+        certificateType: EnglishCertificateType.Toeic,
         testIds: {
           ids: testIdsForget || [],
         },
@@ -79,7 +79,7 @@ const ListTest: React.FC<ListTestProps> = ({
     testsQuery.fetchMore({
       variables: {
         data: {
-          certificateType: EnglishCertificateType.Toiec,
+          certificateType: EnglishCertificateType.Toeic,
           testIds: {
             ids: testIdsForget || [],
           },
@@ -174,7 +174,7 @@ const ListTest: React.FC<ListTestProps> = ({
                     {!modal && <td>{index + 1}</td>}
                     <td className="text-left font-weight-semi">
                       <Link
-                        to={`create-test-toiec/${test.skillType.toLowerCase()}/${
+                        to={`create-test-toeic/${test.skillType.toLowerCase()}/${
                           test.id
                         }`}
                       >
@@ -182,7 +182,7 @@ const ListTest: React.FC<ListTestProps> = ({
                       </Link>
                     </td>
                     <td className="text-center">
-                      {test.certificateType === EnglishCertificateType.Toiec ? (
+                      {test.certificateType === EnglishCertificateType.Toeic ? (
                         <Badge color="primary">{test.certificateType}</Badge>
                       ) : (
                         <Badge color="brand">{test.certificateType}</Badge>
@@ -220,7 +220,7 @@ const ListTest: React.FC<ListTestProps> = ({
                       </Button>
                       <Link
                         className="btn btn-sm mr-1 btn-warning btn-icon btn-round"
-                        to={`create-test-toiec/${test.skillType}/${test.id}`}
+                        to={`create-test-toeic/${test.skillType}/${test.id}`}
                       >
                         <i className="now-ui-icons ui-2_settings-90"></i>
                       </Link>

@@ -13,7 +13,7 @@ const Index: React.FC = () => {
     <Layout isHomePage>
       <div className="wrapper">
         <Switch>
-          <Route path={`${match.path}/toiec/:link`}>
+          <Route path={`${match.path}/toeic/:link`}>
             <Test />
           </Route>
           <Route path={match.path}>

@@ -11,8 +11,8 @@ const BreadcrumbMain: React.FC<BreadcrumbProps> = ({}) => {
           link: '/home',
       },
       {
-        title: 'Toiec',
-        link: '/toiec',
+        title: 'Toeic',
+        link: '/toeic',
     }
   ]
   return (

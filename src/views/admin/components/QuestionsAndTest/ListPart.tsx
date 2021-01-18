@@ -31,7 +31,7 @@ const ListPart: React.FC<ListPartProps> = ({ setIconPills, modal, skillType, dat
   const match = useRouteMatch();
   const questionContext = React.useContext(QuestionContext);
   const partsFilter: PartFilterInput = {
-    certificateType: EnglishCertificateType.Toiec,
+    certificateType: EnglishCertificateType.Toeic,
     skillType,
     partIds: questionContext.partIds?.ids.length! > 0 ? questionContext.partIds : null,
   };
@@ -112,7 +112,7 @@ const ListPart: React.FC<ListPartProps> = ({ setIconPills, modal, skillType, dat
                       {part.partName}
                     </td>
                     <td className="text-center">
-                      {part.certificateType === EnglishCertificateType.Toiec ? (
+                      {part.certificateType === EnglishCertificateType.Toeic ? (
                         <Badge color="primary">{part.certificateType}</Badge>
                       ) : (
                         <Badge color="brand">{part.certificateType}</Badge>

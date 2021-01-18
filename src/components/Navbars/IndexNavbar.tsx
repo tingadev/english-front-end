@@ -14,66 +14,66 @@ import { NavbarContext } from "./NavbarContext";
 
 const elementsNav = [
   {
-    title: "Toiec Thương mại",
+    title: "Toeic Thương mại",
     dropdown: [
       {
         title: "T0 - Giới thiệu",
-        link: "/about-toiec",
+        link: "/about-toeic",
         id: "ielts",
       },
       {
         title: "T1 - Test 1-40",
-        link: "/home/toiec/t1-toiec-2",
+        link: "/home/toeic/t1-toeic-2",
         id: "ielts",
       },
       {
-        title: "T2 - Toiec 600 từ vựng thương mại",
-        link: "/home/toiec",
+        title: "T2 - Toeic 600 từ vựng thương mại",
+        link: "/home/toeic",
         id: "ielts",
       },
       {
-        title: "T3 - Toiec Ngữ pháp đặc biệt",
-        link: "/home/toiec",
+        title: "T3 - Toeic Ngữ pháp đặc biệt",
+        link: "/home/toeic",
         id: "ielts",
       },
       {
         title: "T4 - PART 1 Tranh",
-        link: "/home/toiec",
+        link: "/home/toeic",
         id: "ielts",
       },
       {
         title: "T5 - PART 2 Hỏi đáp",
-        link: "/home/toiec",
+        link: "/home/toeic",
         id: "ielts",
       },
       {
         title: "T6 - PART 3 Hội thoại",
-        link: "/home/toiec",
+        link: "/home/toeic",
         id: "ielts",
       },
       {
         title: "T7 - PART 4 Độc thoại",
-        link: "/home/toiec",
+        link: "/home/toeic",
         id: "ielts",
       },
       {
         title: "T8 - PART 5 Điền vào câu",
-        link: "/home/toiec",
+        link: "/home/toeic",
         id: "ielts",
       },
       {
         title: "T9 - PART 6 Điền vào đoạn văn",
-        link: "/home/toiec",
+        link: "/home/toeic",
         id: "ielts",
       },
       {
         title: "T10 - PART 7 Đọc hiểu đoạn văn",
-        link: "/home/toiec",
+        link: "/home/toeic",
         id: "ielts",
       },
     ],
-    link: "/home/toiec",
-    id: "toiec",
+    link: "/home/toeic",
+    id: "toeic",
   },
   {
     title: "IELTS học thuật",

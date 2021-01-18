@@ -36,8 +36,8 @@ export const EnglishCertificateOptions = [
     label: "Chose type of test",
   },
   {
-    value: EnglishCertificateType.Toiec,
-    label: EnglishCertificateType.Toiec,
+    value: EnglishCertificateType.Toeic,
+    label: EnglishCertificateType.Toeic,
   },
   {
     value: EnglishCertificateType.Ielts,
@@ -179,7 +179,7 @@ const CreateAndEditPart: React.FC<CreateEditPartProps> = () => {
                     Submit
                   </Button>
                   <Link
-                    to={`/admin/toiec/part`}
+                    to={`/admin/toeic/part`}
                     className="bg-danger btn font-weight-bold font-10"
                   >
                     Cancel

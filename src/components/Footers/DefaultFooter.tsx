@@ -63,7 +63,7 @@ const DefaultFooter = () => {
                           href="#pablo"
                           onClick={(e) => e.preventDefault()}
                         >
-                          Toiec
+                          Toeic
                         </a>
                       </li>
                       <li>

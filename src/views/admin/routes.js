@@ -16,11 +16,11 @@
 
 */
 import Dashboard from "./views/Dashboard.js";
-import Notifications from "./views/Notifications.js";
-import ToiecAdmin from "./views/Toiec";
-import Typography from "./views/Typography.js";
-import TableList from "./views/TableList.js";
-import Maps from "./views/Maps.js";
+// import Notifications from "./views/Notifications.js";
+import ToeicAdmin from "./views/Toeic";
+// import Typography from "./views/Typography.js";
+// import TableList from "./views/TableList.js";
+// import Maps from "./views/Maps.js";
 import TestGroup from "./views/TestGroup";
 import UserPage from "./views/UserPage.js";
 
@@ -40,10 +40,10 @@ var dashRoutes = [
     layout: "/admin",
   },
   {
-    path: "/toiec",
-    name: "Toiec",
+    path: "/toeic",
+    name: "Toeic",
     icon: "design_image",
-    component: ToiecAdmin,
+    component: ToeicAdmin,
     layout: "/admin",
   },
 

@@ -178,7 +178,7 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = () =
                     Submit
                   </Button>
                   <Link
-                    to={`/admin/toiec/test-categories`}
+                    to={`/admin/toeic/test-categories`}
                     className="bg-danger btn font-weight-bold font-10"
                   >
                     Cancel
@@ -265,7 +265,7 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = () =
                                 className="font-10 text-center font-weight-semi"
                               >
                                 <Link
-                                  to={`/admin/toiec/create-test-toiec/${t.skillType.toLowerCase()}/${
+                                  to={`/admin/toeic/create-test-toeic/${t.skillType.toLowerCase()}/${
                                     t.id
                                   }`}
                                   className="text-primary"
@@ -288,7 +288,7 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = () =
                                 className="text-center"
                               >
                                 {t.certificateType ===
-                                EnglishCertificateType.Toiec ? (
+                                EnglishCertificateType.Toeic ? (
                                   <Badge color="primary">
                                     {t.certificateType}
                                   </Badge>
@@ -319,7 +319,7 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = () =
                                   <i className="now-ui-icons users_single-02"></i>
                                 </Button>
                                 <Link
-                                  to={`/admin/toiec/create-test-toiec/${t.skillType.toLowerCase()}/${
+                                  to={`/admin/toeic/create-test-toeic/${t.skillType.toLowerCase()}/${
                                     t.id
                                   }`}
                                   className="btn btn-sm mr-1 btn-warning btn-icon btn-round"

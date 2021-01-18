@@ -124,7 +124,7 @@ const ListQuestionExam: React.FC<ListQuestionExam> = ({
                     </span>
                     <span style={{ width: "20%" }} className="text-center">
                       {q.question.certificateType ===
-                      EnglishCertificateType.Toiec ? (
+                      EnglishCertificateType.Toeic ? (
                         <Badge color="primary">
                           {q.question.certificateType}
                         </Badge>

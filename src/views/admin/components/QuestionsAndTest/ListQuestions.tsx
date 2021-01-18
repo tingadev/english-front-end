@@ -1,7 +1,7 @@
-
 import { css } from "@emotion/core";
 import React from "react";
 import { Link, useRouteMatch } from "react-router-dom";
+import Select from "react-select";
 import {
   CardHeader,
   CardTitle,
@@ -31,6 +31,20 @@ interface ListQuestionsProps {
   arrQuestionIds?: PartIdAndQuestionIdsInput;
   setArrQuestionIds?: (val: PartIdAndQuestionIdsInput) => void;
 }
+const optionsFilter = [
+  {
+    value: null,
+    label: 'All',
+  },
+  {
+    value: SkillsType.Reading,
+    label: SkillsType.Reading,
+  },
+  {
+    value: SkillsType.Listening,
+    label: SkillsType.Listening,
+  },
+];
 const ListQuestions: React.FC<ListQuestionsProps> = ({
   setIconPills,
   modal,
@@ -41,17 +55,20 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
   setArrQuestionIds,
 }) => {
   const match = useRouteMatch();
-
+  const [currentFilter, setCurrentFilter] = React.useState(skillType);
   const [
     createTestQuestionMutation,
     resultCreateTestMutation,
   ] = useCreateTestQuestionMutation();
   const [searchName, setSearchName] = React.useState("");
-  const questionsFilter: QuestionFilterTypeInput = {
-    certificateType: EnglishCertificateType.Toiec,
-    skillType,
-    testId: dataTestQuestionInput?.testId,
-  };
+  const questionsFilter: QuestionFilterTypeInput = React.useMemo(() => {
+    return {
+      certificateType: EnglishCertificateType.Toeic,
+      skillType: currentFilter,
+      testId: dataTestQuestionInput?.testId,
+      title: searchName,
+    };
+  }, [currentFilter, searchName]);
   const questionsQuery = useGetQuestionsQuery({
     variables: {
       data: questionsFilter,
@@ -107,19 +124,34 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
     }
   }, [resultCreateTestMutation.loading]);
 
-  if (questionsQuery.loading) {
-    return <>{"Loading...."}</>;
-  }
+  // if (questionsQuery.loading) {
+  //   return <>{"Loading...."}</>;
+  // }
   const questions = questionsQuery.data?.questions.questions;
   return (
     <>
       {!modal && (
         <CardHeader>
-          <CardTitle tag="h4">List Of Questions</CardTitle>
+          <div className="d-flex justify-content-between">
+            <CardTitle tag="h4">List Of Questions</CardTitle>
+            <Select
+              onChange={(opt: any) => {
+                setCurrentFilter(opt.value);
+              }}
+              placeholder="Filter"
+              className="width-10rem z-header"
+              classNamePrefix="react-select"
+              options={optionsFilter}
+            />
+          </div>
         </CardHeader>
       )}
-      <LazyLoad isHeightFull={modal ? true : false} className='p-0' refetchQuery={fetchMoreQuestions}>
-        <div className='sticky-top bg-white p-2'>
+      <LazyLoad
+        isHeightFull={modal ? true : false}
+        className="p-0"
+        refetchQuery={fetchMoreQuestions}
+      >
+        <div className="sticky-top bg-white p-2">
           <Input
             placeholder="Search by name"
             onChange={(e) => {
@@ -156,11 +188,6 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
           <tbody>
             {questions &&
               questions
-                .filter((q) =>
-                  q.questionName
-                    .toLowerCase()
-                    .includes(searchName.toLowerCase())
-                )
                 .map((q, index) => {
                   return (
                     <tr key={index}>
@@ -204,7 +231,7 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
                         {q.questionName}
                       </td>
                       <td className="text-center">
-                        {q.certificateType === EnglishCertificateType.Toiec ? (
+                        {q.certificateType === EnglishCertificateType.Toeic ? (
                           <Badge color="primary">{q.certificateType}</Badge>
                         ) : (
                           <Badge color="brand">{q.certificateType}</Badge>
