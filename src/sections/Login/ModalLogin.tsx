@@ -16,6 +16,8 @@ import {
 import { useLoginMutation, useMeLazyQuery } from "../../schema/schema";
 import * as yup from "yup";
 import ErrorMessage from "../../views/admin/components/Error";
+import useBrowserStorage from "../../components/BrowserStorage";
+import stripTypenames from "../../utils/stripTypenames";
 interface ModalLoginProps {
   isOpen: boolean;
   setIsOpen: (val: boolean) => void;
@@ -24,9 +26,10 @@ export const ModalLogin: React.FC<ModalLoginProps> = ({
   isOpen,
   setIsOpen,
 }) => {
+  const browserStorage = useBrowserStorage();
   const [nameFocus, setNameFocus] = React.useState(false);
   const [passwordFocus, setPasswordFocus] = React.useState(false);
-  const [meQuery, meQueryResult] = useMeLazyQuery();
+  const [meQuery, meQueryResult] = useMeLazyQuery({ fetchPolicy: "network-only" });
   const [loginMutation] = useLoginMutation();
   const [shouldValidate, setShouldValidate] = React.useState(false);
   React.useEffect(() => {
@@ -54,6 +57,8 @@ export const ModalLogin: React.FC<ModalLoginProps> = ({
         });
         if (result.data?.login) {
           setIsOpen(false);
+          browserStorage.tokens = stripTypenames(result.data?.login.impersonatingUser?.tokens!);
+          browserStorage.save();
           meQuery();
         }
       } catch (e) {

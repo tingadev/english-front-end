@@ -13,9 +13,7 @@ import {
   DropdownItem,
 } from "reactstrap";
 import { useMe } from "../../hooks/useMe";
-import { useLogoutMutation } from "../../schema/schema";
 import { ModalLogin } from "../../sections/Login/ModalLogin";
-import { DropdownMenuChild } from "../Navbars/IndexNavbar";
 import { NavbarContext } from "../Navbars/NavbarContext";
 interface LogoProps {
   className?: string;
@@ -42,7 +40,6 @@ const Brand: React.FC = () => {
   const { hiddenBrand, navbarColor } = React.useContext(NavbarContext);
   const [modalLogin, setModalLogin] = React.useState(false);
   const me = useMe();
-  const [logoutMutation] = useLogoutMutation();
   const history = useHistory();
   const client = useApolloClient();
   return (
@@ -80,16 +77,14 @@ const Brand: React.FC = () => {
                         >
                           <DropdownItem
                             to='/profile'
-                            tag={"profile"}
                             className={"text-white font-weight-bold"}
                           >
                             Profile
                           </DropdownItem>
                           <DropdownItem
-                            tag={"logout"}
                             className={"text-white font-weight-bold"}
-                            onClick={async () => {
-                              await logoutMutation()
+                            onClick={() => {
+                              localStorage.clear();
                               client.resetStore();
                               history.push('/home')
                             }}

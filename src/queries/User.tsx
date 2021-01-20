@@ -50,6 +50,13 @@ export const ME_FRAGMENT = gql`
     address
     profileMediaUrl
     name
+    impersonatingUser{
+      userId
+      tokens{
+        accessToken
+        refreshToken
+      }
+    }
   }
 `;
 

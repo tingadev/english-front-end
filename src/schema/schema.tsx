@@ -16,6 +16,12 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type AccessTokens = {
+  __typename?: 'AccessTokens';
+  accessToken: Scalars['String'];
+  refreshToken: Scalars['String'];
+};
+
 export type Answers = {
   __typename?: 'Answers';
   answerContent?: Maybe<Scalars['String']>;
@@ -64,6 +70,7 @@ export enum EnglishCertificateType {
 
 export type ImpersonatingUser = {
   __typename?: 'ImpersonatingUser';
+  tokens: AccessTokens;
   userId: Scalars['String'];
 };
 
@@ -833,6 +840,13 @@ export const MeFragmentDoc = gql`
   address
   profileMediaUrl
   name
+  impersonatingUser {
+    userId
+    tokens {
+      accessToken
+      refreshToken
+    }
+  }
 }
     `;
 export const UploadMediaDocument = gql`
@@ -2750,7 +2764,7 @@ export type GetUsersQuery = { __typename?: 'Query', users: Array<(
     & UserFragment
   )> };
 
-export type MeFragment = { __typename?: 'Me', id: string, firstName: string, lastName?: Maybe<string>, email: string, role: string, address?: Maybe<string>, profileMediaUrl?: Maybe<string>, name: string };
+export type MeFragment = { __typename?: 'Me', id: string, firstName: string, lastName?: Maybe<string>, email: string, role: string, address?: Maybe<string>, profileMediaUrl?: Maybe<string>, name: string, impersonatingUser?: Maybe<{ __typename?: 'ImpersonatingUser', userId: string, tokens: { __typename?: 'AccessTokens', accessToken: string, refreshToken: string } }> };
 
 export type LoginMutationVariables = Exact<{
   email: Scalars['String'];

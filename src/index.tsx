@@ -6,8 +6,7 @@ import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
-  createHttpLink,
-  ApolloLink,
+  createHttpLink
 } from "@apollo/client";
 import { Switch, Redirect, Route, HashRouter } from "react-router-dom";
 import config from "./config";
@@ -20,15 +19,27 @@ import "react-notifications-component/dist/theme.css";
 // pages for this kit
 import routes from "./router.js";
 import ReactNotification from "react-notifications-component";
+import { setContext } from '@apollo/client/link/context';
 const httpLink = createHttpLink({
   uri: config.GRAPHQL_SERVER_URL,
   fetch,
   fetchOptions: {
     credentials: "include",
-  },
+  }
+});
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const powper = JSON.parse(localStorage.getItem('powper') ?? '{}');
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      authorization: powper?.tokens?.accessToken ? `${powper.tokens.accessToken}` : "",
+    }
+  }
 });
 const client = new ApolloClient({
-  link: ApolloLink.from([httpLink]),
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
 function App() {
