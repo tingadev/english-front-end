@@ -106,7 +106,7 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
       )}
 
       <div
-        className="font-11 text-black font-weight-normal"
+        className="font-11 text-black font-weight-normal d-flex"
         dangerouslySetInnerHTML={{ __html: questionProps.content || "" }}
       />
 
