@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "0376f2394287bb750b6f1e236146725f",
+    "revision": "d213c5d64661055c6805cb2f35cec432",
     "url": "http://powper.vn/index.html"
   },
   {
