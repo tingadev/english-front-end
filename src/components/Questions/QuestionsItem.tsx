@@ -2,21 +2,22 @@
 import React from "react";
 import { Label, Input, Button, Collapse, CardBody } from "reactstrap";
 import config from "../../config";
-import { TestQuestionFragment } from "../../schema/schema";
+import { QuestionFragment, QuestionGroupFragment } from "../../schema/schema";
 
 interface QuestionsItemProps {
-  testQuestion: TestQuestionFragment;
+  question: QuestionFragment | QuestionGroupFragment;
   arrChecked: any[];
   setArrChecked: (value: any) => void;
   isSuccessful?: boolean;
+  index: number;
 }
 const QuestionsItem: React.FC<QuestionsItemProps> = ({
-  testQuestion,
+  question,
   arrChecked,
   setArrChecked,
   isSuccessful,
+  index,
 }) => {
-  const questionProps = testQuestion.question;
   const [isOpenExplaination, setIsOpenExplaination] = React.useState("-1");
   const seekAudio = (secs: number) => {
     const audio = document.getElementById(
@@ -25,11 +26,10 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
     audio!.currentTime = secs;
     audio!.play();
   };
-  const handleCheck = (questionId: string, displayOrder: number, ele: any) => {
+  const handleCheck = (questionId: string, ele: any) => {
     const answeredObject = {
       id: questionId,
       keyAnswer: ele.keyAnswer,
-      displayOrder,
     };
     if (arrChecked.length === 0) {
       setArrChecked([...arrChecked, answeredObject]);
@@ -54,22 +54,23 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
       }
     }
   };
-
-  React.useEffect(() => {}, [arrChecked.length]);
+  const lengthOfGroups = (question as QuestionFragment).questionGroups?.length;
+  const [indexState] = React.useState(index + lengthOfGroups);
+  const indexes = index + indexState;
 
   return (
-    <div className="mb-3" id={"question" + questionProps.id}>
+    <div className="mb-3" id={"question" + question.id}>
       <div className="d-flex justify-content-between align-items-center flex-wrap">
-        {questionProps && (
-          <h5 className="font-weight-bold">{questionProps.questionName}</h5>
+        {question && (
+          <h5 className="font-weight-bold">Question {index} {lengthOfGroups > 0 ? `- ${lengthOfGroups + index}` : '' }</h5>
         )}
         <div>
           {isSuccessful && (
             <Button
               className="rounded-fill bg-transparent border border-primary border-radius-fill text-primary"
               onClick={() => {
-                setIsOpenExplaination(questionProps.id);
-                if (questionProps.id === isOpenExplaination) {
+                setIsOpenExplaination(question.id);
+                if (question.id === isOpenExplaination) {
                   setIsOpenExplaination("-1");
                 }
               }}
@@ -77,11 +78,11 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
               Explain
             </Button>
           )}
-          {!!questionProps.audioSec && (
+          {Boolean(question.audioSec) && (
             <Button
               className="rounded-fill bg-transparent border border-primary border-radius-fill text-primary"
               onClick={() => {
-                seekAudio(questionProps.audioSec);
+                seekAudio(question.audioSec);
               }}
             >
               Listen from here
@@ -89,35 +90,36 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
           )}
         </div>
       </div>
-      <Collapse isOpen={isOpenExplaination === questionProps.id}>
+      <Collapse isOpen={isOpenExplaination === question.id}>
         <CardBody>
           <div
             className="font-11 text-black font-weight-normal border border-info p-3 rounded"
             dangerouslySetInnerHTML={{
-              __html: questionProps.explaination || "",
+              __html: question.explaination || "",
             }}
           />
         </CardBody>
       </Collapse>
-      {questionProps.description && (
+      {question.description && (
         <p>
-          <i className="font-weight-normal">{questionProps.description}</i>
+          <i className="font-weight-normal">{question.description}</i>
         </p>
       )}
 
       <div
-        className="font-11 text-black font-weight-normal d-flex"
-        dangerouslySetInnerHTML={{ __html: questionProps.content || "" }}
+        className="font-11 text-black font-weight-normal d-flex flex-wrap"
+        dangerouslySetInnerHTML={{ __html: question.content || "" }}
       />
 
-      {questionProps.image && (
+      {question.image && (
         <div className="img">
-          <img src={config.PATH_IMAGE + questionProps.image} />
+          <img src={config.PATH_IMAGE + question.image} />
         </div>
       )}
+      {lengthOfGroups > 0 && <h5 className="font-weight-bold">Question {index}</h5>}
       <div className="pl-4">
-        {questionProps.answers.map((ele: any, index: any) => {
-          const isAnswer = ele.keyAnswer === questionProps.result;
+        {question.answers.map((ele: any, index: any) => {
+          const isAnswer = ele.keyAnswer === question.result;
           return (
             ele.answerContent && (
               <Label
@@ -130,12 +132,11 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
                   type="radio"
                   onClick={() => {
                     handleCheck(
-                      questionProps.id,
-                      testQuestion.displayOrder,
+                      question.id,
                       ele
                     );
                   }}
-                  name={`radio` + questionProps.id}
+                  name={`radio` + question.id}
                 />{" "}
                 {ele.keyAnswer} . {ele.answerContent}
               </Label>

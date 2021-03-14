@@ -1,5 +1,27 @@
 import { gql } from '@apollo/client';
 
+export const QUESTION_FRAGMENT_GROUP = gql`
+  fragment QuestionGroup on Question {
+    id
+    questionName
+    audioSec
+    audioSecVN
+    questionType
+    image
+    answers{
+        keyAnswer
+        answerContent
+    }
+    content
+    description
+    skillType
+    certificateType
+    explaination
+    result
+    questionGroupOrder
+    isGroup
+  }
+`;
 
 export const QUESTION_FRAGMENT = gql`
   fragment Question on Question {
@@ -19,7 +41,13 @@ export const QUESTION_FRAGMENT = gql`
     certificateType
     explaination
     result
+    questionGroupOrder
+    isGroup
+    questionGroups{
+      ...QuestionGroup
+    }
   }
+  ${QUESTION_FRAGMENT_GROUP}
 `;
 
 export const CREATE_QUESTION = gql`
@@ -61,4 +89,10 @@ export const GET_QUESTIONS = gql `
       }
   }
   ${QUESTION_FRAGMENT}
+`;
+
+export const REMOVE_QUESTION = gql `
+  mutation removeQuestion($id: String!) {
+    removeQuestion(id: $id)
+  }
 `;

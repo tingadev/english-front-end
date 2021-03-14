@@ -29,6 +29,9 @@ import {
   MediaType,
   TestQuestionInputId,
   EnglishCertificateType,
+  AnswersGroupInput,
+  QuestionFragment,
+  useRemoveQuestionMutation,
 } from "../../../../schema/schema";
 import Select from "react-select";
 import { useFormik } from "formik";
@@ -39,6 +42,8 @@ import TinyMCETextarea from "../TinyMCETextarea";
 import ImageUpload from "../ImageUploader/index";
 import config from "../../../../config";
 import { QuestionContext } from "./QuestionContext";
+import { ButtonAdd } from "../ButtonQuestion/ButtonAdd";
+import ModalDelete from "../Modal/Delete";
 
 interface CreateAndEditQuestionProps {
   modal?: boolean;
@@ -78,8 +83,20 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
   refetchTestQuestions,
   setIdForced,
 }) => {
-  
+  const [isOpenModalDelete, setIsOpenModalDelete] = React.useState(false);
+  const [
+    removeQuestionMutation,
+    removeQuestionMutationResult,
+  ] = useRemoveQuestionMutation();
 
+  const [idRemove, setIdRemove] = React.useState("");
+  const removeTestQuestion = () => {
+    removeQuestionMutation({
+      variables: {
+        id: idRemove,
+      },
+    });
+  };
   const answersKeyVcl: AnswersInput[] = [
     {
       keyAnswer: "A",
@@ -103,8 +120,10 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
   React.useEffect(() => {
     formik.setFieldValue("image", questionContext.path);
   }, [questionContext.path]);
+
   const { questionId } = useParams();
   const [answersKeyState, setAnswerKeyState] = React.useState(answersKeyVcl);
+  // const [answersKeyGroupState, setAnswerKeyGroupState] = React.useState(answersKeyVcl);
   let notification = notificationAdd("Question");
   const questionIdFinal = questionId
     ? questionId
@@ -146,9 +165,11 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
             label: part.partName,
           };
           PartsOptions = [...PartsOptions, optionPart];
+          return part;
         });
     }
   }, [certificateTypeSelect, skillTypeSelect, parts]);
+
   let initialValues: NewQuestionInput = {
     questionName: "",
     explaination: "",
@@ -182,10 +203,30 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
       },
     });
   }, [questionIdFinal]);
+
+  const [answersGroupsArr, setAnswersGroupsArr] = React.useState<
+    AnswersGroupInput[]
+  >([]);
+  const handleRemoveQuestionGroup = (id?: string | null) => {
+    if (questionId) {
+      setIsOpenModalDelete(true);
+      id && setIdRemove(id);
+    }
+    setAnswersGroupsArr([...answersGroupsArr.filter((a) => a.id !== id)]);
+  };
   let urlDefault: string = "";
   let answers: any;
+  let dataQuestion: QuestionFragment | undefined;
   if (getQuestionRespone.data) {
-    const { __typename, ...data } = getQuestionRespone.data.question;
+    const {
+      __typename,
+      questionGroups,
+      questionGroupOrder,
+      isGroup,
+      ...data
+    } = getQuestionRespone.data.question;
+    dataQuestion = { ...data, questionGroups, questionGroupOrder, isGroup };
+
     answers = data.answers.map((answer) => {
       const { __typename, ...answerData } = answer;
       return answerData;
@@ -197,17 +238,39 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
       answers,
     };
   }
+  React.useMemo(() => {
+    if (dataQuestion?.questionGroups) {
+      const answersGroupsArrBE = dataQuestion.questionGroups.map((group) => {
+        return {
+          answers: group.answers.map((answer) => {
+            const { __typename, ...answerData } = answer;
+            return answerData;
+          }),
+          id: group.id,
+          order: group.questionGroupOrder,
+          description: group.description,
+          result: group.result,
+          questionName: group.questionName,
+          explaination: group.explaination,
+        };
+      });
+      setAnswersGroupsArr(answersGroupsArrBE);
+    }
+  }, [getQuestionRespone.data]);
+
   React.useEffect(() => {
     if (getQuestionRespone.data) {
       SkillsTypeOptions.find((prop, key) => {
         if (prop.value === initialValues.skillType) {
           setSkillTypeSelect(SkillsTypeOptions[key]);
         }
+        return prop;
       });
       EnglishCertificateOptions.find((prop, key) => {
         if (prop.value === initialValues.certificateType) {
           setCertificateTypeSelect(EnglishCertificateOptions[key]);
         }
+        return prop;
       });
       setIsCheckedResult(getQuestionRespone.data.question.result);
       setAnswerKeyState(answers);
@@ -215,7 +278,9 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
   }, [getQuestionRespone]);
   const [createQuestion] = useCreateQuestionMutation();
   const [updateQuestion] = useUpdateQuestionMutation();
+
   const [shouldValidate, setShouldValidate] = React.useState(false);
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: initialValues,
@@ -223,7 +288,6 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
     validateOnBlur: shouldValidate,
     validationSchema: yup.object().shape({
       questionName: yup.string().required("Part Name is a required field"),
-      explaination: yup.string().required("Explaination is a required field"),
       certificateType: yup
         .string()
         .required("Certificate Type is a required field"),
@@ -238,6 +302,7 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
             data: {
               ...values,
               answers: answersKeyState,
+              answersGroup: answersGroupsArr,
             },
           },
         });
@@ -252,6 +317,7 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
             data: {
               ...values,
               answers: answersKeyState,
+              answersGroup: answersGroupsArr,
             },
           },
         });
@@ -453,54 +519,60 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
                         />
                       </label>
                     </FormGroup>
-                    {answersKeyVcl.map((answer: AnswersInput, index: number) => {
-                      return (
-                        <FormGroup
-                          className="d-flex align-items-center"
-                          key={index}
-                        >
-                          <label className="mr-2">{answer.keyAnswer}</label>
-                          <div className="w-100">
-                            <Input
-                              type="text"
-                              onKeyUp={(opt: any) => {
-                                const res = answersKeyState.map((a) => {
-                                  if (a.keyAnswer === answer.keyAnswer) {
-                                    a.answerContent = opt.target.value;
+                    {answersKeyVcl.map(
+                      (answer: AnswersInput, index: number) => {
+                        return (
+                          <>
+                            <FormGroup
+                              className="d-flex align-items-center"
+                              key={index}
+                            >
+                              <label className="mr-2">{answer.keyAnswer}</label>
+                              <div className="w-100">
+                                <Input
+                                  type="text"
+                                  onKeyUp={(opt: any) => {
+                                    const res = answersKeyState.map((a) => {
+                                      if (a.keyAnswer === answer.keyAnswer) {
+                                        a.answerContent = opt.target.value;
+                                      }
+                                      return a;
+                                    });
+                                    setAnswerKeyState(res);
+                                  }}
+                                  onBlur={formik.handleBlur}
+                                  name="answers"
+                                  defaultValue={
+                                    formik.values.answers[index]
+                                      .answerContent || ""
                                   }
-                                  return a;
-                                });
-                                setAnswerKeyState(res);
-                                console.log(answersKeyState)
-                              }}
-                              onBlur={formik.handleBlur}
-                              name="answers"
-                              defaultValue={
-                                formik.values.answers[index].answerContent || ""
-                              }
-                            />
-                            {formik.errors.answers && (
-                              <ErrorMessage
-                                message={formik.errors.answers[index] as string}
+                                />
+                                {formik.errors.answers && (
+                                  <ErrorMessage
+                                    message={
+                                      formik.errors.answers[index] as string
+                                    }
+                                  />
+                                )}
+                              </div>
+                              <CustomInput
+                                type="radio"
+                                className="ml-3 mr-3"
+                                id={`result${answer.keyAnswer}`}
+                                value={answer.keyAnswer!}
+                                name="result"
+                                checked={answer.keyAnswer === isCheckedResult}
+                                onChange={(e) => {
+                                  formik.handleChange(e);
+                                  setIsCheckedResult(answer.keyAnswer!);
+                                }}
+                                onBlur={formik.handleBlur}
                               />
-                            )}
-                          </div>
-                          <CustomInput
-                            type="radio"
-                            className="ml-3 mr-3"
-                            id={`result${answer.keyAnswer}`}
-                            value={answer.keyAnswer!}
-                            name="result"
-                            checked={answer.keyAnswer === isCheckedResult}
-                            onChange={(e) => {
-                              formik.handleChange(e);
-                              setIsCheckedResult(answer.keyAnswer!);
-                            }}
-                            onBlur={formik.handleBlur}
-                          />
-                        </FormGroup>
-                      );
-                    })}
+                            </FormGroup>
+                          </>
+                        );
+                      }
+                    )}
                   </Col>
                   <Col className="pl-1 mt-4" md="6">
                     <Input
@@ -517,11 +589,192 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
                     <ErrorMessage message={formik.errors.image} />
                   </Col>
                 </Row>
+                <Row>
+                  <Col md="12">
+                    <div>
+                      {answersGroupsArr.map((a, index_a) => {
+                        const answersGroup = answersGroupsArr.find(
+                          (ele) => ele.id === a.id
+                        );
+                        return (
+                          <div key={index_a} className="pt-3 mt-4 border-top">
+                            <FormGroup className="row flex-nowrap justify-content-between align-items-center w-50">
+                              <div className="col-7">
+                                <Input
+                                  placeholder="Enter question name"
+                                  onChange={(e) => {
+                                    setAnswersGroupsArr([
+                                      ...answersGroupsArr.filter(
+                                        (ele) => ele.id !== a.id
+                                      ),
+                                      {
+                                        ...answersGroup,
+                                        questionName: e.target.value,
+                                      },
+                                    ]);
+                                  }}
+                                  defaultValue={a.questionName || ""}
+                                />
+                              </div>
+                              <Button
+                                className="btn-icon btn-round text-center"
+                                color="danger"
+                                size="sm"
+                                type="button"
+                                onClick={async (e) => {
+                                  e.preventDefault();
+                                  handleRemoveQuestionGroup(a.id);
+                                }}
+                              >
+                                <i className="now-ui-icons ui-1_simple-remove"></i>
+                              </Button>
+                            </FormGroup>
+                            <FormGroup className="d-flex flex-wrap w-100">
+                              <label className="mr-2 w-100">Description</label>
+                              <TinyMCETextarea
+                                textareaName={`description${index_a}`}
+                                onEditorChange={(e: any) => {
+                                  setAnswersGroupsArr([
+                                    ...answersGroupsArr.filter(
+                                      (ele) => ele.id !== a.id
+                                    ),
+                                    {
+                                      ...answersGroup,
+                                      description: e,
+                                    },
+                                  ]);
+                                }}
+                                value={a.description || ""}
+                                height={200}
+                              />
+                            </FormGroup>
+                            <FormGroup className="d-flex flex-wrap w-100">
+                              <label className="mr-2 w-100">Explaination</label>
+                              <TinyMCETextarea
+                                textareaName={`explaination${index_a}`}
+                                onEditorChange={(e: any) => {
+                                  setAnswersGroupsArr([
+                                    ...answersGroupsArr.filter(
+                                      (ele) => ele.id !== a.id
+                                    ),
+                                    {
+                                      ...answersGroup,
+                                      explaination: e,
+                                    },
+                                  ]);
+                                }}
+                                value={a.explaination || ""}
+                                height={200}
+                              />
+                            </FormGroup>
+                            {a.answers && (
+                              <div className="w-50">
+                                {a.answers.map(
+                                  (answer: AnswersInput, index: number) => {
+                                    return (
+                                      <>
+                                        <FormGroup
+                                          className="d-flex align-items-center"
+                                          key={index}
+                                        >
+                                          <label className="mr-2">
+                                            {answer.keyAnswer}
+                                          </label>
+                                          <div className="w-100">
+                                            <Input
+                                              type="text"
+                                              onKeyUp={(opt: any) => {
+                                                const res = answersGroup?.answers?.map(
+                                                  (aR) => {
+                                                    if (
+                                                      aR.keyAnswer ===
+                                                      answer.keyAnswer
+                                                    ) {
+                                                      aR.answerContent =
+                                                        opt.target.value;
+                                                    }
+                                                    return aR;
+                                                  }
+                                                );
+                                                res &&
+                                                  answersGroup &&
+                                                  setAnswersGroupsArr([
+                                                    ...answersGroupsArr.filter(
+                                                      (e) => e.id !== a.id
+                                                    ),
+                                                    {
+                                                      ...answersGroup,
+                                                      answers: res,
+                                                    },
+                                                  ]);
+                                              }}
+                                              name="answersGroup"
+                                              defaultValue={
+                                                answer.answerContent || ""
+                                              }
+                                            />
+                                          </div>
+                                          <CustomInput
+                                            type="radio"
+                                            className="ml-3 mr-3"
+                                            id={`result-group_${index_a + index}_${answer.keyAnswer}`}
+                                            value={answer.keyAnswer!}
+                                            checked={
+                                              answer.keyAnswer === a.result
+                                            }
+                                            onChange={() => {
+                                              setAnswersGroupsArr([
+                                                ...answersGroupsArr.filter(
+                                                  (e) => e.id !== a.id
+                                                ),
+                                                {
+                                                  ...answersGroup,
+                                                  result: answer.keyAnswer,
+                                                },
+                                              ]);
+                                            }}
+                                          />
+                                        </FormGroup>
+                                      </>
+                                    );
+                                  }
+                                )}{" "}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </Col>
+                  <Col md="12">
+                    <ButtonAdd
+                      onClick={() => {
+                        const answersGroupEle: AnswersGroupInput = {
+                          order: answersGroupsArr.length + 1,
+                          answers: answersKeyVcl,
+                          id: (answersGroupsArr.length + 1).toString(),
+                          isNew: true,
+                        };
+                        setAnswersGroupsArr([
+                          ...answersGroupsArr,
+                          answersGroupEle,
+                        ]);
+                      }}
+                      text="Add Question"
+                    />
+                  </Col>
+                </Row>
               </CardBody>
             </Card>
           </Col>
         </Row>
       </Form>
+      <ModalDelete
+        isOpen={isOpenModalDelete}
+        onClose={setIsOpenModalDelete}
+        callback={removeTestQuestion}
+        loading={removeQuestionMutationResult.loading}
+      />
     </div>
   );
 };

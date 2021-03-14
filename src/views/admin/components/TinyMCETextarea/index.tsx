@@ -4,9 +4,10 @@ import { Editor } from '@tinymce/tinymce-react';
     textareaName: string;
     onEditorChange: any;
     value: any;
+    height?: number;
   }
 
- const TinyMCETextarea : React.FC<TinyMCETextareaProps> = ({onEditorChange, textareaName, ...props}) => {
+ const TinyMCETextarea : React.FC<TinyMCETextareaProps> = ({onEditorChange, textareaName, height, ...props}) => {
 
 
      return (
@@ -14,7 +15,7 @@ import { Editor } from '@tinymce/tinymce-react';
          apiKey="f9b9q8eygntqnp8oisdg1ssr6mp1s0e4ydnhym3v1kyidgx1"
          initialValue="<p>This is the initial content of the editor</p>"
          init={{
-           height: 400,
+           height: height || 400,
            menubar: true,
            plugins: [
              'advlist autolink lists link image charmap print preview anchor',

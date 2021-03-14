@@ -5,6 +5,7 @@ import ReactAudioPlayer from "react-audio-player";
 import { Button, Col, Container, Row } from "reactstrap";
 import config from "../../config";
 import {
+  QuestionGroupFragment,
   SkillsType,
   TestFragment,
   TestQuestionFragment,
@@ -14,7 +15,7 @@ import QuestionsItem from "./QuestionsItem";
 
 interface ListQuestionsProps {
   testDetail?: TestFragment;
-  questions?: TestQuestionFragment[];
+  testQuestions?: TestQuestionFragment[];
   arrChecked: any[];
   setArrChecked: (value: any) => void;
   isSuccessful?: boolean;
@@ -22,11 +23,37 @@ interface ListQuestionsProps {
 
 const ListQuestions: React.FC<ListQuestionsProps> = ({
   testDetail,
-  questions,
+  testQuestions,
   arrChecked,
   setArrChecked,
   isSuccessful,
 }) => {
+  const [questionsSorted, setQuestionSorted] = React.useState<
+    (QuestionGroupFragment & { partId: string })[]
+  >([]);
+  let questions: (QuestionGroupFragment & { partId: string })[] = [];
+  const questionsClone = testQuestions
+    ?.slice()
+    .sort((a, b) => a.displayOrder - b.displayOrder);
+  React.useEffect(() => {
+    questionsClone?.map((testQuestion) => {
+      const testQuestionWithPart = {
+        ...testQuestion.question,
+        partId: testQuestion.part.id,
+      };
+      questions.push(testQuestionWithPart);
+      if (testQuestion.question.questionGroups.length > 0) {
+        const testQuestionsWithPart = testQuestion.question.questionGroups.map(
+          (group) => {
+            return { ...group, partId: testQuestion.part.id };
+          }
+        );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        questions = [...questions, ...testQuestionsWithPart];
+      }
+    });
+    setQuestionSorted(questions);
+  }, []);
   const parts = testDetail?.partAndAudioSecs;
   const seekAudio = (secs: number) => {
     const audio = document.getElementById(
@@ -43,7 +70,7 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
         }
         audio::-webkit-media-controls-time-remaining-display,
         audio::-webkit-media-controls-current-time-display,
-        audio::-webkit-media-controls-timeline{
+        audio::-webkit-media-controls-timeline {
           color: white;
         }
       `}
@@ -67,7 +94,7 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
               )} */}
           {parts &&
             parts.map((part, index_part) => {
-              const partDetail = questions?.find(
+              const partDetail = testQuestions?.find(
                 (qp) => qp.part.id === part.partId
               );
               return (
@@ -90,19 +117,24 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
                       __html: partDetail?.part.description || "",
                     }}
                   />
-                  {questions &&
-                    questions.map(
-                      (question: TestQuestionFragment, index: number) => {
-                        if (question.part.id === part.partId)
+                  {questionsSorted &&
+                    questionsSorted.map(
+                      (
+                        question: QuestionGroupFragment & { partId: string },
+                        index: number
+                      ) => {
+                        if (question.partId === part.partId) {
                           return (
                             <QuestionsItem
-                              testQuestion={question}
+                              question={question}
+                              index={index + 1}
                               arrChecked={arrChecked}
                               setArrChecked={setArrChecked}
                               key={index}
                               isSuccessful={isSuccessful}
                             />
                           );
+                        }
                       }
                     )}
                 </div>
@@ -111,7 +143,10 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
         </Col>
         {!isSuccessful && (
           <Col md="4">
-            <QuestionPalette questions={questions} answered={arrChecked} />
+            <QuestionPalette
+              testQuestions={testQuestions}
+              answered={arrChecked}
+            />
           </Col>
         )}
       </Row>

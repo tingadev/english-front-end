@@ -5,13 +5,13 @@ import QuestionPalette from "../../sections/Test/QuestionPalette";
 import ListQuestions from "../Questions/ListQuestions";
 
 interface ExplainationProps {
-    questions: TestQuestionFragment[]; 
+    testQuestions: TestQuestionFragment[]; 
     testDetail: TestFragment;
     arrChecked: any;
     setArrChecked: any;
 }
 
-const Explaination : React.FC<ExplainationProps> = ({questions, testDetail, arrChecked, setArrChecked}) => {
+const Explaination : React.FC<ExplainationProps> = ({testQuestions, testDetail, arrChecked, setArrChecked}) => {
 
     return (
         <div className="p-4" style={{ maxWidth: 1920 }}>
@@ -19,10 +19,10 @@ const Explaination : React.FC<ExplainationProps> = ({questions, testDetail, arrC
         <Row>
                 <Col md="8">
                     {/* //List of questions */}
-                    <ListQuestions questions={questions} testDetail={testDetail} arrChecked={arrChecked} setArrChecked={setArrChecked} isSuccessful/>
+                    <ListQuestions testQuestions={testQuestions} testDetail={testDetail} arrChecked={arrChecked} setArrChecked={setArrChecked} isSuccessful/>
                 </Col>
                 <Col md="4">
-                    <QuestionPalette questions={questions} answered={arrChecked} isResult/>
+                    <QuestionPalette testQuestions={testQuestions} answered={arrChecked} isResult/>
                 </Col>
         </Row>
         </div>

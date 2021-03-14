@@ -67,25 +67,25 @@ const ListQuestionExam: React.FC<ListQuestionExam> = ({
           Order
         </span>
         <span
-          style={{ width: "20%" }}
+          style={{ width: "35%" }}
           className="font-10 text-primary text-center font-weight-semi"
         >
           Question Name
         </span>
         <span
-          style={{ width: "20%" }}
+          style={{ width: "15%" }}
           className="font-10 text-primary text-center font-weight-semi"
         >
           Certificate
         </span>
         <span
-          style={{ width: "20%" }}
+          style={{ width: "25%" }}
           className="font-10 text-primary text-center font-weight-semi"
         >
           Question Type
         </span>
         <span
-          style={{ width: "10%" }}
+          style={{ width: "15%" }}
           className="font-10 text-primary text-center font-weight-semi"
         >
           Action
@@ -105,7 +105,7 @@ const ListQuestionExam: React.FC<ListQuestionExam> = ({
                   >
                     <span
                       style={{ width: "10%" }}
-                      className="font-10 text-center text-primary font-weight-semi"
+                      className="d-flex font-10 text-center text-primary font-weight-semi"
                     >
                       <Input
                         key={q.id}
@@ -115,34 +115,8 @@ const ListQuestionExam: React.FC<ListQuestionExam> = ({
                           q_order = parseInt(e.target.value);
                         }}
                       />
-                    </span>
-                    <span
-                      style={{ width: "20%" }}
-                      className="font-10 text-center text-primary font-weight-semi"
-                    >
-                      {q.question.questionName}
-                    </span>
-                    <span style={{ width: "20%" }} className="text-center">
-                      {q.question.certificateType ===
-                      EnglishCertificateType.Toeic ? (
-                        <Badge color="primary">
-                          {q.question.certificateType}
-                        </Badge>
-                      ) : (
-                        <Badge color="brand">
-                          {q.question.certificateType}
-                        </Badge>
-                      )}
-                    </span>
-                    <span
-                      style={{ width: "20%" }}
-                      className="font-10 text-primary text-center"
-                    >
-                      {q.question.questionType}
-                    </span>
-                    <div className="d-flex">
                       <Button
-                        className="btn-icon btn-round mr-1"
+                        className="btn-icon btn-round ml-1 my-0"
                         color="info"
                         size="sm"
                         type="button"
@@ -158,8 +132,34 @@ const ListQuestionExam: React.FC<ListQuestionExam> = ({
                           });
                         }}
                       >
-                        <i className="now-ui-icons users_single-02"></i>
+                        <i className="now-ui-icons ui-1_check"></i>
                       </Button>
+                    </span>
+                    <span
+                      style={{ width: "35%" }}
+                      className="font-10 text-center text-primary font-weight-semi"
+                    >
+                      {q.question.questionName}
+                    </span>
+                    <span style={{ width: "15%" }} className="text-center">
+                      {q.question.certificateType ===
+                      EnglishCertificateType.Toeic ? (
+                        <Badge color="primary">
+                          {q.question.certificateType}
+                        </Badge>
+                      ) : (
+                        <Badge color="brand">
+                          {q.question.certificateType}
+                        </Badge>
+                      )}
+                    </span>
+                    <span
+                      style={{ width: "25%" }}
+                      className="font-10 text-primary text-center"
+                    >
+                      {q.question.questionType}
+                    </span>
+                    <div className="d-flex justify-content-center" style={{ width: "15%" }}>
                       <Button
                         className="btn btn-sm mr-1 btn-warning btn-icon btn-round"
                         onClick={() => {

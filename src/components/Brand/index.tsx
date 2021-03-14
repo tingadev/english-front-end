@@ -37,8 +37,8 @@ const loginDropdowns = [
   },
 ];
 const Brand: React.FC = () => {
-  const { hiddenBrand, navbarColor } = React.useContext(NavbarContext);
-  const [modalLogin, setModalLogin] = React.useState(false);
+  const { hiddenBrand, navbarColor, modalLogin, setModalLogin } = React.useContext(NavbarContext);
+ 
   const me = useMe();
   const history = useHistory();
   const client = useApolloClient();

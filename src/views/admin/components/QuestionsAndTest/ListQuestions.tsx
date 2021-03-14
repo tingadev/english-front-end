@@ -1,4 +1,3 @@
-import { css } from "@emotion/core";
 import React from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import Select from "react-select";
@@ -16,11 +15,12 @@ import {
   EnglishCertificateType,
   SkillsType,
   QuestionFilterTypeInput,
-  useCreateTestQuestionMutation,
   TestQuestionInputId,
   PartIdAndQuestionIdsInput,
+  useRemoveQuestionMutation,
 } from "../../../../schema/schema";
 import LazyLoad from "../LazyLoad";
+import ModalDelete from "../Modal/Delete";
 // import { Route, Switch, Redirect } from "react-router-dom";
 interface ListQuestionsProps {
   setIconPills?: (val: string) => void;
@@ -50,16 +50,25 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
   modal,
   skillType,
   dataTestQuestionInput,
-  refetchTestQuestions,
   arrQuestionIds,
   setArrQuestionIds,
 }) => {
+  const [isOpenModalDelete, setIsOpenModalDelete] = React.useState(false);
   const match = useRouteMatch();
   const [currentFilter, setCurrentFilter] = React.useState(skillType);
   const [
-    createTestQuestionMutation,
-    resultCreateTestMutation,
-  ] = useCreateTestQuestionMutation();
+    removeQuestionMutation,
+    removeQuestionMutationResult,
+  ] = useRemoveQuestionMutation();
+  const [idRemove, setIdRemove] = React.useState("");
+  const removeQuestion = async (): Promise<void> => {
+    await removeQuestionMutation({
+      variables: {
+        id: idRemove,
+      }
+    });
+  }
+
   const [searchName, setSearchName] = React.useState("");
   const questionsFilter: QuestionFilterTypeInput = React.useMemo(() => {
     return {
@@ -68,12 +77,21 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
       testId: dataTestQuestionInput?.testId,
       title: searchName,
     };
-  }, [currentFilter, searchName]);
+  }, [currentFilter, dataTestQuestionInput, searchName]);
+
+  
   const questionsQuery = useGetQuestionsQuery({
     variables: {
       data: questionsFilter,
     },
   });
+
+  React.useEffect(() => {
+    if(removeQuestionMutationResult.data?.removeQuestion){
+      questionsQuery.refetch();
+    }
+  }, [questionsQuery, removeQuestionMutationResult.data])
+  
   const fetchMoreQuestions = React.useCallback((): void => {
     if (
       questionsQuery.loading ||
@@ -118,11 +136,6 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
       });
   }, []);
 
-  React.useEffect(() => {
-    if (!resultCreateTestMutation.data?.createTestQuestion) {
-      refetchTestQuestions && refetchTestQuestions();
-    }
-  }, [resultCreateTestMutation.loading]);
 
   // if (questionsQuery.loading) {
   //   return <>{"Loading...."}</>;
@@ -268,7 +281,7 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
                             color="danger"
                             size="sm"
                             type="button"
-                            onClick={async () => {}}
+                            onClick={() => {setIdRemove(q.id); setIsOpenModalDelete(true)}}
                           >
                             <i className="now-ui-icons ui-1_simple-remove"></i>
                           </Button>
@@ -279,6 +292,12 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
                 })}
           </tbody>
         </Table>
+        <ModalDelete
+          isOpen={isOpenModalDelete}
+          onClose={setIsOpenModalDelete}
+          callback={removeQuestion}
+          loading={removeQuestionMutationResult.loading}
+        />
       </LazyLoad>
     </>
   );

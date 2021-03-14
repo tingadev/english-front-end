@@ -7,6 +7,8 @@ interface NavbarProps {
   setTopFixed: (val: string) => void;
   hiddenBrand: boolean;
   setHiddenBrand: (val: boolean) => void;
+  modalLogin: boolean;
+  setModalLogin: (val: boolean) => void;
 }
 interface NavbarContextProviderProps {
   isHomePage?: boolean;
@@ -22,7 +24,7 @@ const useChatContextProvider = ({
   const [navbarColor, setNavbarColor] = React.useState(isHomePage ? "navbar-transparent" : 'bg-brand');
   const [topFixed, setTopFixed] = React.useState("100px");
   const [hiddenBrand, setHiddenBrand] = React.useState(false);
-
+  const [modalLogin, setModalLogin] = React.useState(false);
   
   React.useEffect(() => {
     document.body.classList.add("index-page");
@@ -61,6 +63,8 @@ const useChatContextProvider = ({
     setTopFixed,
     hiddenBrand,
     setHiddenBrand,
+    modalLogin,
+    setModalLogin,
   };
   return navbarContextProvider;
 };
