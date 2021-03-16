@@ -4,6 +4,7 @@ export const QUESTION_FRAGMENT_GROUP = gql`
   fragment QuestionGroup on Question {
     id
     questionName
+    questionGroupName
     audioSec
     audioSecVN
     questionType
@@ -27,6 +28,7 @@ export const QUESTION_FRAGMENT = gql`
   fragment Question on Question {
     id
     questionName
+    questionGroupName
     audioSec
     audioSecVN
     questionType

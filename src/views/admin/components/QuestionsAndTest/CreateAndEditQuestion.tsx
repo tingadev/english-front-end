@@ -187,6 +187,7 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
     description: "",
     testId: dataTestQuestionInput?.testId,
     partId: dataTestQuestionInput?.partId,
+    questionGroupName: "",
   };
   const [isCheckedResult, setIsCheckedResult] = React.useState(
     initialValues.result
@@ -377,6 +378,20 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
                       />
                     </FormGroup>
                     <ErrorMessage message={formik.errors.questionName} />
+                  </Col>
+                  <Col className="pr-1" md="6">
+                    <FormGroup>
+                      <label>Question Group Name</label>
+                      <Input
+                        placeholder="Question Name"
+                        name="questionGroupName"
+                        type="text"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.questionGroupName || ""}
+                      />
+                    </FormGroup>
+                    <ErrorMessage message={formik.errors.questionGroupName} />
                   </Col>
                   <Input type="hidden" name="testId" />
                 </Row>

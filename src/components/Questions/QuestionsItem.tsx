@@ -62,7 +62,7 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
     <div className="mb-3" id={"question" + question.id}>
       <div className="d-flex justify-content-between align-items-center flex-wrap">
         {question && (
-          <h5 className="font-weight-bold">Question {index} {lengthOfGroups > 0 ? `- ${lengthOfGroups + index}` : '' }</h5>
+          <h5 className="font-weight-bold">{lengthOfGroups > 0 ? question.questionGroupName : question.questionName }</h5>
         )}
         <div>
           {isSuccessful && (
@@ -116,7 +116,7 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
           <img src={config.PATH_IMAGE + question.image} />
         </div>
       )}
-      {lengthOfGroups > 0 && <h5 className="font-weight-bold">Question {index}</h5>}
+      {lengthOfGroups > 0 && <h5 className="font-weight-bold">{question.questionName}</h5>}
       <div className="pl-4">
         {question.answers.map((ele: any, index: any) => {
           const isAnswer = ele.keyAnswer === question.result;

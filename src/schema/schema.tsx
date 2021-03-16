@@ -237,6 +237,7 @@ export type Question = {
   __typename?: 'Question';
   id: Scalars['String'];
   questionName: Scalars['String'];
+  questionGroupName?: Maybe<Scalars['String']>;
   audioSec: Scalars['Float'];
   audioSecVN: Scalars['Float'];
   questionType: QuestionType;
@@ -615,6 +616,7 @@ export type NewQuestionInput = {
   partId?: Maybe<Scalars['String']>;
   testId?: Maybe<Scalars['String']>;
   answersGroup?: Maybe<Array<AnswersGroupInput>>;
+  questionGroupName?: Maybe<Scalars['String']>;
 };
 
 export type AnswersInput = {
@@ -751,6 +753,7 @@ export const QuestionGroupFragmentDoc = gql`
     fragment QuestionGroup on Question {
   id
   questionName
+  questionGroupName
   audioSec
   audioSecVN
   questionType
@@ -773,6 +776,7 @@ export const QuestionFragmentDoc = gql`
     fragment Question on Question {
   id
   questionName
+  questionGroupName
   audioSec
   audioSecVN
   questionType
@@ -2547,9 +2551,9 @@ export type RemovePartMutationVariables = Exact<{
 
 export type RemovePartMutation = { __typename?: 'Mutation', removePart: string };
 
-export type QuestionGroupFragment = { __typename?: 'Question', id: string, questionName: string, audioSec: number, audioSecVN: number, questionType: QuestionType, image?: Maybe<string>, content?: Maybe<string>, description?: Maybe<string>, skillType: SkillsType, certificateType: EnglishCertificateType, explaination?: Maybe<string>, result: string, questionGroupOrder: number, isGroup: boolean, answers: Array<{ __typename?: 'Answers', keyAnswer?: Maybe<string>, answerContent?: Maybe<string> }> };
+export type QuestionGroupFragment = { __typename?: 'Question', id: string, questionName: string, questionGroupName?: Maybe<string>, audioSec: number, audioSecVN: number, questionType: QuestionType, image?: Maybe<string>, content?: Maybe<string>, description?: Maybe<string>, skillType: SkillsType, certificateType: EnglishCertificateType, explaination?: Maybe<string>, result: string, questionGroupOrder: number, isGroup: boolean, answers: Array<{ __typename?: 'Answers', keyAnswer?: Maybe<string>, answerContent?: Maybe<string> }> };
 
-export type QuestionFragment = { __typename?: 'Question', id: string, questionName: string, audioSec: number, audioSecVN: number, questionType: QuestionType, image?: Maybe<string>, content?: Maybe<string>, description?: Maybe<string>, skillType: SkillsType, certificateType: EnglishCertificateType, explaination?: Maybe<string>, result: string, questionGroupOrder: number, isGroup: boolean, answers: Array<{ __typename?: 'Answers', keyAnswer?: Maybe<string>, answerContent?: Maybe<string> }>, questionGroups: Array<(
+export type QuestionFragment = { __typename?: 'Question', id: string, questionName: string, questionGroupName?: Maybe<string>, audioSec: number, audioSecVN: number, questionType: QuestionType, image?: Maybe<string>, content?: Maybe<string>, description?: Maybe<string>, skillType: SkillsType, certificateType: EnglishCertificateType, explaination?: Maybe<string>, result: string, questionGroupOrder: number, isGroup: boolean, answers: Array<{ __typename?: 'Answers', keyAnswer?: Maybe<string>, answerContent?: Maybe<string> }>, questionGroups: Array<(
     { __typename?: 'Question' }
     & QuestionGroupFragment
   )> };

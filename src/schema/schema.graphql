@@ -143,6 +143,7 @@ type TestGroup {
 type Question {
   id: String!
   questionName: String!
+  questionGroupName: String
   audioSec: Float!
   audioSecVN: Float!
   questionType: QuestionType!
@@ -381,6 +382,7 @@ input NewQuestionInput {
   partId: String
   testId: String
   answersGroup: [AnswersGroupInput!]
+  questionGroupName: String
 }
 
 input AnswersInput {

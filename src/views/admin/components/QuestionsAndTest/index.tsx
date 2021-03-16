@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import { Link, useRouteMatch, Route, Switch, useHistory } from "react-router-dom";
 import {
@@ -37,7 +38,6 @@ const TestPage: React.FC<{}> = () => {
     isPublished: false,
   }
   const history = useHistory();
-  let path = '';
   const createTestClick = async (skillType: SkillsType) => {
     await createTestMutation({
       variables: {
