@@ -1,7 +1,7 @@
 /*eslint-disable*/
 import React from "react";
-import { Button, Modal, ModalBody } from "reactstrap";
 import { Link, useRouteMatch } from "react-router-dom";
+import { Button, Modal, ModalBody } from "reactstrap";
 import {
   QuestionGroupFragment,
   TestQuestionFragment,
@@ -19,18 +19,19 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
   isResult,
 }) => {
   const [questionsSorted, setQuestionSorted] = React.useState<
-    QuestionGroupFragment[]
+    (QuestionGroupFragment & { displayOrder: number})[]
   >([]);
-  let questions: QuestionGroupFragment[] = [];
+  let questions: (QuestionGroupFragment & { displayOrder: number})[] = [];
   const questionsClone = testQuestions
     ?.slice()
     .sort((a, b) => a.displayOrder - b.displayOrder);
   React.useEffect(() => {
     questionsClone?.map((testQuestion) => {
-      let questionsGroup: QuestionGroupFragment[] = [];
-      questions.push(testQuestion.question);
+      let questionsGroup: (QuestionGroupFragment & { displayOrder: number})[] = [];
+      const questionFormatted = {...testQuestion.question, displayOrder: testQuestion.displayOrder} ;
+      questions.push(questionFormatted);
       if (testQuestion.question.questionGroups.length > 0) {
-        questionsGroup = testQuestion.question.questionGroups;
+        questionsGroup = testQuestion.question.questionGroups.map((group, index) => { return {...group, displayOrder: testQuestion.displayOrder + 1 + index}});
         questions = [...questions, ...questionsGroup];
       }
     });
@@ -55,7 +56,7 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
       >
         {questionsSorted.length > 0 &&
           questionsSorted.map(
-            (question: QuestionGroupFragment, index: number) => {
+            (question: QuestionGroupFragment & { displayOrder: number}, index: number) => {
               let isChecked = false;
               answered.map((e: any) => {
                 if (e.id === question.id) {
@@ -90,7 +91,7 @@ const QuestionPalette: React.FC<QuestionPaletteProps> = ({
                       });
                   }}
                 >
-                  {index + 1}
+                  {question.displayOrder}
                 </span>
               );
             }

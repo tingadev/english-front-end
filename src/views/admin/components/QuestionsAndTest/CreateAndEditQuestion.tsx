@@ -205,11 +205,16 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
     });
   }, [questionIdFinal]);
 
+  //refresh test questions
+  React.useEffect(() => {
+    removeQuestionMutationResult.data?.removeQuestion && refetchTestQuestions && refetchTestQuestions();
+  }, [removeQuestionMutationResult.loading])
+
   const [answersGroupsArr, setAnswersGroupsArr] = React.useState<
     AnswersGroupInput[]
   >([]);
   const handleRemoveQuestionGroup = (id?: string | null) => {
-    if (questionId) {
+    if (questionId || modal) {
       setIsOpenModalDelete(true);
       id && setIdRemove(id);
     }
