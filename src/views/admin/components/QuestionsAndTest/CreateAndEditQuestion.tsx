@@ -83,6 +83,7 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
   refetchTestQuestions,
   setIdForced,
 }) => {
+  const [path, setPath] = React.useState<string | null>(null);
   const [isOpenModalDelete, setIsOpenModalDelete] = React.useState(false);
   const [
     removeQuestionMutation,
@@ -118,8 +119,8 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
   const questionContext = React.useContext(QuestionContext);
 
   React.useEffect(() => {
-    formik.setFieldValue("image", questionContext.path);
-  }, [questionContext.path]);
+    formik.setFieldValue("image", path);
+  }, [path]);
 
   const { questionId } = useParams();
   const [answersKeyState, setAnswerKeyState] = React.useState(answersKeyVcl);
@@ -207,12 +208,15 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
 
   //refresh test questions
   React.useEffect(() => {
-    removeQuestionMutationResult.data?.removeQuestion && refetchTestQuestions && refetchTestQuestions();
-  }, [removeQuestionMutationResult.loading])
+    removeQuestionMutationResult.data?.removeQuestion &&
+      refetchTestQuestions &&
+      refetchTestQuestions();
+  }, [removeQuestionMutationResult.loading]);
 
   const [answersGroupsArr, setAnswersGroupsArr] = React.useState<
     AnswersGroupInput[]
   >([]);
+  const answersGroup = answersGroupsArr.slice();
   const handleRemoveQuestionGroup = (id?: string | null) => {
     if (questionId || modal) {
       setIsOpenModalDelete(true);
@@ -343,9 +347,9 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
         <Row>
           <Col>
             <Card>
-              <CardHeader className="d-flex justify-content-between align-items-center">
+              <CardHeader className={`d-flex justify-content-between align-items-center ${modal && 'sticky-top py2 px-4 bg-white'}`}>
                 <h5 className="title">
-                  {!questionId ? "Create Question" : "Update Question"}
+                  {!questionId && !modal ? "Create Question" : "Update Question"}
                 </h5>
                 <div>
                   <Button
@@ -602,7 +606,7 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
                     />
                     <ImageUpload
                       type={MediaType.Image}
-                      setPath={questionContext.setPath}
+                      setPath={setPath}
                       url={urlDefault}
                       singleImage
                     />
@@ -613,9 +617,6 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
                   <Col md="12">
                     <div>
                       {answersGroupsArr.map((a, index_a) => {
-                        const answersGroup = answersGroupsArr.find(
-                          (ele) => ele.id === a.id
-                        );
                         return (
                           <div key={index_a} className="pt-3 mt-4 border-top">
                             <FormGroup className="row flex-nowrap justify-content-between align-items-center w-50">
@@ -623,15 +624,17 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
                                 <Input
                                   placeholder="Enter question name"
                                   onChange={(e) => {
-                                    setAnswersGroupsArr([
-                                      ...answersGroupsArr.filter(
-                                        (ele) => ele.id !== a.id
-                                      ),
-                                      {
-                                        ...answersGroup,
-                                        questionName: e.target.value,
-                                      },
-                                    ]);
+                                    setAnswersGroupsArr(
+                                      answersGroupsArr.map((ele) => {
+                                        if (ele.id === a.id) {
+                                          return {
+                                            ...ele,
+                                            questionName: e.target.value,
+                                          };
+                                        }
+                                        return ele;
+                                      })
+                                    );
                                   }}
                                   defaultValue={a.questionName || ""}
                                 />
@@ -654,15 +657,17 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
                               <TinyMCETextarea
                                 textareaName={`description${index_a}`}
                                 onEditorChange={(e: any) => {
-                                  setAnswersGroupsArr([
-                                    ...answersGroupsArr.filter(
-                                      (ele) => ele.id !== a.id
-                                    ),
-                                    {
-                                      ...answersGroup,
-                                      description: e,
-                                    },
-                                  ]);
+                                  setAnswersGroupsArr(
+                                    answersGroupsArr.map((ele) => {
+                                      if (ele.id === a.id) {
+                                        return {
+                                          ...ele,
+                                          description: e,
+                                        };
+                                      }
+                                      return ele;
+                                    })
+                                  );
                                 }}
                                 value={a.description || ""}
                                 height={200}
@@ -673,15 +678,17 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
                               <TinyMCETextarea
                                 textareaName={`explaination${index_a}`}
                                 onEditorChange={(e: any) => {
-                                  setAnswersGroupsArr([
-                                    ...answersGroupsArr.filter(
-                                      (ele) => ele.id !== a.id
-                                    ),
-                                    {
-                                      ...answersGroup,
-                                      explaination: e,
-                                    },
-                                  ]);
+                                  setAnswersGroupsArr(
+                                    answersGroupsArr.map((ele) => {
+                                      if (ele.id === a.id) {
+                                        return {
+                                          ...ele,
+                                          explaination: e,
+                                        };
+                                      }
+                                      return ele;
+                                    })
+                                  );
                                 }}
                                 value={a.explaination || ""}
                                 height={200}
@@ -704,6 +711,9 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
                                             <Input
                                               type="text"
                                               onKeyUp={(opt: any) => {
+                                                const answersGroup = answersGroupsArr.find(
+                                                  (e) => e.id === a.id
+                                                );
                                                 const res = answersGroup?.answers?.map(
                                                   (aR) => {
                                                     if (
@@ -718,15 +728,19 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
                                                 );
                                                 res &&
                                                   answersGroup &&
-                                                  setAnswersGroupsArr([
-                                                    ...answersGroupsArr.filter(
-                                                      (e) => e.id !== a.id
-                                                    ),
-                                                    {
-                                                      ...answersGroup,
-                                                      answers: res,
-                                                    },
-                                                  ]);
+                                                  setAnswersGroupsArr(
+                                                    answersGroupsArr.map(
+                                                      (ele) => {
+                                                        if (ele.id === a.id) {
+                                                          return {
+                                                            ...ele,
+                                                            answers: res,
+                                                          };
+                                                        }
+                                                        return ele;
+                                                      }
+                                                    )
+                                                  );
                                               }}
                                               name="answersGroup"
                                               defaultValue={
@@ -737,21 +751,25 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
                                           <CustomInput
                                             type="radio"
                                             className="ml-3 mr-3"
-                                            id={`result-group_${index_a + index}_${answer.keyAnswer}`}
+                                            id={`result-group_${
+                                              index_a + index
+                                            }_${answer.keyAnswer}`}
                                             value={answer.keyAnswer!}
                                             checked={
                                               answer.keyAnswer === a.result
                                             }
                                             onChange={() => {
-                                              setAnswersGroupsArr([
-                                                ...answersGroupsArr.filter(
-                                                  (e) => e.id !== a.id
-                                                ),
-                                                {
-                                                  ...answersGroup,
-                                                  result: answer.keyAnswer,
-                                                },
-                                              ]);
+                                              setAnswersGroupsArr(
+                                                answersGroupsArr.map((ele) => {
+                                                  if (ele.id === a.id) {
+                                                    return {
+                                                      ...ele,
+                                                      result: answer.keyAnswer,
+                                                    };
+                                                  }
+                                                  return ele;
+                                                })
+                                              );
                                             }}
                                           />
                                         </FormGroup>

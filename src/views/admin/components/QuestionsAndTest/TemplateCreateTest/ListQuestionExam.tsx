@@ -61,7 +61,7 @@ const ListQuestionExam: React.FC<ListQuestionExam> = ({
 
   return (
     <React.Fragment>
-      <div className="d-flex mb-2 px-2 justify-content-between align-items-center">
+      <div className="d-flex px-2 justify-content-between align-items-center">
         <span
           style={{ width: "10%" }}
           className="font-10 text-primary text-center font-weight-semi"
@@ -103,7 +103,7 @@ const ListQuestionExam: React.FC<ListQuestionExam> = ({
                 return (
                   <React.Fragment>
                     <div
-                      className="d-flex mb-2 px-2 justify-content-between align-items-center"
+                      className="d-flex px-2 justify-content-between align-items-center"
                       key={q_index}
                     >
                       <span
@@ -202,7 +202,7 @@ const ListQuestionExam: React.FC<ListQuestionExam> = ({
                         {q.question.questionGroups.map((q_group, index_g) => {
                           return (
                             <div
-                              className="d-flex mb-2 px-2 justify-content-between align-items-center"
+                              className="d-flex px-2 justify-content-between align-items-center"
                               key={`group` + index_g}
                             >
                               <span style={{ width: "10%", height: "15px" }}>

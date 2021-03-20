@@ -1,5 +1,4 @@
 import React from "react";
-import { ButtonAddQuestion } from "../../ButtonQuestion/ButtonAddQuestion";
 import {
   PartFragment,
   SkillsType,
@@ -57,6 +56,7 @@ const Exam: React.FC<ExamProps> = ({
   let partAndAudioSecondsDefault: PartAndAudioSeconds[] = [];
   React.useEffect(() => {
     if (testData?.partAndAudioSecs) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       partAndAudioSecondsDefault = testData?.partAndAudioSecs.map((p) => {
         const { __typename, ...data } = p;
         return data;
@@ -164,7 +164,7 @@ const Exam: React.FC<ExamProps> = ({
                     dataParts && dataParts.find((part) => part.id === p.partId);
                   return (
                     <div key={index}>
-                      <li className="mb-2 bg-primary d-flex justify-content-between align-items-center">
+                      <li className="bg-primary d-flex justify-content-between align-items-center">
                         <h4 className="p-2 text-white my-0">
                           {part?.partName}
                         </h4>
@@ -250,7 +250,6 @@ const Exam: React.FC<ExamProps> = ({
                           </Button>
                         </div>
                       </li>
-                      <ButtonAddQuestion partId={p.partId!} />
                       <ButtonCreateQuestion partId={p.partId!} />
                       
                       <ListQuestionExam questions={questions} partId={p.partId!} refetchTestQuestions={refetchTestQuestions} />

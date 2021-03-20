@@ -13,8 +13,6 @@ interface QuestionContext {
     isOpenModalCreateQuestion: boolean;
     setQuestionIdModal: (questionId: string) => void;
     questionIdModal: string;
-    path: string | null;
-    setPath: (value: string) => void;
     isOpenModalAddPart: boolean;
     setIsOpenModalAddPart: (value: boolean) => void;
     partIds?: PartIdsInput;
@@ -43,7 +41,6 @@ const useQuestionProvider = ({
     const [isOpenModalAddTest, setIsOpenModalAddTest] = React.useState(false);
     const [isOpenModalAddTestCategory, setIsOpenModalAddTestCategory] = React.useState(false);
     const [questionIdModal, setQuestionIdModal] = React.useState('');
-    const [path, setPath] = React.useState<string | null>(null);
     const [partIds, setPartIds] = React.useState<PartIdsInput>()
     React.useEffect(() => {
         !isOpenModalCreateQuestion && setQuestionIdModal('');
@@ -59,8 +56,6 @@ const useQuestionProvider = ({
         setPartId,
         questionIdModal,
         setQuestionIdModal,
-        path,
-        setPath,
         isOpenModalAddPart,
         setIsOpenModalAddPart,
         partIds,

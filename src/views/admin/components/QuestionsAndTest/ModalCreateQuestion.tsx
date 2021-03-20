@@ -19,6 +19,7 @@ const ModalCreateQuestion: React.FC<ModalCreateQuestionProps> = ({
   return (
     <>
       <Modal
+        className='px-4 mw-100 w-100 '
         contentClassName="h-100"
         size="lg"
         centered
