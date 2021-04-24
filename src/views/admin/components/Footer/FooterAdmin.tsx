@@ -6,16 +6,18 @@ import PropTypes from "prop-types";
 interface FooterAdminProps {
   isDefault?: boolean;
   fluid?: boolean;
+  className?: string;
 }
 
 const FooterAdmin : React.FC<FooterAdminProps> = ({
   isDefault,
-  fluid
+  fluid,
+  className
 }) => {
   
     return (
       <footer
-        className={"footer" + (isDefault ? " footer-default" : "")}
+        className={"footer" + (isDefault ? " footer-default" : "") + ` ${className}`}
       >
         <Container fluid={fluid ? true : false}>
           <nav>

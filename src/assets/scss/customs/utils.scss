@@ -1,8 +1,13 @@
-.sticky-top-130{
+.sticky-top-130 {
     top: 167px;
     position: sticky;
     z-index: 1020;
 }
-.z-header{
+
+.z-header {
     z-index: 1031 !important;
+}
+
+.cursor-pointer {
+    cursor: pointer;
 }

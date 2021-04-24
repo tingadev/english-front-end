@@ -9,6 +9,9 @@ interface ImageUploadProps {
   singleImage?: boolean;
   setPath?: (val: string) => void;
   type: MediaType;
+  isShowPreview?: boolean;
+  classNameContainer?: string;
+  path?: string | null;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
@@ -16,6 +19,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   url,
   singleImage,
   setPath,
+  isShowPreview = true,
+  classNameContainer,
+  path
 }) => {
   const [loading, setLoading] = React.useState(false);
   const [pathPreview, setPathPreview] = React.useState("");
@@ -51,31 +57,33 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   return (
     <div className="w-100 text-center wrapper-input-image">
       <ImageUploader
-        className="w-100 ml-auto"
+        className={`w-100 ml-auto ${classNameContainer}`}
         withIcon={false}
-        buttonText="Choose images"
+        buttonText={`${path || url ? 'Edit' : 'Choose images'}`}
         onChange={(e, p) => {
           handleImageChange(e, p);
         }}
-        imgExtension={[".jpg", ".gif", ".png", ".gif"]}
+        imgExtension={[".jpg", ".gif", ".png", ".gif", ".jpeg"]}
         maxFileSize={5242880}
         singleImage={singleImage}
       />
-      {loading && <Spinner color="primary" />}
-      {!loading && pathPreview !== config.PATH_IMAGE && (
-        <div className="position-relative wrapper-img">
-          <img className="img" src={pathPreview} alt="" />
-          <span
-            className="position-absolute"
-            onClick={() => {
-              setPathPreview("");
-              setPath && setPath("");
-            }}
-          >
-            X
-          </span>
-        </div>
-      )}
+      {isShowPreview && <React.Fragment>
+        {loading && <Spinner color="primary" />}
+        {!loading && pathPreview && (
+          <div className="position-relative wrapper-img">
+            <img className="img" src={pathPreview} alt="" />
+            <span
+              className="position-absolute"
+              onClick={() => {
+                setPathPreview("");
+                setPath && setPath("");
+              }}
+            >
+              X
+            </span>
+          </div>
+        )}
+      </React.Fragment>}
     </div>
   );
 };

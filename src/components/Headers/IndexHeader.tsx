@@ -5,7 +5,6 @@ import React from "react";
 import { Container, Button, Row, Col } from "reactstrap";
 import Lottie from "react-lottie";
 import animationTest from "../../assets/lotties/lf30_editor_jlkqa2ui.json";
-import { initial } from "lodash";
 // core components
 
 const IndexHeader = () => {

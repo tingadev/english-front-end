@@ -29,7 +29,7 @@ import {
 } from "reactstrap";
 
 // core components
-import PanelHeader from "../components/PanelHeader/PanelHeader.js";
+import PanelHeader from "../components/PanelHeader/index.js";
 
 import { thead, tbody } from "../variables/general";
 
@@ -37,7 +37,7 @@ class RegularTables extends React.Component {
   render() {
     return (
       <>
-        <PanelHeader size="sm" />
+        <PanelHeader />
         <div className="content">
           <Row>
             <Col xs={12}>

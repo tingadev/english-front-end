@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 
@@ -8,26 +7,29 @@ import Footer from "../components/Footer/FooterAdmin";
 import Sidebar from "../components/Sidebar/Sidebar";
 import FixedPlugin from "../components/FixedPlugin/FixedPlugin.js";
 import routes from "../routes.js";
+import { MeContext, notMe } from "../../../hooks/useMe";
+import { useMeQuery } from "../../../schema/schema";
 
-interface DashboardAdminProps {
+interface DashboardAdminProps {}
 
-}
-
-const DashboardAdmin : React.FC<DashboardAdminProps> = () => {
-
+const DashboardAdmin: React.FC<DashboardAdminProps> = () => {
   const mainPanel = React.useRef<HTMLDivElement>(null);
-  const [backgroundColor, setBackgroundColor] = React.useState('brand')
+  const [backgroundColor, setBackgroundColor] = React.useState("brand");
   const handleColorClick = (color: any) => {
     setBackgroundColor(color);
   };
-    return (
+  const meQuery = useMeQuery();
+  let me = meQuery.data?.me;
+  if (!me) {
+    me = notMe;
+  }
+
+  return (
+    <MeContext.Provider value={me}>
       <div className="wrapper">
-        <Sidebar
-          routes={routes}
-          backgroundColor={backgroundColor}
-        />
-        <div className="main-panel" ref={mainPanel}>
-          <HeaderAdmin/> ADMIN,
+        <Sidebar routes={routes} backgroundColor={backgroundColor} />
+        <div className="flex-column d-flex main-panel vh-100" ref={mainPanel}>
+          <HeaderAdmin />
           <Switch>
             {routes.map((prop, key) => {
               return (
@@ -40,16 +42,17 @@ const DashboardAdmin : React.FC<DashboardAdminProps> = () => {
             })}
             <Redirect from="/admin" to="/admin/dashboard" />
           </Switch>
-          <Footer fluid />
+          <Footer className="mt-auto" fluid />
         </div>
         <FixedPlugin
           bgColor={backgroundColor}
           handleColorClick={(e: any) => {
-            handleColorClick(e.value)
+            handleColorClick(e.value);
           }}
         />
       </div>
-    );
-}
+    </MeContext.Provider>
+  );
+};
 
 export default DashboardAdmin;

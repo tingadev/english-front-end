@@ -6,6 +6,7 @@ import Test from "../sections/Test";
 import IndexHeader from "../components/Headers/IndexHeader";
 // import Loading from "../components/Loading";
 import Layout from "./layout/Layout";
+import Blog from "../sections/Blog";
 
 const Index: React.FC = () => {
   const match = useRouteMatch();
@@ -13,8 +14,11 @@ const Index: React.FC = () => {
     <Layout isHomePage>
       <div className="wrapper">
         <Switch>
-          <Route path={`${match.path}/toeic/:link`}>
+          <Route path={`${match.path}/:type/test/`}>
             <Test />
+          </Route>
+          <Route path={`${match.path}/:type/blog/:link`}>
+            <Blog />
           </Route>
           <Route path={match.path}>
             <IndexHeader />

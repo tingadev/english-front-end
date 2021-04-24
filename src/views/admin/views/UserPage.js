@@ -31,13 +31,12 @@ import {
 } from "reactstrap";
 
 // core components
-import PanelHeader from "../components/PanelHeader/PanelHeader.js";
 
 class User extends React.Component {
   render() {
     return (
       <>
-        <PanelHeader size="sm" />
+        {/* <PanelHeader /> */}
         <div className="content">
           <Row>
             <Col md="8">

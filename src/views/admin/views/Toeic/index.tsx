@@ -1,5 +1,5 @@
 import React from "react";
-import PanelHeader from "../../components/PanelHeader/PanelHeader";
+import PanelHeader from "../../components/PanelHeader";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import CreateAndEditQuestion from "../../components/QuestionsAndTest/CreateAndEditQuestion";
 import CreateAndEditPart from "../../components/QuestionsAndTest/CreateAndEditPart";
@@ -15,16 +15,14 @@ const ToeicAdmin: React.FC<{}> = () => {
   const match = useRouteMatch();
   return (
     <>
-      <PanelHeader
-        content={
-          <div className="header text-center">
+      <PanelHeader>
+      <div className="header text-center">
             <h2 className="title">Toeic</h2>
             <p className="category">
               Management Test and Questions of Toeic Category
             </p>
           </div>
-        }
-      />
+      </PanelHeader>
       <div className="content">
         <QuestionContextProvider certificateType={EnglishCertificateType.Toeic}>
         <Switch>

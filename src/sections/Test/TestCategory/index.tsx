@@ -3,37 +3,22 @@ import React from "react";
 
 // reactstrap components
 import { Row, Col, Container } from "reactstrap";
-import { Link, useRouteMatch, Switch, Route, useParams } from "react-router-dom";
+import { Link, useRouteMatch, Switch, Route } from "react-router-dom";
 import Divider from "../../../components/Divider";
 import TestSkills from "../TestSkills";
 import LeaderBoard from "../../../components/LeaderBoard";
-import { useGetTestGroupQuery } from "../../../schema/schema";
+import { TestCategoryInfoFragment } from "../../../schema/schema";
 import CardCategory from "./CardCategory";
-import Loading from "../../../components/Loading";
 interface TestCategoryProps {
+  testCategories?: TestCategoryInfoFragment[]; 
 }
-const TestCategory: React.FC<TestCategoryProps> = ({}) => {
-  const { link } = useParams();
-  let testGroupId = "";
-  if(link){
-    const temp = link.split("-");
-    testGroupId = temp[temp.length-1];
-  }
-  const getTestGroupQuery = useGetTestGroupQuery({
-    variables: {
-      id: testGroupId
-    }
-  })
-
-  const dataT1 = getTestGroupQuery.data?.getTestGroup.testCategories
-  if(!getTestGroupQuery.data){
-    return <Loading />
-  }
+const TestCategory: React.FC<TestCategoryProps> = ({testCategories}) => {
+  
   const match = useRouteMatch();
   return (
       <Switch>
-        <Route path={`${match.path}/test-category/:testCategoryId`}>
-          <TestSkills testCategories={dataT1}/>
+        <Route path={`${match.path}/category/:testCategoryId`}>
+          <TestSkills testCategories={testCategories}/>
         </Route>
         <Route path={`${match.path}`}>
           <Container>
@@ -45,7 +30,7 @@ const TestCategory: React.FC<TestCategoryProps> = ({}) => {
                   T1-TEST 1-40
                 </h3>
                 <div className="d-flex flex-wrap align-items-start">
-                  {dataT1 && dataT1.map((testCategory, index) => {
+                  {testCategories && testCategories.map((testCategory, index) => {
                     return (
                       <CardCategory key={index} testCategory={testCategory} />
                     );

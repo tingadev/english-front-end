@@ -6,10 +6,10 @@ import animationHello from "../../assets/lotties/35787-robot-says-hello.json";
 import animationLoading from "../../assets/lotties/lf30_editor_e6dctybt.json";
 interface LoadingProps {
   className?: string;
-  isQuery?: boolean;
+  isWelcome?: boolean;
 }
 
-const Loading: React.FC<LoadingProps> = ({ className, isQuery }) => {
+const Loading: React.FC<LoadingProps> = ({ className, isWelcome }) => {
   const [isDisplay, setIsDisplay] = React.useState("flex");
   const defaultOptionsHello = {
     loop: 1,
@@ -49,7 +49,7 @@ const Loading: React.FC<LoadingProps> = ({ className, isQuery }) => {
         display: ${isDisplay};
       `}
     >
-      <Lottie
+      {/* <Lottie
         options={defaultOptionsHello}
         height={150}
         width={200}
@@ -59,9 +59,9 @@ const Loading: React.FC<LoadingProps> = ({ className, isQuery }) => {
             callback: () => !isQuery && onAnimCompleted(),
           },
         ]}
-      />
+      /> */}
       <Lottie
-        options={defaultOptionsLoading}
+        options={isWelcome ? defaultOptionsHello : defaultOptionsLoading}
         height={200}
         width={200}
         style={{

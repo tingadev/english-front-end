@@ -32,7 +32,7 @@ import {
 } from "reactstrap";
 
 // core components
-import PanelHeader from "../components/PanelHeader/PanelHeader.js";
+import PanelHeader from "../components/PanelHeader/index.js";
 
 class Notifications extends React.Component {
   constructor(props) {
@@ -86,9 +86,8 @@ class Notifications extends React.Component {
   render() {
     return (
       <>
-        <PanelHeader
-          content={
-            <div className="header text-center">
+        <PanelHeader>
+        <div className="header text-center">
               <h2 className="title">Notifications</h2>
               <p className="category">
                 Please Checkout{" "}
@@ -102,8 +101,7 @@ class Notifications extends React.Component {
                 .
               </p>
             </div>
-          }
-        />
+        </PanelHeader>
         <div className="content">
           <NotificationAlert ref="notificationAlert" />
           <Row>

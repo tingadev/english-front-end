@@ -11,7 +11,7 @@ import {
   Button,
 } from "reactstrap";
 import Select from "react-select";
-import { useFormik, useFormikContext } from "formik";
+import { useFormik } from "formik";
 import * as yup from "yup";
 import {
   EnglishCertificateType,
@@ -43,14 +43,6 @@ export const EnglishCertificateOptions = [
     value: EnglishCertificateType.Ielts,
     label: EnglishCertificateType.Ielts,
   },
-  {
-    value: EnglishCertificateType.Custom,
-    label: EnglishCertificateType.Custom,
-  },
-  {
-    value: EnglishCertificateType.Blog,
-    label: EnglishCertificateType.Blog,
-  },
 ];
 
 export const SkillsTypeOptions = [
@@ -69,7 +61,7 @@ export const SkillsTypeOptions = [
 ];
 
 const CreateAndEditPart: React.FC<CreateEditPartProps> = () => {
-  const { partId } = useParams();
+  const { partId } = useParams() as {partId?: string};
   let notification = notificationAdd("Part");
   if (partId) {
     notification = notificationAdd("Part", "Updated");

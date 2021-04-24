@@ -135,6 +135,7 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
                             />
                           );
                         }
+                        return null;
                       }
                     )}
                 </div>

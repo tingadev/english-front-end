@@ -15,6 +15,7 @@ import {
 import { Link } from "react-router-dom";
 import ModalDelete from "../Modal/Delete";
 import LazyLoad from "../LazyLoad";
+import Loading from "../../../../components/Loading";
 interface ListTestCategoryProps {
   setIconPills: (val: string) => void;
 }
@@ -104,7 +105,7 @@ const ListTestCategory: React.FC<ListTestCategoryProps> = ({
     testCategoriesQuery,
   ]);
   if (testCategoriesQuery.loading) {
-    return <>{"Loading...."}</>;
+    return <Loading />
   }
   const testCategories =
     testCategoriesQuery.data?.getTestCategories.testCategories;

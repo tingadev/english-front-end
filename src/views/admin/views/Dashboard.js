@@ -41,10 +41,10 @@ import {
 } from "reactstrap";
 
 // core components
-import PanelHeader from "../components/PanelHeader/PanelHeader.js";
+// import PanelHeader from "../components/PanelHeader/index.js";
 
 import {
-  dashboardPanelChart,
+  // dashboardPanelChart,
   dashboardShippedProductsChart,
   dashboardAllProductsChart,
   dashboard24HoursPerformanceChart,
@@ -54,7 +54,7 @@ class Dashboard extends React.Component {
   render() {
     return (
       <>
-        <PanelHeader
+        {/* <PanelHeader
           size="lg"
           content={
             <Line
@@ -62,7 +62,7 @@ class Dashboard extends React.Component {
               options={dashboardPanelChart.options}
             />
           }
-        />
+        /> */}
         <div className="content">
           <Row>
             <Col xs={12} md={4}>

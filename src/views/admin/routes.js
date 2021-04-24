@@ -18,6 +18,7 @@
 import Dashboard from "./views/Dashboard.js";
 // import Notifications from "./views/Notifications.js";
 import ToeicAdmin from "./views/Toeic";
+import BlogAdmin from "./views/Blog";
 // import Typography from "./views/Typography.js";
 // import TableList from "./views/TableList.js";
 // import Maps from "./views/Maps.js";
@@ -44,6 +45,14 @@ var dashRoutes = [
     name: "Toeic",
     icon: "design_image",
     component: ToeicAdmin,
+    layout: "/admin",
+  },
+
+  {
+    path: "/blog",
+    name: "Blog",
+    icon: "design_image",
+    component: BlogAdmin,
     layout: "/admin",
   },
 

@@ -41,7 +41,7 @@ interface CreateAndEditTestCategoryProps {}
 
 const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = () => {
   const notification = notificationAdd("Test Category", "Update");
-  const { id } = useParams();
+  const { id } = useParams() as { id?: string };
   const [
     getTestCategoryQuery,
     getTestCategoryResponse,

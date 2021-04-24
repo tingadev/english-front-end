@@ -1,19 +1,21 @@
 /** @jsx jsx */
 import { jsx, css } from "@emotion/core";
+import moment from "moment";
 import React from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import { Button, Card, CardBody, CardSubtitle, CardTitle } from "reactstrap";
 // import { NavbarContext } from "../../../components/Navbars/NavbarContext";
 // import { useMe } from "../../../hooks/useMe";
-import { TestCategoryFragment } from "../../../schema/schema";
+import { TestCategoryInfoFragment } from "../../../schema/schema";
 
 interface CardCategoryProps {
-  testCategory?: TestCategoryFragment;
+  testCategory?: TestCategoryInfoFragment;
 }
 const CardCategory: React.FC<CardCategoryProps> = ({ testCategory }) => {
   // const me = useMe();
   const match = useRouteMatch();
   // const { setModalLogin } = React.useContext(NavbarContext);
+  const dateFormatted = moment(testCategory?.createdAt).format('DD/MM/YYYY');
   return (
     <Link
       className="font-12 font-weight-bold"
@@ -52,7 +54,7 @@ const CardCategory: React.FC<CardCategoryProps> = ({ testCategory }) => {
           >
             <div className="d-flex align-items-center">
               <i className="now-ui-icons ui-1_calendar-60 mr-1"></i>
-              <p className="mb-0 font-6">Published on: 14/08/2020</p>
+              <p className="mb-0 font-6">Published on: {dateFormatted}</p>
             </div>
             <div className="d-flex align-items-center">
               <i className="now-ui-icons tech_laptop mr-1"></i>

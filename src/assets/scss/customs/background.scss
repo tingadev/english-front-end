@@ -10,8 +10,15 @@
 }
 
 .noHeader{
-    margin-top: 208px;
+    margin-top: 153px;
 }
 .bg-brand-50{
     background-color: rgba(#33075A,0.3) !important;
+}
+.bg-black-10{
+    background-color: rgba(0,0,0,0.2) !important;
+}
+.bg-black-blur{
+    background-color: rgba(0,0,0,0.3) !important;
+    backdrop-filter: blur(2px) !important;
 }

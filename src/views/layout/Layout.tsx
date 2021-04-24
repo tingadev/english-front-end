@@ -2,7 +2,6 @@
 import { jsx, css } from "@emotion/core";
 import React from "react";
 import Brand from "../../components/Brand";
-import IndexNavbar from "../../components/Navbars/IndexNavbar";
 import NavBarContextProvider from "../../components/Navbars/NavbarContext";
 import { MeContext, notMe } from "../../hooks/useMe";
 import { useMeQuery } from "../../schema/schema";
@@ -20,7 +19,6 @@ const Layout: React.FC<LayoutProps> = ({ children, isHomePage }) => {
     <MeContext.Provider value={me}>
       <NavBarContextProvider>
         <Brand />
-        <IndexNavbar isGeneral />
         <div
           css={css`
             padding-top: ${isHomePage ? "0" : "180px"};

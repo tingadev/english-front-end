@@ -20,6 +20,21 @@ export const TEST_CATEGORY_FRAGMENT = gql`
   ${TEST_FRAGMENT}
 `;
 
+export const TEST_CATEGORY_INFO_FRAGMENT = gql`
+  fragment TestCategoryInfo on TestCategory {
+    id
+    testCategoryName
+    certificateType
+    testGroup{
+      id
+    }
+    isPublished
+    displayOrder
+    displayOrderGroup
+    createdAt
+  }
+`;
+
 export const CREATE_TEST_CATEGORY = gql`
   mutation createTestCategory($data: NewTestCategoryInput!) {
     createTestCategory(data: $data) {
@@ -63,6 +78,20 @@ export const GET_TEST_CATEGORIES = gql `
     }
   }
   ${TEST_CATEGORY_FRAGMENT}
+`;
+
+
+export const GET_TEST_CATEGORIES_INFO = gql `
+  query getTestCategoriesInfo($data: TestCategoryFilterInput!) {
+    getTestCategories(data: $data) {
+      testCategories{
+        ...TestCategoryInfo
+      }
+      total
+      nextCursor
+    }
+  }
+  ${TEST_CATEGORY_INFO_FRAGMENT}
 `;
 
 

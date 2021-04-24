@@ -5,13 +5,16 @@ interface NavbarProps {
   setNavbarColor: (color: string) => void;
   topFixed: string;
   setTopFixed: (val: string) => void;
-  hiddenBrand: boolean;
-  setHiddenBrand: (val: boolean) => void;
+  hiddenBrand: string;
+  setHiddenBrand: (val: string) => void;
   modalLogin: boolean;
   setModalLogin: (val: boolean) => void;
+  setIsStyle: (val: boolean) => void;
+  isStyle: boolean;
 }
 interface NavbarContextProviderProps {
   isHomePage?: boolean;
+  isStyle?: boolean;
 }
 
 export const NavbarContext = React.createContext<NavbarProps>(
@@ -21,11 +24,12 @@ export const NavbarContext = React.createContext<NavbarProps>(
 const useChatContextProvider = ({
   isHomePage,
 }: NavbarContextProviderProps): NavbarProps => {
-  const [navbarColor, setNavbarColor] = React.useState(isHomePage ? "navbar-transparent" : 'bg-brand');
-  const [topFixed, setTopFixed] = React.useState("100px");
-  const [hiddenBrand, setHiddenBrand] = React.useState(false);
+  const [isStyle, setIsStyle] = React.useState(false);
+  const [navbarColor, setNavbarColor] = React.useState(!isStyle ? "bg-primary" : "navbar-transparent");
+  const [topFixed, setTopFixed] = React.useState("81px");
+  const [hiddenBrand, setHiddenBrand] = React.useState("");
   const [modalLogin, setModalLogin] = React.useState(false);
-  
+ 
   React.useEffect(() => {
     document.body.classList.add("index-page");
     document.body.classList.add("sidebar-collapse");
@@ -36,19 +40,23 @@ const useChatContextProvider = ({
     };
   });
   React.useEffect(() => {
-    if(!isHomePage) return;
+    // if(!isHomePage) return;
     const updateNavbarColor = () => {
       if (
         document.documentElement.scrollTop > 89 ||
         document.body.scrollTop > 89
       ) {
-        setNavbarColor("bg-brand");
-       
+        
+        setTopFixed('0px');
+        setNavbarColor(`${isStyle ? 'bg-black-blur' : 'bg-primary'}`);
+        setHiddenBrand("d-none");
       } else if (
         document.documentElement.scrollTop < 90 ||
         document.body.scrollTop < 90
       ) {
-        setNavbarColor("navbar-transparent");
+        setTopFixed('81px');
+        setNavbarColor("");
+        setHiddenBrand("");
       }
     };
     window.addEventListener("scroll", updateNavbarColor);
@@ -65,6 +73,8 @@ const useChatContextProvider = ({
     setHiddenBrand,
     modalLogin,
     setModalLogin,
+    setIsStyle,
+    isStyle,
   };
   return navbarContextProvider;
 };

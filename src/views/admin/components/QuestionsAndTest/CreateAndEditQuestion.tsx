@@ -216,7 +216,6 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
   const [answersGroupsArr, setAnswersGroupsArr] = React.useState<
     AnswersGroupInput[]
   >([]);
-  const answersGroup = answersGroupsArr.slice();
   const handleRemoveQuestionGroup = (id?: string | null) => {
     if (questionId || modal) {
       setIsOpenModalDelete(true);

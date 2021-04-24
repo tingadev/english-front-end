@@ -21,13 +21,13 @@ import React from "react";
 import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
 
 // core components
-import PanelHeader from "../components/PanelHeader/PanelHeader.js";
+import PanelHeader from "../components/PanelHeader/index.js";
 
 class Typography extends React.Component {
   render() {
     return (
       <>
-        <PanelHeader size="sm" />
+        <PanelHeader />
         <div className="content">
           <Row>
             <Col md={12}>

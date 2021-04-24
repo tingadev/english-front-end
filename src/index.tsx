@@ -8,7 +8,7 @@ import {
   ApolloProvider,
   createHttpLink
 } from "@apollo/client";
-import { Switch, Redirect, Route, HashRouter } from "react-router-dom";
+import { Switch, Redirect, Route, BrowserRouter as Router } from "react-router-dom";
 import config from "./config";
 // styles for this kit
 import "./assets/css/bootstrap.min.css";
@@ -45,7 +45,7 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-      <HashRouter basename="/">
+      <Router >
         <ReactNotification />
         <Switch>
           {routes.map((prop, key) => {
@@ -56,7 +56,7 @@ function App() {
           <Redirect to="/home" />
           <Redirect from="/" to="/home" />
         </Switch>
-      </HashRouter>
+      </Router>
       ,
     </ApolloProvider>
   );

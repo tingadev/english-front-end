@@ -10,222 +10,16 @@ import {
   Navbar,
   Nav,
 } from "reactstrap";
+import { TestGroupChildInfoFragment, useGetTestGroupsInfoQuery } from "../../schema/schema";
+import Loading from "../Loading";
 import { NavbarContext } from "./NavbarContext";
-
-const elementsNav = [
-  {
-    title: "Toeic Thương mại",
-    dropdown: [
-      {
-        title: "T0 - Giới thiệu",
-        link: "/about-toeic",
-        id: "ielts",
-      },
-      {
-        title: "T1 - Test 1-40",
-        link: "/home/toeic/t1-toeic-2",
-        id: "ielts",
-      },
-      {
-        title: "T2 - Toeic 600 từ vựng thương mại",
-        link: "/home/toeic",
-        id: "ielts",
-      },
-      {
-        title: "T3 - Toeic Ngữ pháp đặc biệt",
-        link: "/home/toeic",
-        id: "ielts",
-      },
-      {
-        title: "T4 - PART 1 Tranh",
-        link: "/home/toeic",
-        id: "ielts",
-      },
-      {
-        title: "T5 - PART 2 Hỏi đáp",
-        link: "/home/toeic",
-        id: "ielts",
-      },
-      {
-        title: "T6 - PART 3 Hội thoại",
-        link: "/home/toeic",
-        id: "ielts",
-      },
-      {
-        title: "T7 - PART 4 Độc thoại",
-        link: "/home/toeic",
-        id: "ielts",
-      },
-      {
-        title: "T8 - PART 5 Điền vào câu",
-        link: "/home/toeic",
-        id: "ielts",
-      },
-      {
-        title: "T9 - PART 6 Điền vào đoạn văn",
-        link: "/home/toeic",
-        id: "ielts",
-      },
-      {
-        title: "T10 - PART 7 Đọc hiểu đoạn văn",
-        link: "/home/toeic",
-        id: "ielts",
-      },
-    ],
-    link: "/home/toeic",
-    id: "toeic",
-  },
-  {
-    title: "IELTS học thuật",
-    link: "home/ielts",
-    dropdown: [
-      {
-        title: "I1 - Test 1-40",
-        link: "/home/ielts",
-        id: "ielts",
-      },
-      {
-        title: "I2 - IELTS Tự vựng cao cấp",
-        link: "/home/ielts",
-        id: "ielts",
-      },
-      {
-        title: "I3 - IELTS Ngữ pháp cao cấp",
-        link: "/home/ielts",
-        id: "ielts",
-      },
-      {
-        title: "I4 - IELTS Nghe",
-        link: "/home/ielts",
-        id: "ielts",
-      },
-      {
-        title: "I5 - IELTS Đọc",
-        link: "/home/ielts",
-        id: "ielts",
-      },
-      {
-        title: "I6 - IELTS Nói",
-        link: "/home/ielts",
-        id: "ielts",
-      },
-      {
-        title: "I7 - IELTS Viết",
-        link: "/home/ielts",
-        id: "ielts",
-      },
-      {
-        title: "I8 - IELTS Dịch vụ sửa bài viết",
-        link: "/home/ielts",
-        id: "ielts",
-      },
-      {
-        title: "I9 - IELTS Dịch vụ sửa bài nói",
-        link: "/home/ielts",
-        id: "ielts",
-      },
-    ],
-    id: "ielts",
-  },
-  {
-    title: "Luyện thi đại học",
-    link: "/home/ltdh",
-    dropdown: [
-      {
-        title: "L1 - Test 1-100",
-        link: "/home/ltdh",
-        id: "ltdh",
-      },
-      {
-        title: "L2 - Ngữ pháp",
-        link: "/home/ltdh",
-        id: "ltdh",
-      },
-      {
-        title: "L3 - Từ vựng",
-        link: "/home/ltdh",
-        id: "ltdh",
-      },
-      {
-        title: "L4 - Phát âm",
-        link: "/home/ltdh",
-        id: "ltdh",
-      },
-      {
-        title: "L5 - Đọc hiểu",
-        link: "/home/ltdh",
-        id: "ltdh",
-      },
-      {
-        title: "L6 - Bài viết",
-        link: "/home/ltdh",
-        id: "ltdh",
-      },
-      {
-        title: "L7 - 300 bài luận mẫu chuẩn phổ thông",
-        link: "/home/ltdh",
-        id: "ltdh",
-      },
-    ],
-    id: "ltdh",
-  },
-  {
-    title: "Khoá học tặng kèm",
-    link: "/home/khtk",
-    dropdown: [
-      {
-        title: "K1 - Hợp đồng kinh tế mới nhất",
-        link: "/home/khtk",
-        id: "khtk",
-      },
-      {
-        title: "K2 - Email ngoại giao quốc tế",
-        link: "/home/khtk",
-        id: "khtk",
-      },
-      {
-        title: "K3 - Phát âm chuẩn bản xứ",
-        link: "/home/khtk",
-        id: "khtk",
-      },
-      {
-        title: "K4 - Viết tiếng anh căn bản",
-        link: "/home/khtk",
-        id: "khtk",
-      },
-    ],
-    id: "ltdh",
-  },
-  {
-    title: "Cộng tác",
-    link: "/home/ct",
-    dropdown: [
-      {
-        title: "C1 - Tuyển dụng",
-        link: "/home/ct",
-        id: "ct",
-      },
-      {
-        title: "C2 - Đại sứ",
-        link: "/home/ct",
-        id: "ct",
-      },
-    ],
-    id: "ltdh",
-  },
-  {
-    title: "Hổ trợ 24/7",
-    link: "/home/support",
-    id: "support",
-  },
-];
 interface ElementMenuProps {
   title: string;
   link: string;
   id: string;
 }
 interface DropdownMenuChildProps {
-  elements: ElementMenuProps[];
+  elements: TestGroupChildInfoFragment[];
   className?: string;
 }
 
@@ -240,11 +34,11 @@ export const DropdownMenuChild: React.FC<DropdownMenuChildProps> = ({ elements, 
         return (
           <DropdownItem
             key={index}
-            to={eleChild.link}
+            to={`/home/${eleChild.certificateType.toLowerCase()}/${eleChild.groupType.toLowerCase()}/${eleChild.link}`}
             tag={Link}
             className={"text-white font-weight-bold"}
           >
-            {eleChild.title.toUpperCase()}
+            {eleChild.testGroupName.toUpperCase()}
           </DropdownItem>
         );
       })}
@@ -256,11 +50,17 @@ interface IndexNavbarProps {
   isGeneral?: boolean;
 }
 const IndexNavbar: React.FC<IndexNavbarProps> = ({ isGeneral }) => {
-  const {
-    navbarColor,
-    topFixed
-  } = React.useContext(NavbarContext);
+  const { navbarColor, isStyle } = React.useContext(NavbarContext);
   const [collapseOpen, setCollapseOpen] = React.useState(false);
+  const {data, loading} = useGetTestGroupsInfoQuery({
+    variables: {
+      data: {},
+    },
+  });
+  const testGroups = data?.getTestGroups.testGroups;
+  if(loading){
+    return <Loading isWelcome />
+  }
 
   return (
     <>
@@ -274,11 +74,8 @@ const IndexNavbar: React.FC<IndexNavbarProps> = ({ isGeneral }) => {
         />
       ) : null}
       <Navbar
-        className={"fixed-top " + navbarColor}
+        className={`mb-0 ${isStyle ? '' : 'bg-primary'} ${navbarColor}`}
         expand="lg"
-        color="primary"
-        style={{ top: topFixed }}
-        id="navbarFixed"
       >
         <div className="navbar-translate">
           {/* <UncontrolledTooltip target="#navbar-brand">
@@ -299,26 +96,26 @@ const IndexNavbar: React.FC<IndexNavbarProps> = ({ isGeneral }) => {
           </button>
         </div>
         <Collapse
-          className="justify-content-center"
+          className="justify-content-start"
           isOpen={collapseOpen}
           navbar
         >
           <Nav navbar>
-            {elementsNav.map((ele, index) => {
+            {testGroups?.map((ele, index) => {
               return (
                 <UncontrolledDropdown key={index} nav>
                   <DropdownToggle
-                    caret={ele.dropdown ? true : false}
+                    caret={ele.testGroupsChild ? true : false}
                     color="default"
                     href="#pablo"
                     nav
                     onClick={(e) => e.preventDefault()}
                     className="border border-white rounded-pill min-w-6rem text-center font-11 px-3"
                   >
-                    <p className="font-weight-bold">{ele.title}</p>
+                    <p className="font-weight-bold">{ele.testGroupName}</p>
                   </DropdownToggle>
-                  {ele.dropdown && (
-                    <DropdownMenuChild elements={ele.dropdown!} />
+                  {ele.testGroupsChild && (
+                    <DropdownMenuChild elements={ele.testGroupsChild} />
                   )}
                 </UncontrolledDropdown>
               );

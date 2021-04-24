@@ -8,81 +8,140 @@ import {
   FormGroup,
   Input,
   Form,
-  Button,
 } from "reactstrap";
 import Select from "react-select";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import {
+  EnglishCertificateType,
+  GroupType,
   NewTestGroupInput,
-    TestGroupFragment,
+  TestGroupInfoFragment,
   useCreateTestGroupMutation,
-  useGetTestGroupLazyQuery,
+  useGetTestGroupInfoLazyQuery,
+  useUniqueLinkTestGroupMutation,
   useUpdateTestGroupMutation,
 } from "../../../../schema/schema";
 import { store } from "react-notifications-component";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { notificationAdd } from "../../utils/Notification";
 import ErrorMessage from "../../components/Error";
 import { EnglishCertificateOptions } from "../../components/QuestionsAndTest/CreateAndEditPart";
-
+import Loading from "../../../../components/Loading";
+import ButtonSubmitGroup from "../../components/ButtonSubmit";
+import { generateLink } from "../../utils/GenerateLink";
+const penEdit = require("../../../../assets/img/pen.svg");
 interface CreateAndEditTestGroupProps {
-    testsGroupData?: TestGroupFragment[];
+  testsGroupData?: TestGroupInfoFragment[];
 }
 
-export const ListOfTestGroups = [
+export const ListOfTestGroups: { value: string | null; label: string }[] = [
   {
-    value: "",
-    label: "Chose Test Group",
+    value: null,
+    label: "Chose test group",
   },
 ];
 
+const GroupTypeOptions = [
+  {
+    value: "",
+    label: "Chose type",
+  },
+  {
+    value: GroupType.Test,
+    label: "Test",
+  },
+  {
+    value: GroupType.Blog,
+    label: "Blog",
+  },
+  {
+    value: GroupType.Landing,
+    label: "Landing",
+  },
+];
 
-const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({testsGroupData}) => {
-  const { testGroupId } = useParams();
-  let notification = notificationAdd("Test Group");
-  
-  if (testGroupId) {
-    notification = notificationAdd("Test Group", "Updated");
-  }
+const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({
+  testsGroupData,
+}) => {
+  const { testGroupId } = useParams() as any;
+  const [isDisableEditLink, setIsDisableEditLink] = React.useState(true);
+  const [uniqueLinkTestGroupMutation] = useUniqueLinkTestGroupMutation();
+  const notification = notificationAdd(
+    "Test Group",
+    `${testGroupId ? "Updated" : ""}`
+  );
+  const [getTestGroupQuery, getTestGroupResponse] = useGetTestGroupInfoLazyQuery();
+  React.useEffect(() => {
+    testGroupId &&
+      getTestGroupQuery({
+        variables: {
+          id: testGroupId,
+        },
+      });
+  }, [getTestGroupQuery, testGroupId]);
+  const [
+    selectedGroupTypeOptions,
+    setSelectedGroupTypeOptions,
+  ] = React.useState(GroupTypeOptions[0]);
+  const [selectedTestGroup, setSelectedTestGroup] = React.useState(
+    ListOfTestGroups[0]
+  );
   const [certificateTypeSelect, setCertificateTypeSelect] = React.useState(
     EnglishCertificateOptions[0]
   );
-  let initialValues: NewTestGroupInput = {
-    testGroupName: "",
-  };
+  const testGroupData = getTestGroupResponse.data?.getTestGroup;
+  React.useMemo(() => {
+    if (testGroupData) {
+      const selected = testsGroupData?.find(
+        (t) => t.id === testGroupData.parentId
+      );
+      selected &&
+        setSelectedTestGroup({
+          value: selected.id,
+          label: selected.testGroupName,
+        });
+      setSelectedGroupTypeOptions({
+        value: testGroupData.groupType,
+        label: testGroupData.groupType,
+      });
+      EnglishCertificateOptions.find((prop, key) => {
+        if (prop.value === testGroupData?.certificateType) {
+          setCertificateTypeSelect(EnglishCertificateOptions[key]);
+        }
+        return null;
+      });
+    }
+  }, [testGroupData]);
+
   const [
     createTestGroupMutation,
-    createTestGroupMutationResult,
+    createTestGroupResponse,
   ] = useCreateTestGroupMutation();
   const [
     updateTestGroupMutation,
-    updateTestGroupMutationResult,
+    updateTestGrouResponse,
   ] = useUpdateTestGroupMutation();
-  const [
-    getTestGroupQuery,
-    getTestGroupQueryRespone,
-  ] = useGetTestGroupLazyQuery();
- 
-  React.useEffect(() => {
-    if (!testGroupId) {
-      return;
-    }
-    getTestGroupQuery({
-      variables: {
-        id: testGroupId,
-      },
-    });
-  }, [testGroupId]);
-  if (getTestGroupQueryRespone.data) {
-    const { __typename, testCategories, ...data } = getTestGroupQueryRespone.data.getTestGroup;
-    initialValues = data;
-  }
-  const defaultListTestGroup = React.useMemo(() => {
+
+  const [defaultListTestGroup, setDefaultListTestGroup] = React.useState(
+    ListOfTestGroups
+  );
+
+  let initialValues: NewTestGroupInput = {
+    testGroupName: testGroupData?.testGroupName || "",
+    link: testGroupData?.link || "",
+    groupType: testGroupData?.groupType || GroupType.Test,
+    parentId: testGroupData?.parentId || "0",
+    certificateType:
+      testGroupData?.certificateType || EnglishCertificateType.Toeic,
+    displayOrder: testGroupData?.displayOrder || 0,
+  };
+
+  React.useMemo(() => {
     if (!testsGroupData) {
       return ListOfTestGroups;
     }
-    return [
+    setDefaultListTestGroup([
       ...ListOfTestGroups,
       ...testsGroupData.map((tg) => {
         const data = {
@@ -91,46 +150,51 @@ const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({testsGro
         };
         return data;
       }),
-    ];
+    ]);
   }, [testsGroupData]);
-
-  React.useEffect(() => {
-    EnglishCertificateOptions.find((prop, key) => {
-      if (prop.value === getTestGroupQueryRespone?.data?.getTestGroup.certificateType) {
-        setCertificateTypeSelect(EnglishCertificateOptions[key]);
-      }
-    });
-  },[getTestGroupQueryRespone.data])
-
 
   const [shouldValidate, setShouldValidate] = React.useState(false);
   const formik = useFormik({
     enableReinitialize: true,
     validateOnChange: shouldValidate,
     validateOnBlur: shouldValidate,
-    initialValues: initialValues,
+    initialValues,
     validationSchema: yup.object().shape({
-        testGroupName: yup.string().required("Test Group Name is a required field"),
-        link: yup.string().required("Link is a required field"),
-        certificateType: yup.string().required("Type of test is a required field"),
-     
+      testGroupName: yup
+        .string()
+        .required("Test Group Name is a required field"),
+      link: yup.string().trim().required("Link is a required field"),
+      certificateType: yup
+        .string()
+        .required("Type of test is a required field"),
     }),
     onSubmit: async (values) => {
+      const { link, ...remainingData } = values;
+      const linkTrim = link.trim();
+      const res = await uniqueLinkTestGroupMutation({
+        variables: {
+          link: linkTrim,
+        },
+      });
+      if (res.data?.uniqueLinkTestGroup) {
+        formik.setErrors({
+          link: "This link already exists, please try again !",
+        });
+        return;
+      }
       if (testGroupId) {
         const result = await updateTestGroupMutation({
           variables: {
-            data: values,
+            data: { id: testGroupId, link: linkTrim, ...remainingData },
           },
         });
         if (result.data?.updateTestGroup) {
           store.addNotification(notification);
-          getTestGroupQueryRespone.refetch &&
-            getTestGroupQueryRespone.refetch();
         }
       } else {
         const result = await createTestGroupMutation({
           variables: {
-            data: values,
+            data: { link: linkTrim, ...remainingData },
           },
         });
         if (result.data?.createTestGroup) {
@@ -140,6 +204,9 @@ const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({testsGro
       }
     },
   });
+  if (getTestGroupResponse.loading) {
+    return <Loading />;
+  }
 
   return (
     <>
@@ -151,35 +218,33 @@ const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({testsGro
                 <h5 className="title">
                   {!testGroupId ? "Create Test Group" : "Update Test Group"}
                 </h5>
-                <div>
-                  <Button
-                    type="button"
-                    className="bg-info font-weight-bold font-10"
-                    onClick={() => {
-                      formik.submitForm();
-                      setShouldValidate(true);
-                    }}
-                  >
-                    Submit
-                  </Button>
-                  <Link
-                    to={`/admin/test-group`}
-                    className="bg-danger btn font-weight-bold font-10"
-                  >
-                    Cancel
-                  </Link>
-                </div>
+                <ButtonSubmitGroup
+                  onClick={() => {
+                    formik.submitForm();
+                    setShouldValidate(true);
+                  }}
+                  link={`/admin/test-group`}
+                  loading={
+                    createTestGroupResponse.loading ||
+                    updateTestGrouResponse.loading
+                  }
+                />
               </CardHeader>
               <CardBody>
                 <Row>
-                  <Col className="pr-1" md="6">
+                  <Col className="pr-1" md="4">
                     <FormGroup>
                       <label>Test Group Name</label>
                       <Input
-                        placeholder="Part Name"
+                        placeholder="Test Group Name"
                         name="testGroupName"
                         type="text"
-                        onChange={formik.handleChange}
+                        onChange={(e) => {
+                          formik.handleChange(e);
+                          const generatedLink = generateLink(e.target.value);
+                          isDisableEditLink &&
+                            formik.setFieldValue("link", generatedLink);
+                        }}
                         onBlur={formik.handleBlur}
                         value={formik.values.testGroupName || ""}
                         className={formik.errors.testGroupName && "input-error"}
@@ -188,15 +253,16 @@ const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({testsGro
                       <ErrorMessage message={formik.errors.testGroupName} />
                     </FormGroup>
                   </Col>
-                  <Col md="6" className="pl-1">
+                  <Col md="4" className="pl-1">
                     <FormGroup>
                       <label>Children of</label>
                       <Select
                         className="react-select react-select-primary"
                         onChange={(opt: any) => {
                           formik.setFieldValue("parentId", opt.value);
+                          setSelectedTestGroup(opt);
                         }}
-                        value={defaultListTestGroup[0]}
+                        value={selectedTestGroup}
                         classNamePrefix="react-select"
                         placeholder="Chose type of Test"
                         name="parentId"
@@ -206,13 +272,32 @@ const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({testsGro
                     </FormGroup>
                   </Col>
 
+                  <Col md="4" className="pl-1">
+                    <FormGroup>
+                      <label>Type</label>
+                      <Select
+                        className="react-select react-select-primary"
+                        onChange={(opt: any) => {
+                          formik.setFieldValue("groupType", opt.value);
+                          setSelectedGroupTypeOptions(opt);
+                        }}
+                        value={selectedGroupTypeOptions}
+                        classNamePrefix="react-select"
+                        placeholder="Chose type of Test"
+                        name="groupType"
+                        options={GroupTypeOptions}
+                      ></Select>
+                      <ErrorMessage message={formik.errors.groupType} />
+                    </FormGroup>
+                  </Col>
+
                   <Col md="6" className="pr-1">
                     <FormGroup>
                       <label>Label Test</label>
                       <Select
                         className="react-select react-select-primary"
                         onChange={(opt: any) => {
-                          setCertificateTypeSelect(opt)
+                          setCertificateTypeSelect(opt);
                           formik.setFieldValue("certificateType", opt.value);
                         }}
                         value={certificateTypeSelect}
@@ -224,25 +309,31 @@ const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({testsGro
                       <ErrorMessage message={formik.errors.certificateType} />
                     </FormGroup>
                   </Col>
-                  <Col className="pl-1" md="3">
+                  <Col className="pl-1" md="6">
                     <FormGroup>
                       <label>Link</label>
-                      <Input
-                        placeholder="Link"
-                        name="link"
-                        type="text"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.link || ""}
-                        className={formik.errors.link && "input-error"}
-                      />
-
+                      <div className="d-flex align-items-center">
+                        <Input
+                          placeholder="Link"
+                          name="link"
+                          type="text"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.link || ""}
+                          className={formik.errors.link && "input-error"}
+                          disabled={isDisableEditLink}
+                        />
+                        <span
+                          className="ml-2 cursor-pointer"
+                          onClick={() => setIsDisableEditLink(false)}
+                        >
+                          <img alt="penEdit" src={penEdit} />
+                        </span>
+                      </div>
                       <ErrorMessage message={formik.errors.link} />
                     </FormGroup>
                   </Col>
-                 
                 </Row>
-               
               </CardBody>
             </Card>
           </Col>

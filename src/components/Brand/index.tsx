@@ -14,6 +14,7 @@ import {
 } from "reactstrap";
 import { useMe } from "../../hooks/useMe";
 import { ModalLogin } from "../../sections/Login/ModalLogin";
+import IndexNavbar from "../Navbars/IndexNavbar";
 import { NavbarContext } from "../Navbars/NavbarContext";
 interface LogoProps {
   className?: string;
@@ -37,24 +38,22 @@ const loginDropdowns = [
   },
 ];
 const Brand: React.FC = () => {
-  const { hiddenBrand, navbarColor, modalLogin, setModalLogin } = React.useContext(NavbarContext);
+  const { hiddenBrand, modalLogin, setModalLogin, isStyle } = React.useContext(NavbarContext);
  
   const me = useMe();
   const history = useHistory();
   const client = useApolloClient();
   return (
-    <>
+    <div className={`${isStyle ? 'bg-black-10' : '' } fixed-top`}>
       <Navbar
-        className={`${navbarColor} fixed-top ${
-          hiddenBrand ? "d-none " : ""
-        } z-header`}
+        className={`${hiddenBrand} z-header mb-0 ${!isStyle ? 'bg-brand' : ''}`}
       >
         <Container>
           <div className="w-100">
             <div className="d-flex align-items-center justify-content-between">
               <div className="d-flex align-items-center">
-                <Logo className="width-5rem" />
-                <h3 className="mb-0 text-white ml-2">POWPER ENGLISH</h3>
+                <Logo className="width-3rem" />
+                <h4 className="m-0 text-white ml-2">POWPER ENGLISH</h4>
               </div>
               <ul className="list-unstyled">
                 <UncontrolledDropdown nav className="list-style-none">
@@ -129,7 +128,8 @@ const Brand: React.FC = () => {
           </div>
         </Container>
       </Navbar>
-    </>
+      <IndexNavbar />
+    </div>
   );
 };
 

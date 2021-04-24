@@ -28,7 +28,7 @@ import {
 import { Row, Col, Card, CardHeader, CardBody } from "reactstrap";
 
 // core components
-import PanelHeader from "../components/PanelHeader/PanelHeader.js";
+import PanelHeader from "../components/PanelHeader/index.js";
 
 const MapWrapper = withScriptjs(
   withGoogleMap((props) => (
@@ -122,7 +122,7 @@ class FullScreenMap extends React.Component {
   render() {
     return (
       <>
-        <PanelHeader size="sm" />
+        <PanelHeader />
         <div className="content">
           <Row>
             <Col xs={12}>

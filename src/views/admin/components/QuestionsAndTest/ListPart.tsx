@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Card,
   CardHeader,
   CardTitle,
   CardBody,
@@ -14,7 +13,8 @@ import {
   useGetPartsQuery,
   EnglishCertificateType,
   SkillsType,
-  AudioSecondsInput, PartIdsInput, PartFilterInput, PartAndAudioSeconds
+  PartFilterInput,
+  PartAndAudioSeconds
 } from "../../../../schema/schema";
 import { Link, useRouteMatch } from "react-router-dom";
 import _ from "lodash";
