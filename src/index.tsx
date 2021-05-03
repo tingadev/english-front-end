@@ -19,7 +19,7 @@ import "react-notifications-component/dist/theme.css";
 // pages for this kit
 import ReactNotification from "react-notifications-component";
 import { setContext } from '@apollo/client/link/context';
-import dashRoutes from "./router";
+// import dashRoutes from "./router";
 import Index from "./views/Index";
 import DashboardAdmin from "./views/admin/layouts/Admin";
 const httpLink = createHttpLink({
@@ -47,15 +47,17 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-      <Router basename='/'>
+      <Router>
         <ReactNotification />
         <Switch>
-        <Route path={'/admin'}>
+          <Route path={'/admin'}>
             <DashboardAdmin />
           </Route>
-          <Route path={['/', '/home']}>
+          <Route path={['/home']}>
             <Index />
           </Route>
+          <Redirect to='/home/' />
+          <Redirect from='/' to='/home' />
         </Switch>
       </Router>
     </ApolloProvider>

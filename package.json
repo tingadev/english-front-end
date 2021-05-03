@@ -2,7 +2,7 @@
   "name": "front-end",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://tingadev.github.io/english-front-end/",
+  "homepage": "http://powper.vn",
   "dependencies": {
     "@apollo/client": "^3.1.1",
     "@apollo/react-common": "^3.1.4",
@@ -71,7 +71,7 @@
     "eject": "react-scripts eject",
     "refresh:schema": "rimraf src/schema/* && cp ../english-back-end/dist/schema.g*ql src/schema/schema.graphql && graphql-codegen --config codegen.yml",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -b master -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
