@@ -24,7 +24,7 @@ import DashboardAdmin from "./views/admin/layouts/Admin";
 import { SignUp } from "./sections/SignUp";
 import { ProfilePage } from "./sections/User/Profile";
 
-var dashRoutes = [
+const dashRoutes = [
   {
     path: "/home",
     name: "Dashboard",

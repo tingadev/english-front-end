@@ -17,9 +17,9 @@ import "./assets/demo/demo.css?v=1.4.0";
 import "./assets/demo/nucleo-icons-page-styles.css?v=1.4.0";
 import "react-notifications-component/dist/theme.css";
 // pages for this kit
-import routes from "./router.js";
 import ReactNotification from "react-notifications-component";
 import { setContext } from '@apollo/client/link/context';
+import dashRoutes from "./router";
 const httpLink = createHttpLink({
   uri: config.GRAPHQL_SERVER_URL,
   fetch,
@@ -48,11 +48,12 @@ function App() {
       <Router >
         <ReactNotification />
         <Switch>
-          {routes.map((prop, key) => {
+          {dashRoutes.map((prop, key) => {
             return (
-              <Route exact={prop.exact} path={prop.path} component={prop.component} key={key} />
+              <Route path={prop.path} component={prop.component} key={key} />
             );
           })}
+          <Redirect to="/home" />
           <Redirect from="/" to="/home" />
         </Switch>
       </Router>
