@@ -71,7 +71,7 @@
     "eject": "react-scripts eject",
     "refresh:schema": "rimraf src/schema/* && cp ../english-back-end/dist/schema.g*ql src/schema/schema.graphql && graphql-codegen --config codegen.yml",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -b master -d build"
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
