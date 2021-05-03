@@ -57,7 +57,6 @@ function App() {
           <Redirect from="/" to="/home" />
         </Switch>
       </Router>
-      ,
     </ApolloProvider>
   );
 }

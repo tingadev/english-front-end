@@ -93,7 +93,7 @@ export const DELETE_BLOG = gql `
 `
 
 export const UNIQUE_LINK_BLOG = gql `
-  mutation uniqueLinkBlog($link: String!){
-    uniqueLinkBlog(link: $link)
+  mutation uniqueLinkBlog($link: String!, $id: String){
+    uniqueLinkBlog(link: $link, id: $id)
   }
 `

@@ -11,3 +11,29 @@
 .cursor-pointer {
     cursor: pointer;
 }
+// HEADER
+.hide-nav{
+    height: 0;
+    visibility: hidden;
+    min-height: 0;
+    padding: 0;
+    .logo, .profile {
+        display: none;
+    }
+}
+.header-logo {
+    transition: min-height 0s ease !important;
+}
+
+.img-hover {
+    transition: all 0.3s ease !important;
+    &:hover{
+        transform: scale(1.05);
+    }
+}
+.card-hover {
+    transition: all 0.3s ease !important;
+    &:hover{
+        transform: scale(1.03);
+    }
+}

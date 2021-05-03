@@ -14,7 +14,7 @@ const Index: React.FC = () => {
     <Layout isHomePage>
       <div className="wrapper">
         <Switch>
-          <Route path={`${match.path}/:type/test/`}>
+          <Route path={`${match.path}/:type/test/:link`}>
             <Test />
           </Route>
           <Route path={`${match.path}/:type/blog/:link`}>

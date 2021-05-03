@@ -116,7 +116,7 @@ export const REMOVE_TEST_GROUP = gql `
   }
 `
 export const UNIQUE_LINK_TEST_GROUP = gql `
-  mutation uniqueLinkTestGroup($link: String!){
-    uniqueLinkTestGroup(link: $link)
+  mutation uniqueLinkTestGroup($link: String!, $id: String){
+    uniqueLinkTestGroup(link: $link, id: $id)
   }
 `

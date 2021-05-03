@@ -62,7 +62,7 @@ const Loading: React.FC<LoadingProps> = ({ className, isWelcome }) => {
       /> */}
       <Lottie
         options={isWelcome ? defaultOptionsHello : defaultOptionsLoading}
-        height={200}
+        height={isWelcome ? 150 : 200}
         width={200}
         style={{
             marginTop: -90,

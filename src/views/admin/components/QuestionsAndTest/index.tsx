@@ -58,7 +58,7 @@ const TestPage: React.FC<{}> = () => {
   React.useEffect(() => {
     if(resultCreateTestMutation.data){
       const id = resultCreateTestMutation.data.createTest.id
-      const path = `${match.path}/create-test-toeic/${resultCreateTestMutation.data.createTest.skillType.toLowerCase()}/${id}`;
+      const path = `${match.url}/create-test-toeic/${resultCreateTestMutation.data.createTest.skillType.toLowerCase()}/${id}`;
       history.push(path)
     }
   },[resultCreateTestMutation.data])
@@ -66,7 +66,7 @@ const TestPage: React.FC<{}> = () => {
   React.useEffect(() => {
     if(resultCreateTestCategory.data){
       const id = resultCreateTestCategory.data.createTestCategory.id
-      const path = `${match.path}/create-test-category/${resultCreateTestCategory.data.createTestCategory.certificateType.toLowerCase()}/${id}`;
+      const path = `${match.url}/create-test-category/${id}`;
       history.push(path)
     }
   },[resultCreateTestCategory.data])
@@ -74,14 +74,6 @@ const TestPage: React.FC<{}> = () => {
     <Row>
       <Col md={12}>
         <div className="px-4 py-2 bg-white font-weight-semi font-10">
-        <a className="btn-info btn text-white"
-            onClick={async (e) => {
-              e.preventDefault()
-              await createTestClick(SkillsType.Reading);
-            }}
-          >
-            Create Test Group
-          </a>
         <a className="btn-info btn text-white"
             onClick={async (e) => {
               e.preventDefault()

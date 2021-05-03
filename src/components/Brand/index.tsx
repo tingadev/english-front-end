@@ -46,16 +46,16 @@ const Brand: React.FC = () => {
   return (
     <div className={`${isStyle ? 'bg-black-10' : '' } fixed-top`}>
       <Navbar
-        className={`${hiddenBrand} z-header mb-0 ${!isStyle ? 'bg-brand' : ''}`}
+        className={`${hiddenBrand} header-logo z-header mb-0 ${!isStyle ? 'bg-brand' : ''}`}
       >
-        <Container>
+        <div className='container'>
           <div className="w-100">
             <div className="d-flex align-items-center justify-content-between">
-              <div className="d-flex align-items-center">
+              <div className="d-flex align-items-center logo">
                 <Logo className="width-3rem" />
-                <h4 className="m-0 text-white ml-2">POWPER ENGLISH</h4>
+                <h4 className="m-0 text-white ml-2 font-9">POWPER ENGLISH</h4>
               </div>
-              <ul className="list-unstyled">
+              <ul className="list-unstyled profile mb-0">
                 <UncontrolledDropdown nav className="list-style-none">
                   <DropdownToggle
                     color="default"
@@ -126,7 +126,7 @@ const Brand: React.FC = () => {
               </div>
             </Col> */}
           </div>
-        </Container>
+        </div>
       </Navbar>
       <IndexNavbar />
     </div>

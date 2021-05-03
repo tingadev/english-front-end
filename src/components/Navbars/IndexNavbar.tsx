@@ -24,13 +24,15 @@ interface DropdownMenuChildProps {
 }
 
 export const DropdownMenuChild: React.FC<DropdownMenuChildProps> = ({ elements, className }) => {
+
+  const eleSorted = elements.slice().sort((a, b) => a.displayOrder - b.displayOrder);
   return (
     <DropdownMenu
       className={
         `bg-brand border border-white rounded min-w-6rem text-left mt-3 min-w-full ${className}`
       }
     >
-      {elements.map((eleChild, index) => {
+      {eleSorted.map((eleChild, index) => {
         return (
           <DropdownItem
             key={index}
@@ -50,7 +52,7 @@ interface IndexNavbarProps {
   isGeneral?: boolean;
 }
 const IndexNavbar: React.FC<IndexNavbarProps> = ({ isGeneral }) => {
-  const { navbarColor, isStyle } = React.useContext(NavbarContext);
+  const { navbarColor, isStyle, setTestGroupsData } = React.useContext(NavbarContext);
   const [collapseOpen, setCollapseOpen] = React.useState(false);
   const {data, loading} = useGetTestGroupsInfoQuery({
     variables: {
@@ -58,10 +60,15 @@ const IndexNavbar: React.FC<IndexNavbarProps> = ({ isGeneral }) => {
     },
   });
   const testGroups = data?.getTestGroups.testGroups;
+  
+  React.useEffect(() => {
+    !loading && setTestGroupsData(testGroups);
+  }, [loading])
+
   if(loading){
     return <Loading isWelcome />
   }
-
+ 
   return (
     <>
       {collapseOpen ? (
@@ -96,12 +103,13 @@ const IndexNavbar: React.FC<IndexNavbarProps> = ({ isGeneral }) => {
           </button>
         </div>
         <Collapse
-          className="justify-content-start"
+          className="justify-content-center wrapper"
           isOpen={collapseOpen}
           navbar
         >
           <Nav navbar>
             {testGroups?.map((ele, index) => {
+              
               return (
                 <UncontrolledDropdown key={index} nav>
                   <DropdownToggle
@@ -110,7 +118,7 @@ const IndexNavbar: React.FC<IndexNavbarProps> = ({ isGeneral }) => {
                     href="#pablo"
                     nav
                     onClick={(e) => e.preventDefault()}
-                    className="border border-white rounded-pill min-w-6rem text-center font-11 px-3"
+                    className="border border-white rounded-pill min-w-6rem text-center font-10 px-3 py-1"
                   >
                     <p className="font-weight-bold">{ele.testGroupName}</p>
                   </DropdownToggle>

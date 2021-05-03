@@ -46,6 +46,15 @@ var dashRoutes = [
     icon: "design_image",
     component: ToeicAdmin,
     layout: "/admin",
+    isTest: true,
+  },
+  {
+    path: "/ielts",
+    name: "Ielts",
+    icon: "design_image",
+    component: ToeicAdmin,
+    layout: "/admin",
+    isTest: true,
   },
 
   {

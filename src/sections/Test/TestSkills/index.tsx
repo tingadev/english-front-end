@@ -9,41 +9,45 @@ import {
   Switch,
   Route,
   useRouteMatch,
+  useHistory,
 } from "react-router-dom";
 import TestTaken from "../TestTake";
 import LeaderBoard from "../../../components/LeaderBoard";
-import { SkillsType, TestCategoryFragment } from "../../../schema/schema";
+import { SkillsType, useGetTestCategoryQuery } from "../../../schema/schema";
 import Loading from "../../../components/Loading";
 interface TestSkillsProps {
   setIsTaken?: (value: boolean) => void;
-  testCategories?: TestCategoryFragment[] | null;
 }
-const TestSkills: React.FC<TestSkillsProps> = ({
-  setIsTaken,
-  testCategories,
-}) => {
-  const { testCategoryId } = useParams();
-
+const TestSkills: React.FC<TestSkillsProps> = ({ setIsTaken }) => {
+  const { testCategoryId } = useParams() as { testCategoryId?: string };
+  const history = useHistory();
+  if (!testCategoryId) {
+    history.push("/home");
+    return <></>
+  }
   const match = useRouteMatch();
-
-  const testCategory = testCategories?.find(
-    (testCategory) => testCategory.id === testCategoryId
-  );
+  const {data, loading} = useGetTestCategoryQuery({
+    variables: {
+      id: testCategoryId,
+    }
+  })
   
-  let tests = testCategory?.tests;
-  if(!tests){
+  if(loading){
     return <Loading />
   }
+
+  const testCategory = data?.getTestCategory;
+  let tests = data?.getTestCategory.tests;
   // reorder test skill LISTENING READING  
   let shouldReorder = false;
-  shouldReorder = tests?.some((e, i) => e.skillType === SkillsType.Listening && i !== 0);
+  shouldReorder = tests ? tests.some((e, i) => e.skillType === SkillsType.Listening && i !== 0) : false;
   if(shouldReorder){
     tests = tests?.reverse();
   }
   
   return (
     <Switch>
-      <Route path={`${match.path}/test/:testId`}>
+      <Route path={`${match.path}/exam/:testId`}>
         <TestTaken testsData={tests} setIsTaken={setIsTaken} />
       </Route>
       <Route path={`${match.path}`}>
@@ -103,7 +107,7 @@ const TestSkills: React.FC<TestSkillsProps> = ({
                             return (
                               <td className="text-center py-0">
                                 <Link
-                                  to={`${match.url}/test/${test.id}`}
+                                  to={`${match.url}/exam/${test.id}`}
                                   className={`d-block rounded border border-none ${
                                     test.skillType === SkillsType.Reading
                                       ? "bg-success"

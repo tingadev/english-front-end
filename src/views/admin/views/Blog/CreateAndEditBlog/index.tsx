@@ -124,6 +124,7 @@ const CreateAndEditBlog: React.FC<BlogProps> = () => {
       const res = await uniqueLinkBlogMutation({
         variables: {
           link: linkTrim,
+          id,
         },
       });
       if (res.data?.uniqueLinkBlog) {

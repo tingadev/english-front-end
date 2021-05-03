@@ -17,10 +17,10 @@ const TestCategory: React.FC<TestCategoryProps> = ({testCategories}) => {
   const match = useRouteMatch();
   return (
       <Switch>
-        <Route path={`${match.path}/category/:testCategoryId`}>
-          <TestSkills testCategories={testCategories}/>
+        <Route path={`${match.url}/category/:testCategoryId`}>
+          <TestSkills />
         </Route>
-        <Route path={`${match.path}`}>
+        <Route path={`${match.url}`}>
           <Container>
           <Row>
             <Col md="8">

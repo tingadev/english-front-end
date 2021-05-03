@@ -22,8 +22,9 @@ import {
   useRemoveFromCatMutation,
   SkillsType,
   OrderDirection,
-  TestGroupFragment,
-  useGetTestGroupsQuery,
+  useGetTestGroupsInfoQuery,
+  TestGroupInfoFragment,
+  GroupType,
 } from "../../../../schema/schema";
 import { Link, useParams } from "react-router-dom";
 import { useFormik } from "formik";
@@ -56,10 +57,12 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = () =
     removeTestFromCatMutationResult,
   ] = useRemoveFromCatMutation();
 
-  const getTestGroupsQuery = useGetTestGroupsQuery({
+  const getTestGroupsQuery = useGetTestGroupsInfoQuery({
     variables: {
       data: {
         orderDirection: OrderDirection.Asc,
+        groupType: GroupType.Test,
+        shouldGetChild: true,
       },
     },
   });
@@ -73,8 +76,8 @@ const CreateAndEditTestCategory: React.FC<CreateAndEditTestCategoryProps> = () =
           id,
         },
       });
-  }, [id]);
-  let testsGroupData: TestGroupFragment[] | undefined;
+  }, [getTestCategoryQuery, id]);
+  let testsGroupData: TestGroupInfoFragment[] | undefined;
   if (getTestGroupsQuery.data) {
     testsGroupData = getTestGroupsQuery.data.getTestGroups.testGroups;
   }

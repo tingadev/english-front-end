@@ -142,10 +142,11 @@ const ListBodyChild: React.FC<{
           size="sm"
           type="button"
           onClick={async () => {
+            const { isPublished, __typename, ...remainingData } = testGroup;
             const res = await updateTestGroupMutation({
               variables: {
                 data: {
-                  ...testGroup,
+                  ...remainingData,
                   displayOrder: order,
                 },
               },

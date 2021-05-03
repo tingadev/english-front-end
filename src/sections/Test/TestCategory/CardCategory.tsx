@@ -14,6 +14,8 @@ interface CardCategoryProps {
 const CardCategory: React.FC<CardCategoryProps> = ({ testCategory }) => {
   // const me = useMe();
   const match = useRouteMatch();
+
+  console.log(match);
   // const { setModalLogin } = React.useContext(NavbarContext);
   const dateFormatted = moment(testCategory?.createdAt).format('DD/MM/YYYY');
   return (
@@ -25,7 +27,7 @@ const CardCategory: React.FC<CardCategoryProps> = ({ testCategory }) => {
       //     setModalLogin(true);
       //   }
       // }}
-      to={`${match.url}/test-category/` + testCategory?.id}
+      to={`${match.url}/category/` + testCategory?.id}
       css={css`
         width: 30%;
         margin-right: 1.5%;

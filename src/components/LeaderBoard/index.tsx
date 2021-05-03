@@ -62,7 +62,7 @@ const LeaderBoard: React.FC<LeaderBoardProps> = ({}) => {
                   <b>{index + 1}</b> .{ele.name}{" "}
                   </div>
                   <span className=" text-black font-weight-semi ml-5">
-                     {ele.point} point 
+                     {ele.point} points 
                   </span>{" "}
               </li>
             );

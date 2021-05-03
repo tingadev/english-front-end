@@ -64,7 +64,7 @@ const GroupTypeOptions = [
 const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({
   testsGroupData,
 }) => {
-  const { testGroupId } = useParams() as any;
+  const { testGroupId } = useParams() as { testGroupId?: string };
   const [isDisableEditLink, setIsDisableEditLink] = React.useState(true);
   const [uniqueLinkTestGroupMutation] = useUniqueLinkTestGroupMutation();
   const notification = notificationAdd(
@@ -83,12 +83,12 @@ const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({
   const [
     selectedGroupTypeOptions,
     setSelectedGroupTypeOptions,
-  ] = React.useState(GroupTypeOptions[0]);
+  ] = React.useState(GroupTypeOptions[1]);
   const [selectedTestGroup, setSelectedTestGroup] = React.useState(
     ListOfTestGroups[0]
   );
   const [certificateTypeSelect, setCertificateTypeSelect] = React.useState(
-    EnglishCertificateOptions[0]
+    EnglishCertificateOptions[1]
   );
   const testGroupData = getTestGroupResponse.data?.getTestGroup;
   React.useMemo(() => {
@@ -96,6 +96,7 @@ const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({
       const selected = testsGroupData?.find(
         (t) => t.id === testGroupData.parentId
       );
+      console.log('testGroupData', testGroupData);
       selected &&
         setSelectedTestGroup({
           value: selected.id,
@@ -131,7 +132,7 @@ const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({
     testGroupName: testGroupData?.testGroupName || "",
     link: testGroupData?.link || "",
     groupType: testGroupData?.groupType || GroupType.Test,
-    parentId: testGroupData?.parentId || "0",
+    parentId: testGroupData?.parentId || null,
     certificateType:
       testGroupData?.certificateType || EnglishCertificateType.Toeic,
     displayOrder: testGroupData?.displayOrder || 0,
@@ -167,6 +168,7 @@ const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({
       certificateType: yup
         .string()
         .required("Type of test is a required field"),
+      groupType: yup.string().trim().required("GroupType is a required field"),
     }),
     onSubmit: async (values) => {
       const { link, ...remainingData } = values;
@@ -174,6 +176,7 @@ const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({
       const res = await uniqueLinkTestGroupMutation({
         variables: {
           link: linkTrim,
+          id: testGroupId,
         },
       });
       if (res.data?.uniqueLinkTestGroup) {

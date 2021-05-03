@@ -7,6 +7,7 @@ import {
   useRouteMatch,
 } from "react-router-dom";
 import Loading from "../../components/Loading";
+import { NavbarContext } from "../../components/Navbars/NavbarContext";
 import {
   useGetBlogsQuery,
   useGetTestGroupInfoQuery,
@@ -17,34 +18,22 @@ import ListBlog from "./ListBlog";
 const Blog: React.FC = () => {
   const history = useHistory();
   const match = useRouteMatch();
+  const { testGroupsData } = React.useContext(NavbarContext)
   const { link } = useParams() as { link?: string };
-  const linkArr = link?.split("-");
-  let testGroupId = "";
   if (!link) {
     history.push("/home");
   }
-  if (linkArr?.length && linkArr?.length > 0) {
-    testGroupId = linkArr![linkArr?.length - 1];
-  }
-  if (!testGroupId) {
-    history.push("/home");
-  }
-  const testGroupQuery = useGetTestGroupInfoQuery({
-    variables: {
-      id: testGroupId,
-    },
-  });
-  const testGroupData = testGroupQuery.data?.getTestGroup;
+  const testGroupData = testGroupsData?.find((e) => e.link === link);
   const { data: blogsQuery, loading } = useGetBlogsQuery({
     variables: {
       data: {
-        testGroupId,
+        testGroupId: testGroupData?.id,
       },
     },
   });
   const blogsData = blogsQuery?.getBlogs.blogs;
 
-  if (loading || testGroupQuery.loading) {
+  if (loading) {
     return <Loading />;
   }
   return (
@@ -54,7 +43,7 @@ const Blog: React.FC = () => {
           <BlogDetail blogsData={blogsData} />
         </Route>
         <Route path={match.url}>
-          <ListBlog blogsData={blogsData} testGroupData={testGroupData} />
+          <ListBlog blogsData={blogsData} />
         </Route>
       </Switch>
     </>

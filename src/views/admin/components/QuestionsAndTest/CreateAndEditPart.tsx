@@ -43,6 +43,22 @@ export const EnglishCertificateOptions = [
     value: EnglishCertificateType.Ielts,
     label: EnglishCertificateType.Ielts,
   },
+  {
+    value: EnglishCertificateType.University,
+    label: 'Luyện thi đại học',
+  },
+  {
+    value: EnglishCertificateType.ExtraCourses,
+    label: 'Khoá học tặng kèm',
+  },
+  {
+    value: EnglishCertificateType.Coop,
+    label: 'Cộng tác',
+  },
+  {
+    value: EnglishCertificateType.Support,
+    label: 'Hổ trợ 24/7',
+  },
 ];
 
 export const SkillsTypeOptions = [

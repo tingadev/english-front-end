@@ -32,6 +32,15 @@ const DashboardAdmin: React.FC<DashboardAdminProps> = () => {
           <HeaderAdmin />
           <Switch>
             {routes.map((prop, key) => {
+              if(prop.isTest){
+                return (
+                  <Route
+                    path={prop.layout + '/:type'}
+                    component={prop.component}
+                    key={key}
+                  />
+                );
+              }
               return (
                 <Route
                   path={prop.layout + prop.path}
