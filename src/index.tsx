@@ -20,6 +20,8 @@ import "react-notifications-component/dist/theme.css";
 import ReactNotification from "react-notifications-component";
 import { setContext } from '@apollo/client/link/context';
 import dashRoutes from "./router";
+import Index from "./views/Index";
+import DashboardAdmin from "./views/admin/layouts/Admin";
 const httpLink = createHttpLink({
   uri: config.GRAPHQL_SERVER_URL,
   fetch,
@@ -48,13 +50,12 @@ function App() {
       <Router basename='/'>
         <ReactNotification />
         <Switch>
-          {dashRoutes.map((prop, key) => {
-            return (
-              <Route path={prop.path} component={prop.component} key={key} />
-            );
-          })}
-          <Redirect to="/home" />
-          <Redirect from="/" to="/home" />
+        <Route path={'/admin'}>
+            <DashboardAdmin />
+          </Route>
+          <Route path={['/', '/home']}>
+            <Index />
+          </Route>
         </Switch>
       </Router>
     </ApolloProvider>
@@ -66,6 +67,6 @@ render(<App />, document.getElementById("root"));
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 
-// serviceWorker.unregister(); // for production
+serviceWorker.unregister(); // for production
 
-serviceWorker.register(); // for local
+// serviceWorker.register(); // for local
