@@ -31,6 +31,7 @@ var dashRoutes = [
     icon: "",
     component: Index,
     layout: "/",
+    exact: true,
   },
   {
     path: "/icons",
@@ -38,6 +39,7 @@ var dashRoutes = [
     icon: "design_image",
     component: NucleoIcons,
     layout: "/",
+    exact: false,
   },
   {
     path: "/login-page",
@@ -45,6 +47,7 @@ var dashRoutes = [
     icon: "",
     component: LoginPage,
     layout: "/",
+    exact: false,
   },
   {
     path: "/landing-page",
@@ -52,6 +55,7 @@ var dashRoutes = [
     icon: "ui-1_bell-53",
     component: LandingPage,
     layout: "/",
+    exact: false,
   },
   {
     path: "/profile",
@@ -59,6 +63,7 @@ var dashRoutes = [
     icon: "",
     component: ProfilePage,
     layout: "/",
+    exact: false,
   },
   {
     path: "/about-toeic",
@@ -66,6 +71,7 @@ var dashRoutes = [
     icon: "",
     component: AboutUs,
     layout: "/",
+    exact: false,
   },
   {
     path: "/signup",
@@ -73,6 +79,7 @@ var dashRoutes = [
     icon: "",
     component: SignUp,
     layout: "/",
+    exact: false,
   },
   {
     path: "/admin",
@@ -80,6 +87,7 @@ var dashRoutes = [
     icon: "",
     component: DashboardAdmin,
     layout: "/admin",
+    exact: false,
   },
 ];
 export default dashRoutes;

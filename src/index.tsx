@@ -8,7 +8,7 @@ import {
   ApolloProvider,
   createHttpLink
 } from "@apollo/client";
-import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
+import { Switch, Route, BrowserRouter as Router, Redirect } from "react-router-dom";
 import config from "./config";
 // styles for this kit
 import "./assets/css/bootstrap.min.css";
@@ -50,9 +50,10 @@ function App() {
         <Switch>
           {routes.map((prop, key) => {
             return (
-              <Route path={prop.path} component={prop.component} key={key} />
+              <Route exact={prop.exact} path={prop.path} component={prop.component} key={key} />
             );
           })}
+          <Redirect from="/" to="/home" />
         </Switch>
       </Router>
     </ApolloProvider>
