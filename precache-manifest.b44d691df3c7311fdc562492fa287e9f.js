@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "1c57bd90af47b71610ceae1031065fa7",
+    "revision": "6256bad1ba053d7343ea23e573c4537d",
     "url": "http://powper.vn/index.html"
   },
   {
@@ -8,8 +8,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "http://powper.vn/static/css/2.def79406.chunk.css"
   },
   {
-    "revision": "a0d2510f150229bdb623",
-    "url": "http://powper.vn/static/css/main.ce2a4f38.chunk.css"
+    "revision": "f322287bbe8157668fe9",
+    "url": "http://powper.vn/static/css/main.57838ce1.chunk.css"
   },
   {
     "revision": "a4e702d17c666db5327c",
@@ -20,12 +20,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "http://powper.vn/static/js/2.a610d78f.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "a0d2510f150229bdb623",
-    "url": "http://powper.vn/static/js/main.dbb37fe0.chunk.js"
+    "revision": "f322287bbe8157668fe9",
+    "url": "http://powper.vn/static/js/main.cdc9f9e5.chunk.js"
   },
   {
     "revision": "c5eafabe4b2314660f3de33fe2c9484b",
-    "url": "http://powper.vn/static/js/main.dbb37fe0.chunk.js.LICENSE.txt"
+    "url": "http://powper.vn/static/js/main.cdc9f9e5.chunk.js.LICENSE.txt"
   },
   {
     "revision": "024f271bb0a48b255b3e",
