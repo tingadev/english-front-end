@@ -6,7 +6,6 @@ import CreateAndEditBlog from "./CreateAndEditBlog";
 const BlogAdmin: React.FC<{}> = () => {
   const match = useRouteMatch();
   return (
-    <div className='h-fullscreen'>
       <Switch>
         <Route path={[`${match.path}/create-blog`, `${match.path}/:id/edit`]}>
           <CreateAndEditBlog />
@@ -15,7 +14,6 @@ const BlogAdmin: React.FC<{}> = () => {
           <BlogHomePage />
         </Route>
       </Switch>
-    </div>
   );
 };
 

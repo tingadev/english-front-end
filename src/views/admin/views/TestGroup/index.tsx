@@ -7,7 +7,6 @@ import {
   useGetTestGroupsInfoQuery,
 } from "../../../../schema/schema";
 import ListTestGroup from "./ListTestGroup";
-import Loading from "../../../../components/Loading";
 const TestGroup: React.FC<{}> = () => {
   const match = useRouteMatch();
   const variables = {
@@ -23,9 +22,6 @@ const TestGroup: React.FC<{}> = () => {
     refetch();
   }, [refetch]);
 
-  if (loading) {
-    return <Loading />;
-  }
 
   return (
     <>
@@ -46,7 +42,7 @@ const TestGroup: React.FC<{}> = () => {
             <CreateAndEditTestGroup testsGroupData={testsGroupData}/>
           </Route>
           <Route path={`${match.path}`}>
-            <ListTestGroup testsGroupData={testsGroupData} />
+            <ListTestGroup testsGroupData={testsGroupData} loading={loading} />
           </Route>
         </Switch>
       </div>

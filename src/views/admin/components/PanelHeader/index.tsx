@@ -9,15 +9,14 @@ interface PanelHeaderProps {
 const PanelHeader: React.FC<PanelHeaderProps> = ({
   children,
   className,
-  height = "260",
+  height = "200",
 }) => {
   return (
     <div
-      className={`panel-header ${className}`}
+      className={`panel-header d-flex align-items-center justify-content-center ${className}`}
       css={css`
-        min-height: 260px;
         height: ${height === 'auto' ? height : height + 'px'};
-        padding-top: 68px;
+        margin-top: 68px;
       `}
     >
       {children}

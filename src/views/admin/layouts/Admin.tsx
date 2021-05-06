@@ -26,9 +26,9 @@ const DashboardAdmin: React.FC<DashboardAdminProps> = () => {
 
   return (
     <MeContext.Provider value={me}>
-      <div className="wrapper">
+      <div className="wrapper admin-page">
         <Sidebar routes={routes} backgroundColor={backgroundColor} />
-        <div className="flex-column d-flex main-panel vh-100" ref={mainPanel}>
+        <div className="flex-column d-flex main-panel" ref={mainPanel}>
           <HeaderAdmin />
           <Switch>
             {routes.map((prop, key) => {

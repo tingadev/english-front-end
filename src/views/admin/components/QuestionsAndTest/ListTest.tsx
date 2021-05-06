@@ -115,9 +115,6 @@ const ListTest: React.FC<ListTestProps> = ({
     removeTestMutationResult.data,
     testsQuery,
   ]);
-  if (testsQuery.loading) {
-    return <>{"Loading...."}</>;
-  }
   const tests = testsQuery.data?.getTests.tests;
   return (
     <>
@@ -126,7 +123,7 @@ const ListTest: React.FC<ListTestProps> = ({
           <CardTitle tag="h4">List of Tests</CardTitle>
         </CardHeader>
       )}
-      <LazyLoad className='p-0' refetchQuery={fetchMoreTests}>
+      <LazyLoad className='p-0' refetchQuery={fetchMoreTests} loading={testsQuery.loading}>
         <Table responsive>
           <thead className="text-primary font-10">
             <tr>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import Select from "react-select";
-import { Button, Input, Table } from "reactstrap";
+import { Button, Card, Col, Input, Row, Table } from "reactstrap";
 import { notificationAdd } from "../../utils/Notification";
 import { store } from "react-notifications-component";
 import {
@@ -9,6 +9,7 @@ import {
   TestGroupInfoFragment,
   useUpdateTestGroupMutation,
 } from "../../../../schema/schema";
+import LazyLoad from "../../components/LazyLoad";
 const arrow = require("../../../../assets/img/arrow_square.svg");
 const StatusOptions = [
   {
@@ -22,13 +23,14 @@ const StatusOptions = [
 ];
 interface ListTestGroupProps {
   testsGroupData?: TestGroupInfoFragment[];
+  loading?: boolean;
 }
-const ListTestGroup: React.FC<ListTestGroupProps> = ({ testsGroupData }) => {
+const ListTestGroup: React.FC<ListTestGroupProps> = ({ testsGroupData, loading }) => {
   const match = useRouteMatch();
   return (
-    <div className="d-flex h-100 flex-column position-relative">
-      <div className="w-100">
-        <div className="px-4 py-2 bg-white font-weight-semi font-10">
+    <Row>
+      <Col lg={12}>
+      <div className="px-4 py-2 bg-white font-weight-semi font-10">
           <Link
             className="btn-info btn text-white"
             to={`${match.url}/create-test-group`}
@@ -36,8 +38,10 @@ const ListTestGroup: React.FC<ListTestGroupProps> = ({ testsGroupData }) => {
             Create Test Group
           </Link>
         </div>
-      </div>
-      <div className="w-100 px-4 bg-white table-responsive-h100">
+      </Col >
+      <Col lg={12} className='mt-4'>
+      <Card className='p-2'>
+        <LazyLoad className='p-2' loading={loading}>
         <Table responsive>
           <thead className="text-primary font-10">
             <tr>
@@ -59,8 +63,11 @@ const ListTestGroup: React.FC<ListTestGroupProps> = ({ testsGroupData }) => {
             <ListBody testsGroupData={testsGroupData} />
           </tbody>
         </Table>
-      </div>
-    </div>
+        </LazyLoad>
+      </Card>
+      </Col>
+   
+    </Row>
   );
 };
 

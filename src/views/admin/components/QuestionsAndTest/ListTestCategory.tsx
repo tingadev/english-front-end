@@ -15,7 +15,6 @@ import {
 import { Link } from "react-router-dom";
 import ModalDelete from "../Modal/Delete";
 import LazyLoad from "../LazyLoad";
-import Loading from "../../../../components/Loading";
 interface ListTestCategoryProps {
   setIconPills: (val: string) => void;
 }
@@ -104,9 +103,6 @@ const ListTestCategory: React.FC<ListTestCategoryProps> = ({
     removeTestCategoryMutationResult.data,
     testCategoriesQuery,
   ]);
-  if (testCategoriesQuery.loading) {
-    return <Loading />
-  }
   const testCategories =
     testCategoriesQuery.data?.getTestCategories.testCategories;
   return (
@@ -114,7 +110,7 @@ const ListTestCategory: React.FC<ListTestCategoryProps> = ({
       <CardHeader>
         <CardTitle tag="h4">List of Tests</CardTitle>
       </CardHeader>
-      <LazyLoad className='p-0' refetchQuery={fetchMoreTestCategories}>
+      <LazyLoad className='p-0' refetchQuery={fetchMoreTestCategories} loading={testCategoriesQuery.loading}>
         <Table responsive>
           <thead className="text-primary font-10">
             <tr>

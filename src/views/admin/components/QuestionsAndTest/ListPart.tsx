@@ -7,18 +7,19 @@ import {
   Badge,
   Button,
   Label,
-  Input
+  Input,
 } from "reactstrap";
 import {
   useGetPartsQuery,
   EnglishCertificateType,
   SkillsType,
   PartFilterInput,
-  PartAndAudioSeconds
+  PartAndAudioSeconds,
 } from "../../../../schema/schema";
 import { Link, useRouteMatch } from "react-router-dom";
 import _ from "lodash";
 import { QuestionContext } from "./QuestionContext";
+import LazyLoad from "../LazyLoad";
 interface ListPartProps {
   setIconPills?: (val: string) => void;
   modal?: boolean;
@@ -27,16 +28,23 @@ interface ListPartProps {
   setDataUpdateTest?: (val: PartAndAudioSeconds[]) => void;
 }
 
-const ListPart: React.FC<ListPartProps> = ({ setIconPills, modal, skillType, dataUpdateTest, setDataUpdateTest }) => {
+const ListPart: React.FC<ListPartProps> = ({
+  setIconPills,
+  modal,
+  skillType,
+  dataUpdateTest,
+  setDataUpdateTest,
+}) => {
   const match = useRouteMatch();
   const questionContext = React.useContext(QuestionContext);
   const partsFilter: PartFilterInput = {
     certificateType: EnglishCertificateType.Toeic,
     skillType,
-    partIds: questionContext.partIds?.ids.length! > 0 ? questionContext.partIds : null,
+    partIds:
+      questionContext.partIds?.ids.length! > 0 ? questionContext.partIds : null,
   };
-  
-  const {data, loading, refetch} = useGetPartsQuery({
+
+  const { data, loading, refetch } = useGetPartsQuery({
     variables: {
       data: partsFilter,
     },
@@ -46,20 +54,24 @@ const ListPart: React.FC<ListPartProps> = ({ setIconPills, modal, skillType, dat
     setIconPills && setIconPills("part");
     refetch();
   }, []);
-  if (loading) {
-    return <>{"Loading...."}</>;
-  }
   const parts = data?.getParts.parts;
   return (
     <>
-      {!modal && <CardHeader>
-        <CardTitle tag="h4">List of Parts</CardTitle>
-      </CardHeader> }
-      <CardBody>
+      {!modal && (
+        <CardHeader>
+          <CardTitle tag="h4">List of Parts</CardTitle>
+        </CardHeader>
+      )}
+      <LazyLoad
+        isHeightFull={modal ? true : false}
+        className="p-0"
+        refetchQuery={refetch}
+        loading={loading}
+      >
         <Table responsive>
           <thead className="text-primary font-10">
             <tr>
-            {modal && (
+              {modal && (
                 <th
                   className="form-check m-0 p-td-initial"
                   style={{ width: "5%" }}
@@ -85,28 +97,31 @@ const ListPart: React.FC<ListPartProps> = ({ setIconPills, modal, skillType, dat
                 return (
                   <tr key={index}>
                     {modal && (
-                        <td className="form-check m-0 p-td-initial">
-                          <Label check>
-                            <Input
-                              type="checkbox"
-                              onChange={async (e) => {
-                                if (e.target.checked) {
-                                  const data: PartAndAudioSeconds = {
-                                    partId: part.id,
-                                    autdioSecs: 0,
-                                    displayOrder: 0,
-                                  }
-                                  setDataUpdateTest!([...dataUpdateTest!, data])
-                                }
-                                else{
-                                 setDataUpdateTest!(dataUpdateTest!.filter(d => d.partId !== part.id))
-                                }
-                              }}
-                            />
-                            <span className="form-check-sign"></span>
-                          </Label>
-                        </td>
-                      )}
+                      <td className="form-check m-0 p-td-initial">
+                        <Label check>
+                          <Input
+                            type="checkbox"
+                            onChange={async (e) => {
+                              if (e.target.checked) {
+                                const data: PartAndAudioSeconds = {
+                                  partId: part.id,
+                                  autdioSecs: 0,
+                                  displayOrder: 0,
+                                };
+                                setDataUpdateTest!([...dataUpdateTest!, data]);
+                              } else {
+                                setDataUpdateTest!(
+                                  dataUpdateTest!.filter(
+                                    (d) => d.partId !== part.id
+                                  )
+                                );
+                              }
+                            }}
+                          />
+                          <span className="form-check-sign"></span>
+                        </Label>
+                      </td>
+                    )}
                     {!modal && <td>{index + 1}</td>}
                     <td className="text-left font-weight-semi">
                       {part.partName}
@@ -154,7 +169,7 @@ const ListPart: React.FC<ListPartProps> = ({ setIconPills, modal, skillType, dat
               })}
           </tbody>
         </Table>
-      </CardBody>
+      </LazyLoad>
     </>
   );
 };

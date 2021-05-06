@@ -7,9 +7,10 @@ import animationLoading from "../../assets/lotties/lf30_editor_e6dctybt.json";
 interface LoadingProps {
   className?: string;
   isWelcome?: boolean;
+  absolute?: boolean;
 }
 
-const Loading: React.FC<LoadingProps> = ({ className, isWelcome }) => {
+const Loading: React.FC<LoadingProps> = ({ className, isWelcome, absolute }) => {
   const [isDisplay, setIsDisplay] = React.useState("flex");
   const defaultOptionsHello = {
     loop: 1,
@@ -36,11 +37,11 @@ const Loading: React.FC<LoadingProps> = ({ className, isWelcome }) => {
     <div
       className={className}
       css={css`
-        position: fixed;
+        position: ${absolute ? 'absolute' : 'fixed'};
         width: 100%;
         top:0;
         left:0;
-        height: 100vh;
+        height: ${absolute ? '100%' : '100vh'};
         background: white;
         z-index: 9999999999;
         justify-content: center;

@@ -137,9 +137,6 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
   }, []);
 
 
-  // if (questionsQuery.loading) {
-  //   return <>{"Loading...."}</>;
-  // }
   const questions = questionsQuery.data?.questions.questions;
   return (
     <>
@@ -163,6 +160,7 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
         isHeightFull={modal ? true : false}
         className="p-0"
         refetchQuery={fetchMoreQuestions}
+        loading={questionsQuery.loading}
       >
         <div className="sticky-top bg-white p-2">
           <Input

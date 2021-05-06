@@ -41,6 +41,13 @@ var dashRoutes = [
     layout: "/admin",
   },
   {
+    path: "/blog",
+    name: "Blog",
+    icon: "design_image",
+    component: BlogAdmin,
+    layout: "/admin",
+  },
+  {
     path: "/toeic",
     name: "Toeic",
     icon: "design_image",
@@ -55,14 +62,6 @@ var dashRoutes = [
     component: ToeicAdmin,
     layout: "/admin",
     isTest: true,
-  },
-
-  {
-    path: "/blog",
-    name: "Blog",
-    icon: "design_image",
-    component: BlogAdmin,
-    layout: "/admin",
   },
 
   // {
