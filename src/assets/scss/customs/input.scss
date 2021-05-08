@@ -5,3 +5,7 @@
 .input-error {
     border-color: $danger-color !important
 }
+
+.react-select {
+    z-index: 999;
+}

@@ -26,15 +26,12 @@ import { store } from "react-notifications-component";
 import { Link, useParams } from "react-router-dom";
 import { notificationAdd } from "../../utils/Notification";
 import TinyMCETextarea from "../TinyMCETextarea";
+import { OptionsType } from "../../views/TestGroup/CreateAndEditTestGroup";
 
 interface CreateEditPartProps {
   partId?: string;
 }
-export const EnglishCertificateOptions = [
-  {
-    value: "",
-    label: "Chose type of test",
-  },
+export const EnglishCertificateOptions: OptionsType[] = [
   {
     value: EnglishCertificateType.Toeic,
     label: EnglishCertificateType.Toeic,

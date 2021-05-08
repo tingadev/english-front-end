@@ -32,7 +32,10 @@ import { Editor } from '@tinymce/tinymce-react';
          
          onEditorChange={onEditorChange}
          textareaName={textareaName}
-         
+         scriptLoading={{
+          async: true,
+          defer: true,
+         }}
 
          {...props}
        />

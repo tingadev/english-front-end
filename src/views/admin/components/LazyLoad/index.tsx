@@ -19,14 +19,11 @@ const LazyLoad: React.FC<LazyLoadProps> = ({
 }) => {
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const handleScroll = () => {
-    
     const node = bodyRef.current;
     if (!node) return;
     const bottom =
       Math.floor(node.scrollHeight - node.scrollTop) === node.clientHeight;
-      console.log('hello', bottom)
     if (bottom) {
-       
       refetchQuery && refetchQuery();
     }
   };
@@ -36,7 +33,7 @@ const LazyLoad: React.FC<LazyLoadProps> = ({
       className={`${className} card-body position-relative`}
       css={css`
         overflow-y: auto;
-        ${!isHeightFull ? 'max-height: 40rem;' : 'height: 100%;'}
+        ${!isHeightFull ? 'max-height: 30rem;' : 'height: 100%;'}
         min-height: 20rem;
       `}
       onScroll={handleScroll}

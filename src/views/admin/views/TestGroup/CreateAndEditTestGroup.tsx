@@ -30,23 +30,23 @@ import { EnglishCertificateOptions } from "../../components/QuestionsAndTest/Cre
 import Loading from "../../../../components/Loading";
 import ButtonSubmitGroup from "../../components/ButtonSubmit";
 import { generateLink } from "../../utils/GenerateLink";
+import { SelectCustom } from "../../components/SelectCustom";
 const penEdit = require("../../../../assets/img/pen.svg");
 interface CreateAndEditTestGroupProps {
   testsGroupData?: TestGroupInfoFragment[];
 }
-
-export const ListOfTestGroups: { value: string | null; label: string }[] = [
+export interface OptionsType {
+  value: string | null ; 
+  label: string;
+}
+export const ListOfTestGroups: OptionsType[] = [
   {
     value: null,
-    label: "Chose test group",
+    label: "Non-parent",
   },
 ];
 
-const GroupTypeOptions = [
-  {
-    value: "",
-    label: "Chose type",
-  },
+const GroupTypeOptions: OptionsType[]= [
   {
     value: GroupType.Test,
     label: "Test",
@@ -83,20 +83,17 @@ const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({
   const [
     selectedGroupTypeOptions,
     setSelectedGroupTypeOptions,
-  ] = React.useState(GroupTypeOptions[1]);
+  ] = React.useState<OptionsType | undefined>(undefined);
   const [selectedTestGroup, setSelectedTestGroup] = React.useState(
     ListOfTestGroups[0]
   );
-  const [certificateTypeSelect, setCertificateTypeSelect] = React.useState(
-    EnglishCertificateOptions[1]
-  );
+  const [certificateTypeSelect, setCertificateTypeSelect] = React.useState<OptionsType | undefined>(undefined);
   const testGroupData = getTestGroupResponse.data?.getTestGroup;
   React.useMemo(() => {
     if (testGroupData) {
       const selected = testsGroupData?.find(
         (t) => t.id === testGroupData.parentId
       );
-      console.log('testGroupData', testGroupData);
       selected &&
         setSelectedTestGroup({
           value: selected.id,
@@ -259,18 +256,19 @@ const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({
                   <Col md="4" className="pl-1">
                     <FormGroup>
                       <label>Children of</label>
-                      <Select
-                        className="react-select react-select-primary"
+                      <SelectCustom
                         onChange={(opt: any) => {
                           formik.setFieldValue("parentId", opt.value);
                           setSelectedTestGroup(opt);
                         }}
+                        className="clearfix"
                         value={selectedTestGroup}
                         classNamePrefix="react-select"
                         placeholder="Chose type of Test"
                         name="parentId"
                         options={defaultListTestGroup}
-                      ></Select>
+                        zIndex={1000}
+                      />
                       <ErrorMessage message={formik.errors.parentId} />
                     </FormGroup>
                   </Col>
@@ -278,18 +276,18 @@ const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({
                   <Col md="4" className="pl-1">
                     <FormGroup>
                       <label>Type</label>
-                      <Select
-                        className="react-select react-select-primary"
+                      <SelectCustom
                         onChange={(opt: any) => {
                           formik.setFieldValue("groupType", opt.value);
                           setSelectedGroupTypeOptions(opt);
                         }}
-                        value={selectedGroupTypeOptions}
                         classNamePrefix="react-select"
+                        value={selectedGroupTypeOptions}
                         placeholder="Chose type of Test"
                         name="groupType"
                         options={GroupTypeOptions}
-                      ></Select>
+                        zIndex={1000}
+                      />
                       <ErrorMessage message={formik.errors.groupType} />
                     </FormGroup>
                   </Col>
@@ -297,7 +295,7 @@ const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({
                   <Col md="6" className="pr-1">
                     <FormGroup>
                       <label>Label Test</label>
-                      <Select
+                      <SelectCustom
                         className="react-select react-select-primary"
                         onChange={(opt: any) => {
                           setCertificateTypeSelect(opt);
@@ -305,10 +303,10 @@ const CreateAndEditTestGroup: React.FC<CreateAndEditTestGroupProps> = ({
                         }}
                         value={certificateTypeSelect}
                         classNamePrefix="react-select"
-                        placeholder="Chose type of Test"
+                        placeholder="Chose label test"
                         name="certificateType"
                         options={EnglishCertificateOptions}
-                      ></Select>
+                      />
                       <ErrorMessage message={formik.errors.certificateType} />
                     </FormGroup>
                   </Col>

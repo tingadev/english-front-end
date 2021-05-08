@@ -23,7 +23,7 @@ import {
   NewBlogInput,
   useCreateBlogMutation,
   useGetBlogLazyQuery,
-  useGetTestGroupsQuery,
+  useGetTestGroupsInfoQuery,
   useUniqueLinkBlogMutation,
   useUpdateBlogMutation,
 } from "../../../../../schema/schema";
@@ -34,16 +34,12 @@ import config from "../../../../../config";
 import TinyMCETextarea from "../../../components/TinyMCETextarea";
 import { notificationAdd } from "../../../utils/Notification";
 import { store } from "react-notifications-component";
-import Select from "react-select";
 import { generateLink } from "../../../utils/GenerateLink";
+import Loading from "../../../../../components/Loading";
+import { SelectCustom } from "../../../components/SelectCustom";
 const penEdit = require("../../../../../assets/img/pen.svg");
 interface BlogProps {}
-const TestGroupDefaultOptions = [
-  {
-    value: "0",
-    label: "Chose test group",
-  },
-];
+const TestGroupDefaultOptions: { value: string; label: string }[] = [];
 
 const CreateAndEditBlog: React.FC<BlogProps> = () => {
   const { id } = useParams() as any;
@@ -61,16 +57,15 @@ const CreateAndEditBlog: React.FC<BlogProps> = () => {
   );
   React.useEffect(() => {
     formik.setFieldValue("image", path);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path]);
-  let blog: BlogFragment | undefined;
-  React.useEffect(() => {
+  React.useMemo(() => {
     if (!id) return;
     getBlogQuery({
       variables: { id },
     });
   }, [getBlogQuery, id]);
-  const testGroupQuery = useGetTestGroupsQuery({
+  const testGroupQuery = useGetTestGroupsInfoQuery({
     variables: {
       data: {
         certificateType: EnglishCertificateType.Toeic,
@@ -92,12 +87,16 @@ const CreateAndEditBlog: React.FC<BlogProps> = () => {
       ]);
     }
   }, [testGroupsData]);
-  
-  let urlDefault: string = "";
-  if (getBlogResponse.data?.getBlog) {
-    blog = getBlogResponse.data?.getBlog;
-    urlDefault = config.PATH_IMAGE + blog.image;
-  }
+  const blog = getBlogResponse.data?.getBlog;
+  React.useMemo(() => {
+    blog &&
+      setTestGroupSelected({
+        value: blog.testGroup.id,
+        label: blog.testGroup.testGroupName,
+      });
+  }, [blog]);
+
+  const urlDefault = config.PATH_IMAGE + blog?.image;
   const me = useMe();
   const initialValues: NewBlogInput = {
     blogName: blog?.blogName || "",
@@ -106,7 +105,7 @@ const CreateAndEditBlog: React.FC<BlogProps> = () => {
     testGroupId: blog?.testGroup.id || "",
     authorId: me.id,
     link: blog?.link || "",
-    metaTags: blog?.metaTags
+    metaTags: blog?.metaTags,
   };
   const [shouldValidate, setShouldValidate] = React.useState(false);
   const shouldShowPreview = path || blog?.image;
@@ -117,6 +116,7 @@ const CreateAndEditBlog: React.FC<BlogProps> = () => {
     validateOnBlur: shouldValidate,
     validationSchema: yup.object().shape({
       blogName: yup.string().required("Blog name is a required field"),
+      testGroupId: yup.string().required("Test group is a required field"),
     }),
     onSubmit: async (values) => {
       const { link, ...remainingData } = values;
@@ -136,7 +136,7 @@ const CreateAndEditBlog: React.FC<BlogProps> = () => {
       if (id) {
         const result = await updateBlogMutation({
           variables: {
-            data: { id,link: linkTrim, ...remainingData},
+            data: { id, link: linkTrim, ...remainingData },
           },
         });
         const notification = notificationAdd("Blog", "Updated");
@@ -159,6 +159,9 @@ const CreateAndEditBlog: React.FC<BlogProps> = () => {
     },
   });
   // create and mark it draft
+  if (getBlogResponse.loading) {
+    return <Loading />;
+  }
 
   return (
     <Form key={formik.submitCount} onSubmit={formik.handleSubmit}>
@@ -251,17 +254,18 @@ const CreateAndEditBlog: React.FC<BlogProps> = () => {
                 <div className="d-flex justify-content-between align-items-end">
                   <FormGroup className="w-100">
                     <label>Test Group</label>
-                    <Select
-                      className="react-select react-select-primary"
+                    <SelectCustom
                       onChange={(opt: any) => {
                         setTestGroupSelected(opt);
                         formik.setFieldValue("testGroupId", opt.value);
                       }}
                       classNamePrefix="react-select"
-                      placeholder="Single Select"
+                      placeholder="Chose test group"
                       value={testGroupSelected}
                       name="testGroupId"
                       options={TestGroupOptions}
+                      isLoading={testGroupQuery.loading}
+                      isDisabled={testGroupQuery.loading}
                     />
                     <ErrorMessage message={formik.errors.blogName} />
                   </FormGroup>
@@ -272,29 +276,28 @@ const CreateAndEditBlog: React.FC<BlogProps> = () => {
               <Col md={6}>
                 <div className="d-flex justify-content-between align-items-end">
                   <FormGroup className="w-100">
-                  <div className="d-flex align-items-center">
-                        <Input
-                          placeholder="Link"
-                          name="link"
-                          type="text"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          value={formik.values.link || ""}
-                          className={formik.errors.link && "input-error"}
-                          disabled={isDisableEditLink}
-                        />
-                        <span
-                          className="ml-2 cursor-pointer"
-                          onClick={() => setIsDisableEditLink(false)}
-                        >
-                          <img alt="penEdit" src={penEdit} />
-                        </span>
-                      </div>
-                      <ErrorMessage message={formik.errors.link} />
+                    <div className="d-flex align-items-center">
+                      <Input
+                        placeholder="Link"
+                        name="link"
+                        type="text"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.link || ""}
+                        className={formik.errors.link && "input-error"}
+                        disabled={isDisableEditLink}
+                      />
+                      <span
+                        className="ml-2 cursor-pointer"
+                        onClick={() => setIsDisableEditLink(false)}
+                      >
+                        <img alt="penEdit" src={penEdit} />
+                      </span>
+                    </div>
+                    <ErrorMessage message={formik.errors.link} />
                   </FormGroup>
                 </div>
               </Col>
-
             </Row>
             <Row>
               <Col className="" md="12">

@@ -16,7 +16,7 @@ This file was modified entirely by Creative Tim for React-Select v2.0.0
   .react-select__menu{
     border: 0;
     box-shadow: 0 10px 50px 0 rgba(0,0,0,.2);
-    border-radius: .125rem;
+    border-radius: 5px;
     transition: all .15s linear;
     font-size: 14px;
     color: #212529;
@@ -24,14 +24,12 @@ This file was modified entirely by Creative Tim for React-Select v2.0.0
     list-style: none;
     background-color: #fff;
     background-clip: padding-box;
-    margin-top: 0;
-    margin-bottom: .125rem;
-    padding: .5rem 0;
-    margin: .125rem 0 0;
+    margin: .5rem 0;
+    overflow: hidden;
   }
   .react-select__menu-list {
     max-height: 198px;
-    overflow-y: auto;
+    overflow-y: overlay;
     padding-bottom: unset;
     padding-top: unset;
     position: relative;
@@ -63,13 +61,14 @@ This file was modified entirely by Creative Tim for React-Select v2.0.0
       &.react-select__option--is-selected{
         &,&.react-select__option--is-focused{
           &,&:active{
-            background-color: $medium-gray;
+            background-color: $primary-color;
+            color: white;
           }
         }
       }
       &.react-select__option--is-focused {
         &,&:active{
-          background-color: $smoke-bg;
+          background-color: $light-blue;
         }
       }
       &.react-select__option--is-disabled {
