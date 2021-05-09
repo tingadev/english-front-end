@@ -1,12 +1,31 @@
 import React from "react";
+import Lottie from "react-lottie";
 // reactstrap components
 import { Container, Row, Col } from "reactstrap";
+import animationFlyman from "../../../assets/lotties/fly_man.json";
+import animationWelcome from "../../../assets/lotties/welcome.json";
 
 // core components
 interface TestingTrialProps {
   data?: any;
 }
 const TestingTrial: React.FC<TestingTrialProps> = ({}) => {
+  const defaultAnimationFlyman = {
+    loop: true,
+    autoplay: true,
+    animationData: animationFlyman,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+  const defaultAnimationWelcome = {
+    loop: true,
+    autoplay: true,
+    animationData: animationWelcome,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
   return (
     <>
       <div className="features-5">
@@ -75,10 +94,9 @@ const TestingTrial: React.FC<TestingTrialProps> = ({}) => {
             <Col md="6">
               <div className="d-flex flex-column h-100">
                 <div className="tablet-container">
-                  <img
-                    alt="..."
-                    src={require("../../../assets/img/4772.jpg")}
-                  ></img>
+                <Lottie options={defaultAnimationFlyman} height={'auto'} style={{
+                    margin: 'initial',
+                  }}/>
                 </div>
                 <div className="info info-horizontal mt-auto">
                   <div className="icon icon-brand icon-circle">
@@ -100,10 +118,7 @@ const TestingTrial: React.FC<TestingTrialProps> = ({}) => {
         </Container>
       </div>
       <div
-          className="features-2 section-image"
-          style={{
-            backgroundImage: "url(" + require("../../../assets/img/bg22_o.jpg") + ")",
-          }}
+          className="features-2 page-header-image-custom"
         >
         <Container>
           <Row>
@@ -186,10 +201,10 @@ const TestingTrial: React.FC<TestingTrialProps> = ({}) => {
             <Col md="4">
               <div className="d-flex flex-column h-100">
                 <div className="tablet-container">
-                  <img
-                    alt="..."
-                    src={require("../../../assets/img/mission.svg")}
-                  ></img>
+                <Lottie options={defaultAnimationWelcome} height={'auto'} style={{
+                    margin: 'initial',
+                    marginTop: -15
+                  }}/>
                 </div>
               </div>
             </Col>

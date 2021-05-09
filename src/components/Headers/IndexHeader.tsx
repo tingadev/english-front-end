@@ -4,15 +4,24 @@ import React from "react";
 // reactstrap components
 import { Container, Button, Row, Col } from "reactstrap";
 import Lottie from "react-lottie";
-import animationTest from "../../assets/lotties/lf30_editor_jlkqa2ui.json";
+import animationHand from "../../assets/lotties/lf30_editor_jlkqa2ui.json";
+import animationEducation from "../../assets/lotties/distance-education.json";
 // core components
 
 const IndexHeader = () => {
   const pageHeader = React.useRef<HTMLDivElement>(null);
-  const defaultOptionsTest = {
+  const defaultAnimationHand = {
     loop: true,
     autoplay: true,
-    animationData: animationTest,
+    animationData: animationHand,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+  const defaultAnimationEducation = {
+    loop: true,
+    autoplay: true,
+    animationData: animationEducation,
     rendererSettings: {
       preserveAspectRatio: "xMidYMid slice",
     },
@@ -35,22 +44,14 @@ const IndexHeader = () => {
 
   return (
     <>
-      <div className="page-header clear-filter" filter-color="purple">
-        <div
-          className="page-header-image"
-          style={{
-            backgroundImage:
-              "url(" + require("../../assets/img/header-m.jpg") + ")",
-          }}
-          ref={pageHeader}
-        ></div>
+      <div className="page-header clear-filter page-header-image-custom" filter-color="purple">
         <Container>
           <Row
             style={{
               marginTop: "8rem",
             }}
           >
-            <Col className="mr-auto text-left" md="7">
+            <Col className="mr-auto text-left" md="6">
               <h1 className="title">POWPER ENGLISH</h1>
               <h4 className="description">
                 Tổ chức giáo dục POWPER ENGLISH cung cấp một trong những thư
@@ -83,16 +84,22 @@ const IndexHeader = () => {
                   }}
                 >
                   <span>Thi thử Online</span>
-                  <Lottie options={defaultOptionsTest} width={50} height={50} style={{
+                  <Lottie options={defaultAnimationHand} width={50} height={50} style={{
                     margin: 'initial',
                     marginTop: -15
                   }}/>
                 </Button>
               </div>
             </Col>
+            <Col className="" md="6">
+            <Lottie options={defaultAnimationEducation} height={'auto'} style={{
+                    margin: 'initial',
+                    marginTop: -15
+                  }}/>
+            </Col>
           </Row>
         </Container>
-      </div>
+        </div>
     </>
   );
 };

@@ -205,17 +205,13 @@ const Testimonials: React.FC<{}> = ({}) => {
         </Row>
       </Container>
       <div
-        className="team-3 section-image"
-        style={{
-          backgroundImage:
-            "url(" + require("../../../assets/img/bg21.jpg") + ")",
-        }}
+        className="team-3 page-header-image-custom"
       >
         <Container>
           <Row>
             <Col className="ml-auto mr-auto text-center" md="8">
-              <h2 className="title">Đội ngũ Học Thuật</h2>
-              <h4 className="description"></h4>
+              <h2 className="title text-white">Đội ngũ Học Thuật</h2>
+              {/* <h4 className="description"></h4> */}
             </Col>
           </Row>
           <Row>
