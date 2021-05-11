@@ -103,6 +103,7 @@ const CreateAndEditPart: React.FC<CreateEditPartProps> = () => {
         id: partId,
       },
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [partId]);
   if (getPartResponse.data) {
     const { __typename, ...data } = getPartResponse.data.part;
@@ -112,15 +113,18 @@ const CreateAndEditPart: React.FC<CreateEditPartProps> = () => {
     if (getPartResponse.data) {
       SkillsTypeOptions.find((prop, key) => {
         if (prop.value === initialValues.skillType) {
-          setSkillTypeSelect(SkillsTypeOptions[key]);
+          void setSkillTypeSelect(SkillsTypeOptions[key]);
         }
+        return prop;
       });
       EnglishCertificateOptions.find((prop, key) => {
         if (prop.value === initialValues.certificateType) {
           setCertificateTypeSelect(EnglishCertificateOptions[key]);
         }
+        return prop;
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getPartResponse]);
   const [createPart] = useCreatePartMutation();
   const [updatePart] = useUpdatePartMutation();

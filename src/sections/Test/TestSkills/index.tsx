@@ -42,7 +42,7 @@ const TestSkills: React.FC<TestSkillsProps> = ({ setIsTaken }) => {
   let shouldReorder = false;
   shouldReorder = tests ? tests.some((e, i) => e.skillType === SkillsType.Listening && i !== 0) : false;
   if(shouldReorder){
-    tests = tests?.reverse();
+    tests = tests?.slice().reverse();
   }
   
   return (

@@ -120,9 +120,10 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
 
   React.useEffect(() => {
     formik.setFieldValue("image", path);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path]);
 
-  const { questionId } = useParams();
+  const { questionId } = useParams() as { questionId?: string };
   const [answersKeyState, setAnswerKeyState] = React.useState(answersKeyVcl);
   // const [answersKeyGroupState, setAnswerKeyGroupState] = React.useState(answersKeyVcl);
   let notification = notificationAdd("Question");
@@ -169,6 +170,7 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
           return part;
         });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [certificateTypeSelect, skillTypeSelect, parts]);
 
   let initialValues: NewQuestionInput = {
@@ -204,6 +206,7 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
         id: questionIdFinal,
       },
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questionIdFinal]);
 
   //refresh test questions
@@ -211,6 +214,7 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
     removeQuestionMutationResult.data?.removeQuestion &&
       refetchTestQuestions &&
       refetchTestQuestions();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [removeQuestionMutationResult.loading]);
 
   const [answersGroupsArr, setAnswersGroupsArr] = React.useState<
@@ -265,6 +269,7 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
       });
       setAnswersGroupsArr(answersGroupsArrBE);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getQuestionRespone.data]);
 
   React.useEffect(() => {
@@ -284,6 +289,7 @@ const CreateAndEditQuestionForm: React.FC<CreateAndEditQuestionProps> = ({
       setIsCheckedResult(getQuestionRespone.data.question.result);
       setAnswerKeyState(answers);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getQuestionRespone]);
   const [createQuestion] = useCreateQuestionMutation();
   const [updateQuestion] = useUpdateQuestionMutation();

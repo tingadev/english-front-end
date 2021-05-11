@@ -15,7 +15,7 @@ interface TestTakenProps {
 const TestTaken: React.FC<TestTakenProps> = ({ testsData }) => {
   const [arrChecked, setArrChecked] = React.useState<any[]>([]);
   
-  const { testId } = useParams();
+  const { testId } = useParams() as { testId?: string };
   const testDetail = testsData?.find((test) => test.id === testId);
 
   const match = useRouteMatch();

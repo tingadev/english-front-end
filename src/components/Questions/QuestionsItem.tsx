@@ -62,7 +62,11 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
     <div className="mb-3" id={"question" + question.id}>
       <div className="d-flex justify-content-between align-items-center flex-wrap">
         {question && (
-          <h5 className="font-weight-bold">{lengthOfGroups > 0 ? question.questionGroupName : question.questionName }</h5>
+          <h5 className="font-weight-bold">
+            {lengthOfGroups > 0
+              ? question.questionGroupName
+              : question.questionName}
+          </h5>
         )}
         <div>
           {isSuccessful && (
@@ -78,7 +82,7 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
               Explain
             </Button>
           )}
-          {Boolean(question.audioSec) && (
+          {Boolean(question.audioSec) && !question.isGroup && (
             <Button
               className="rounded-fill bg-transparent border border-primary border-radius-fill text-primary"
               onClick={() => {
@@ -102,7 +106,12 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
       </Collapse>
       {question.description && (
         <p>
-          <i className="font-weight-normal">{question.description}</i>
+          <i
+            dangerouslySetInnerHTML={{
+              __html: question.description || "",
+            }}
+            className="font-weight-normal"
+          />
         </p>
       )}
 
@@ -116,7 +125,9 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
           <img src={config.PATH_IMAGE + question.image} />
         </div>
       )}
-      {lengthOfGroups > 0 && <h5 className="font-weight-bold">{question.questionName}</h5>}
+      {lengthOfGroups > 0 && (
+        <h5 className="font-weight-bold">{question.questionName}</h5>
+      )}
       <div className="pl-4">
         {question.answers.map((ele: any, index: any) => {
           const isAnswer = ele.keyAnswer === question.result;
@@ -131,10 +142,7 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
                 <Input
                   type="radio"
                   onClick={() => {
-                    handleCheck(
-                      question.id,
-                      ele
-                    );
+                    handleCheck(question.id, ele);
                   }}
                   name={`radio` + question.id}
                 />{" "}

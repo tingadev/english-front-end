@@ -8,10 +8,7 @@ import {
 interface  ContactUsProps{
 
 }
-const ContactUs : React.FC<ContactUsProps> = ({
-
-
-}) => {
+const ContactUs : React.FC<ContactUsProps> = () => {
     const [firstFocus, setFirstFocus] = React.useState(false);
   const [lastFocus, setLastFocus] = React.useState(false);
     return (

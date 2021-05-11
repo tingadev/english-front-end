@@ -21,52 +21,57 @@ interface NavbarContextProviderProps {
 }
 
 export const NavbarContext = React.createContext<NavbarProps>(
-  ({} as any) as NavbarProps
+  {} as any as NavbarProps
 );
 
 const useChatContextProvider = ({
   isHomePage,
 }: NavbarContextProviderProps): NavbarProps => {
   const [isStyle, setIsStyle] = React.useState(false);
-  const [navbarColor, setNavbarColor] = React.useState(!isStyle ? "bg-primary" : "navbar-transparent");
+  const [navbarColor, setNavbarColor] = React.useState(
+    !isStyle ? "bg-primary" : "navbar-transparent"
+  );
   const [topFixed, setTopFixed] = React.useState("81px");
   const [hiddenBrand, setHiddenBrand] = React.useState("");
   const [modalLogin, setModalLogin] = React.useState(false);
-  const [testGroupsData, setTestGroupsData] = React.useState<TestGroupInfoFragment[] | undefined>(undefined);
+  const [testGroupsData, setTestGroupsData] =
+    React.useState<TestGroupInfoFragment[] | undefined>(undefined);
   const [y, setY] = React.useState(0);
-  const [scrolState, setScrolState] = React.useState('up');
+  const [scrolState, setScrolState] = React.useState("up");
   const handleNavigation = (e: any) => {
     const window = e.currentTarget;
     if (y > window.scrollY) {
-        setScrolState('up');
+      setScrolState("up");
     } else if (y < window.scrollY) {
-        setScrolState('down');
+      setScrolState("down");
     }
     setY(window.scrollY);
   };
 
   React.useMemo(() => {
-    document.body.classList.add("sidebar-collapse");
+
     document.documentElement.classList.remove("nav-open");
     window.addEventListener("scroll", handleNavigation);
     return function cleanup() {
       document.body.classList.remove("sidebar-collapse");
       window.addEventListener("scroll", handleNavigation);
     };
-  },[y]);
+  }, [y]);
 
   React.useMemo(() => {
-    if (scrolState === 'up') {
-      setTopFixed('81px');
+    if (scrolState === "up") {
+      setTopFixed("81px");
       setNavbarColor("");
       setHiddenBrand("");
-  } else {
-    setTopFixed('0px');
-      setNavbarColor(`${isStyle ? 'bg-black-blur' : 'bg-primary'}`);
+      document.body.classList.remove("scrollDown");
+    } else {
+      setTopFixed("0px");
+      setNavbarColor(`${isStyle ? "bg-black-blur" : "bg-primary"}`);
       setHiddenBrand("hide-nav");
-  }
-
-  }, [scrolState])
+      document.body.classList.add("scrollDown");
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scrolState]);
   const navbarContextProvider: NavbarProps = {
     navbarColor,
     setNavbarColor,
