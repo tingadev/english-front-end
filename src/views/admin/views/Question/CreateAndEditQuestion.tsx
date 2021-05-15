@@ -14,10 +14,6 @@ import {
 } from "reactstrap";
 import { notificationAdd } from "../../utils/Notification";
 import {
-  EnglishCertificateOptions,
-  SkillsTypeOptions,
-} from "./CreateAndEditPart";
-import {
   NewQuestionInput,
   QuestionType,
   useCreateQuestionMutation,
@@ -37,13 +33,14 @@ import Select from "react-select";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { store } from "react-notifications-component";
-import ErrorMessage from "../Error";
-import TinyMCETextarea from "../TinyMCETextarea";
-import ImageUpload from "../ImageUploader/index";
+import { QuestionContext } from "../QuestionsAndTest/QuestionContext";
+import { EnglishCertificateOptions, SkillsTypeOptions } from "../Part/CreateAndEditPart";
 import config from "../../../../config";
-import { QuestionContext } from "./QuestionContext";
-import { ButtonAdd } from "../ButtonQuestion/ButtonAdd";
-import ModalDelete from "../Modal/Delete";
+import ErrorMessage from "../../components/Error";
+import TinyMCETextarea from "../../components/TinyMCETextarea";
+import ImageUpload from "../../components/ImageUploader";
+import { ButtonAdd } from "../../components/ButtonQuestion/ButtonAdd";
+import ModalDelete from "../../components/Modal/Delete";
 
 interface CreateAndEditQuestionProps {
   modal?: boolean;

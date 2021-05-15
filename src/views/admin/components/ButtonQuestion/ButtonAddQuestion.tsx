@@ -1,5 +1,5 @@
 import React from "react";
-import { QuestionContext } from "../QuestionsAndTest/QuestionContext";
+import { QuestionContext } from "../../views/QuestionsAndTest/QuestionContext";
 import { ButtonAdd } from "./ButtonAdd";
 interface ButtonAddQuestionProps {
     partId: string;

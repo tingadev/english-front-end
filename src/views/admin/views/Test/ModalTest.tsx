@@ -5,8 +5,8 @@ import {
   TestIdsInput,
   useUpdateTestsMutation,
 } from "../../../../schema/schema";
+import { QuestionContext } from "../QuestionsAndTest/QuestionContext";
 import ListTest from "./ListTest";
-import { QuestionContext } from "./QuestionContext";
 
 interface ModalPartProps {
   testCategoryId?: string;

@@ -1,14 +1,13 @@
 import React from "react";
 import { Modal, ModalBody, Button, Spinner } from "reactstrap";
 import {
-  AudioSecondsInput,
   PartAndAudioSeconds,
   PartFragment,
   PartIdsInput,
   SkillsType,
 } from "../../../../schema/schema";
+import { QuestionContext } from "../QuestionsAndTest/QuestionContext";
 import ListPart from "./ListPart";
-import { QuestionContext } from "./QuestionContext";
 
 interface ModalPartProps {
   skillType: SkillsType;
@@ -31,7 +30,6 @@ const ModalPart: React.FC<ModalPartProps> = ({
   const [dataUpdateTest, setDataUpdateTest] = React.useState<PartAndAudioSeconds[]>([]);
   
   React.useEffect(() => {
-    console.log('partAndAudioSecs', partAndAudioSecs)
     if (partAndAudioSecs && partAndAudioSecs?.length > 0) {
       let hello : PartAndAudioSeconds[] = [];
       partAndAudioSecs.map((p) => {
@@ -42,18 +40,9 @@ const ModalPart: React.FC<ModalPartProps> = ({
     }
   },[partAndAudioSecs])
   
-  // console.log('AAAAA', dataUpdateTest)
-//   partIds &&
-//     partIds.ids.map((pId) => {
-//       const data: PartAndAudioSeconds = {
-//         partId: pId,
-//         autdioSecs: 0,
-//         displayOrder: 0,
-//       };
-//       dataUpdateTest.push(data);
-//     });
-  React.useEffect(() => {
+  React.useMemo(() => {
     questionContext.setIsOpenModalAddPart(false);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[questionContext.updateTestMutationResult.loading])
 
   return (

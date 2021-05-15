@@ -13,8 +13,8 @@ import {
   useUpdateTestCategoryMutation,
 } from "../../../../schema/schema";
 import { Link } from "react-router-dom";
-import ModalDelete from "../Modal/Delete";
-import LazyLoad from "../LazyLoad";
+import LazyLoad from "../../components/LazyLoad";
+import ModalDelete from "../../components/Modal/Delete";
 interface ListTestCategoryProps {
   setIconPills: (val: string) => void;
 }

@@ -9,7 +9,6 @@ import {
   Input,
   Form,
 } from "reactstrap";
-import Select from "react-select";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import {
@@ -26,11 +25,11 @@ import { store } from "react-notifications-component";
 import { useParams } from "react-router-dom";
 import { notificationAdd } from "../../utils/Notification";
 import ErrorMessage from "../../components/Error";
-import { EnglishCertificateOptions } from "../../components/QuestionsAndTest/CreateAndEditPart";
 import Loading from "../../../../components/Loading";
 import ButtonSubmitGroup from "../../components/ButtonSubmit";
 import { generateLink } from "../../utils/GenerateLink";
 import { SelectCustom } from "../../components/SelectCustom";
+import { EnglishCertificateOptions } from "../Part/CreateAndEditPart";
 const penEdit = require("../../../../assets/img/pen.svg");
 interface CreateAndEditTestGroupProps {
   testsGroupData?: TestGroupInfoFragment[];

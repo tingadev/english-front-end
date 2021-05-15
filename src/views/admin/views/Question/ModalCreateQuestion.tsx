@@ -1,8 +1,8 @@
 import React from "react";
-import { Modal, ModalBody, Button } from "reactstrap";
+import { Modal, ModalBody } from "reactstrap";
 import { SkillsType, TestQuestionInputId } from "../../../../schema/schema";
+import { QuestionContext } from "../QuestionsAndTest/QuestionContext";
 import CreateAndEditQuestion from "./CreateAndEditQuestion";
-import { QuestionContext } from "./QuestionContext";
 
 interface ModalCreateQuestionProps {
   skillType: SkillsType;

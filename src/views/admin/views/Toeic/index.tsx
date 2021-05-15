@@ -1,14 +1,14 @@
 import React from "react";
 import PanelHeader from "../../components/PanelHeader";
 import { Switch, Route, useRouteMatch, useParams, useHistory } from "react-router-dom";
-import CreateAndEditQuestion from "../../components/QuestionsAndTest/CreateAndEditQuestion";
-import CreateAndEditPart from "../../components/QuestionsAndTest/CreateAndEditPart";
-import CreateAndEditTest from "../../components/QuestionsAndTest/CreateAndEditTest";
-import QuestionContextProvider from "../../components/QuestionsAndTest/QuestionContext";
-import { EnglishCertificateType } from "../../../../schema/schema";
-import TestPage from "../../components/QuestionsAndTest";
-import CreateAndEditTestCategory from "../../components/QuestionsAndTest/CreateAndEditTestCategory";
 import { capitalizeFirstLetter } from "../../utils/UppercaseFirstLetter";
+import CreateAndEditTest from "../Test/CreateAndEditTest";
+import QuestionContextProvider from "../QuestionsAndTest/QuestionContext";
+import CreateAndEditTestCategory from "../TestCategory/CreateAndEditTestCategory";
+import CreateAndEditQuestion from "../Question/CreateAndEditQuestion";
+import CreateAndEditPart from "../Part/CreateAndEditPart";
+import TestPage from "../QuestionsAndTest";
+import { EnglishCertificateType } from "../../../../schema/schema";
 // import { Route, Switch, Redirect } from "react-router-dom";
 // interface ToeicAdminProps {}
 

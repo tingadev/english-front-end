@@ -19,8 +19,8 @@ import {
   PartIdAndQuestionIdsInput,
   useRemoveQuestionMutation,
 } from "../../../../schema/schema";
-import LazyLoad from "../LazyLoad";
-import ModalDelete from "../Modal/Delete";
+import LazyLoad from "../../components/LazyLoad";
+import ModalDelete from "../../components/Modal/Delete";
 // import { Route, Switch, Redirect } from "react-router-dom";
 interface ListQuestionsProps {
   setIconPills?: (val: string) => void;

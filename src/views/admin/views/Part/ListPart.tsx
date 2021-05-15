@@ -2,7 +2,6 @@ import React from "react";
 import {
   CardHeader,
   CardTitle,
-  CardBody,
   Table,
   Badge,
   Button,
@@ -18,8 +17,8 @@ import {
 } from "../../../../schema/schema";
 import { Link, useRouteMatch } from "react-router-dom";
 import _ from "lodash";
-import { QuestionContext } from "./QuestionContext";
-import LazyLoad from "../LazyLoad";
+import { QuestionContext } from "../QuestionsAndTest/QuestionContext";
+import LazyLoad from "../../components/LazyLoad";
 interface ListPartProps {
   setIconPills?: (val: string) => void;
   modal?: boolean;

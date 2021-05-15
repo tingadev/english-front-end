@@ -1,45 +1,41 @@
 import React from "react";
-import {
-  Row,
-  Col,
-  Card,
-  CardHeader,
-  CardBody
-} from "reactstrap";
+import { Row, Col, Card, CardHeader, CardBody } from "reactstrap";
 import {
   SkillsType,
   QuestionFragment,
-  TestFragment, TestQuestionInputId, useGetTestQuestionsLazyQuery, useGetTestLazyQuery, PartFragment, useGetPartsFromIdsLazyQuery, PartIdsInput
+  TestFragment,
+  TestQuestionInputId,
+  useGetTestQuestionsLazyQuery,
+  useGetTestLazyQuery,
+  useGetPartsFromIdsLazyQuery,
 } from "../../../../schema/schema";
-import ModalListQuestions from "./ModalListQuestions";
-import Exam from "./TemplateCreateTest/Exam";
-import ModalCreateQuestion from "./ModalCreateQuestion";
 import { useParams } from "react-router-dom";
-import { QuestionContext } from "./QuestionContext";
-import ModalPart from "./ModalPart";
-
-
+import ModalListQuestions from "../Question/ModalListQuestions";
+import ModalCreateQuestion from "../Question/ModalCreateQuestion";
+import ModalPart from "../Part/ModalPart";
+import { QuestionContext } from "../QuestionsAndTest/QuestionContext";
+import Exam from "../QuestionsAndTest/TemplateCreateTest/Exam";
 
 export interface ArrayQuestionIds {
-  skillType: SkillsType,
-  questions?: (QuestionFragment & { partId: string })[]
+  skillType: SkillsType;
+  questions?: (QuestionFragment & { partId: string })[];
 }
-interface CreateAndEditTestProps {
-}
+interface CreateAndEditTestProps {}
 
-const CreateAndEditTest: React.FC<CreateAndEditTestProps> = ({ }) => {
+const CreateAndEditTest: React.FC<CreateAndEditTestProps> = () => {
   const questionContext = React.useContext(QuestionContext);
-  const { id } = useParams();
+  const { id } = useParams() as { id?: string };
   // create and mark it draft
   const [getTestQuery, getTestResponse] = useGetTestLazyQuery();
 
-  React.useEffect(() => {
-    id && getTestQuery({
-      variables: {
-        id,
-      }
-    })
-  }, [id])
+  React.useMemo(() => {
+    id &&
+      getTestQuery({
+        variables: {
+          id,
+        },
+      });
+  }, [getTestQuery, id]);
   let testData: TestFragment | undefined;
   if (getTestResponse.data) {
     testData = getTestResponse.data.test;
@@ -47,60 +43,66 @@ const CreateAndEditTest: React.FC<CreateAndEditTestProps> = ({ }) => {
   const dataTestQuestionInput: TestQuestionInputId = {
     testId: testData && testData.id,
     partId: questionContext.partId,
-  }
-  
+  };
 
-  const [testQuestionsQuery, testQuestionsResponse] = useGetTestQuestionsLazyQuery()
-  const [partsQuery, partsQueryResponse] = useGetPartsFromIdsLazyQuery()
+  const [testQuestionsQuery, testQuestionsResponse] =
+    useGetTestQuestionsLazyQuery();
+  const [partsQuery, partsQueryResponse] = useGetPartsFromIdsLazyQuery();
   const variablesTestQuestion = {
-    testId: id
-  }
+    testId: id,
+  };
   React.useEffect(() => {
     questionContext.setPartIds({
-      ids: []
-    })
-    if(testData && testData.partAndAudioSecs?.length){
+      ids: [],
+    });
+    if (testData && testData.partAndAudioSecs?.length) {
       const ids: string[] = [];
       testData.partAndAudioSecs.map((p) => {
         ids.push(p.partId!);
         questionContext.setPartIds({
           ids,
-        })
+        });
       });
     }
-  },[getTestResponse.data?.test])
+  }, [getTestResponse.data?.test]);
 
   React.useEffect(() => {
     refetchTest();
-  },[questionContext.updateTestMutationResult.data])
+  }, [questionContext.updateTestMutationResult.data]);
   React.useEffect(() => {
-    questionContext.partIds?.ids && questionContext.partIds?.ids.length > 0 && partsQuery({
-      variables: {
-        data: questionContext.partIds
-      }
-    })
-  },[questionContext.partIds?.ids.length])
+    questionContext.partIds?.ids &&
+      questionContext.partIds?.ids.length > 0 &&
+      partsQuery({
+        variables: {
+          data: questionContext.partIds,
+        },
+      });
+  }, [questionContext.partIds?.ids.length]);
   React.useEffect(() => {
-    if (testData) {
+    if (testData || !id) {
       return;
     }
     testQuestionsQuery({
-      variables: variablesTestQuestion,
-    })
-  }, [testData])
+      variables: {
+        testId: id
+      },
+    });
+  }, [testData]);
   const refetchTestQuestions = () => {
-    testQuestionsResponse.refetch && testQuestionsResponse.refetch(variablesTestQuestion)
-  }
-  const refetchTest =  () => {
-    getTestResponse.refetch && getTestResponse.refetch({id})
-  }
+    testQuestionsResponse.refetch &&
+      testQuestionsResponse.refetch(variablesTestQuestion);
+  };
+  const refetchTest = () => {
+    getTestResponse.refetch && getTestResponse.refetch({ id });
+  };
 
   const refechParts = () => {
-    partsQueryResponse.refetch && partsQueryResponse.refetch({data: questionContext.partIds})
-  }
+    partsQueryResponse.refetch &&
+      partsQueryResponse.refetch({ data: questionContext.partIds });
+  };
   const testQuestions = testQuestionsResponse.data?.getTestQuestions;
   if (getTestResponse.loading) {
-    return <>{'...loading'}</>
+    return <>{"...loading"}</>;
   }
   const skillType = testData?.skillType!;
   const dataParts = partsQueryResponse.data?.getPartsFromIds;

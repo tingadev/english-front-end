@@ -21,12 +21,12 @@ import {
   useUpdatePartMutation,
   NewPartInput,
 } from "../../../../schema/schema";
-import ErrorMessage from "../Error";
 import { store } from "react-notifications-component";
 import { Link, useParams } from "react-router-dom";
 import { notificationAdd } from "../../utils/Notification";
-import TinyMCETextarea from "../TinyMCETextarea";
 import { OptionsType } from "../../views/TestGroup/CreateAndEditTestGroup";
+import ErrorMessage from "../../components/Error";
+import TinyMCETextarea from "../../components/TinyMCETextarea";
 
 interface CreateEditPartProps {
   partId?: string;

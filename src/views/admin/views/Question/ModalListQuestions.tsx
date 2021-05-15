@@ -11,8 +11,8 @@ import {
   TestQuestionInputId,
   useCreateListTestQuestionsMutation
 } from "../../../../schema/schema";
+import { QuestionContext } from "../QuestionsAndTest/QuestionContext";
 import ListQuestions from "./ListQuestions";
-import { QuestionContext } from "./QuestionContext";
 
 interface ModalListQuestionsProps {
   skillType: SkillsType;

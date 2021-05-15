@@ -17,8 +17,8 @@ import {
   useUpdateTestMutation,
 } from "../../../../schema/schema";
 import { Link } from "react-router-dom";
-import ModalDelete from "../Modal/Delete";
-import LazyLoad from "../LazyLoad";
+import ModalDelete from "../../components/Modal/Delete";
+import LazyLoad from "../../components/LazyLoad";
 interface ListTestProps {
   setIconPills?: (val: string) => void;
   modal?: boolean;

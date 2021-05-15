@@ -1,13 +1,11 @@
 import React from "react";
 import { Button } from "reactstrap";
-import { QuestionContext } from "../QuestionsAndTest/QuestionContext";
+import { QuestionContext } from "../../views/QuestionsAndTest/QuestionContext";
 interface ButtonAddQuestionProps {
     testId?: string;
   }
 
-export const ButtonAddTest: React.FC<ButtonAddQuestionProps> = ({
-    
-  }) => {
+export const ButtonAddTest: React.FC<ButtonAddQuestionProps> = () => {
     const questionContext = React.useContext(QuestionContext);
     return (
       <div>

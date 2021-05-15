@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "reactstrap";
-import { QuestionContext } from "../QuestionsAndTest/QuestionContext";
+import { QuestionContext } from "../../views/QuestionsAndTest/QuestionContext";
 interface ButtonCreateQuestionProps {
     partId: string;
   }

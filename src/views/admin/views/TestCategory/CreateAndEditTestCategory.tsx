@@ -31,12 +31,12 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { store } from "react-notifications-component";
 import { notificationAdd } from "../../utils/Notification";
-import ErrorMessage from "../Error";
-import { ButtonAddTest } from "../ButtonQuestion/ButtonAddTest";
-import ModalTest from "./ModalTest";
-import { ListOfTestGroups } from "../../views/TestGroup/CreateAndEditTestGroup";
+import { ListOfTestGroups } from "../TestGroup/CreateAndEditTestGroup";
 import Select from "react-select";
 import _ from "lodash";
+import ErrorMessage from "../../components/Error";
+import { ButtonAddTest } from "../../components/ButtonQuestion/ButtonAddTest";
+import ModalTest from "../Test/ModalTest";
 
 interface CreateAndEditTestCategoryProps {}
 

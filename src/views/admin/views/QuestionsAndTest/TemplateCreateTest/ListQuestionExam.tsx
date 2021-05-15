@@ -2,15 +2,15 @@
 import { jsx, css } from "@emotion/core";
 import React from "react";
 import { store } from "react-notifications-component";
-import { Badge, Button, Input, Spinner } from "reactstrap";
+import { Badge, Button, Input } from "reactstrap";
 import {
   EnglishCertificateType,
   TestQuestionFragment,
   useRemoveTestQuestionMutation,
   useUpdateTestQuestionMutation,
 } from "../../../../../schema/schema";
+import ModalDelete from "../../../components/Modal/Delete";
 import { notificationAdd } from "../../../utils/Notification";
-import ModalDelete from "../../Modal/Delete";
 import { QuestionContext } from "../QuestionContext";
 
 interface ListQuestionExam {

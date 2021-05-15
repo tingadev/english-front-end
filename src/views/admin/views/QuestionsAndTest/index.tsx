@@ -11,10 +11,10 @@ import {
   NavItem,
 } from "reactstrap";
 import { EnglishCertificateType, NewTestCategoryInput, NewTestInput, SkillsType, useCreateTestCategoryMutation, useCreateTestMutation } from "../../../../schema/schema";
-import ListPart from "./ListPart";
-import ListQuestions from "./ListQuestions";
-import ListTest from "./ListTest";
-import ListTestCategory from "./ListTestCategory";
+import ListTest from "../../views/Test/ListTest";
+import ListPart from "../Part/ListPart";
+import ListQuestions from "../Question/ListQuestions";
+import ListTestCategory from "../TestCategory/ListTestCategory";
 // import { Route, Switch, Redirect } from "react-router-dom";
 // interface ToeicAdminProps {}
 

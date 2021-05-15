@@ -9,26 +9,19 @@ import {
   MediaType,
   PartAndAudioSeconds,
 } from "../../../../../schema/schema";
-import {
-  Button,
-  Row,
-  Col,
-  Form,
-  FormGroup,
-  Input,
-} from "reactstrap";
+import { Button, Row, Col, Form, FormGroup, Input } from "reactstrap";
 import { useFormik } from "formik";
-import ErrorMessage from "../../Error";
-import { ButtonCreateQuestion } from "../../ButtonQuestion/ButtonCreateQuestion";
 import { QuestionContext } from "../QuestionContext";
 import { notificationAdd } from "../../../utils/Notification";
 import { store } from "react-notifications-component";
 import _ from "lodash";
 import * as yup from "yup";
 import { Link } from "react-router-dom";
-import AudioUpload from "../../AudioUploader";
-import { ButtonAddPart } from "../../ButtonQuestion/ButtonAddPart";
 import ListQuestionExam from "./ListQuestionExam";
+import ErrorMessage from "../../../components/Error";
+import AudioUpload from "../../../components/AudioUploader";
+import { ButtonCreateQuestion } from "../../../components/ButtonQuestion/ButtonCreateQuestion";
+import { ButtonAddPart } from "../../../components/ButtonQuestion/ButtonAddPart";
 interface ExamProps {
   dataParts?: PartFragment[];
   skillType: SkillsType;
@@ -50,8 +43,6 @@ const Exam: React.FC<ExamProps> = ({
   const [partAndAudioSeconds, setPartAndAudioSeconds] = React.useState<
     AudioSecondsInput[]
   >([]);
-
-
 
   let partAndAudioSecondsDefault: PartAndAudioSeconds[] = [];
   React.useEffect(() => {
@@ -99,7 +90,6 @@ const Exam: React.FC<ExamProps> = ({
   return (
     <Form onSubmit={formik.handleSubmit}>
       <Row>
-      
         <Col md={12}>
           <div className="d-flex justify-content-between pl-5 align-items-end">
             <FormGroup className="w-50">
@@ -136,7 +126,6 @@ const Exam: React.FC<ExamProps> = ({
       <Row>
         <Col>
           <div className="w-50 pl-5 d-flex">
-            
             <FormGroup>
               <label>Audio</label>
               <Input placeholder="Chose file" name="audioUrl" type="hidden" />
@@ -152,7 +141,6 @@ const Exam: React.FC<ExamProps> = ({
               />
             </FormGroup>
           </div>
-         
         </Col>
       </Row>
       <Row>
@@ -160,55 +148,26 @@ const Exam: React.FC<ExamProps> = ({
           <ul className="list-style-none mt-4">
             {partAndAudioSeconds &&
               partAndAudioSeconds.map((p, index: number) => {
-                  const part =
-                    dataParts && dataParts.find((part) => part.id === p.partId);
-                  return (
-                    <div key={index}>
-                      <li className="bg-primary d-flex justify-content-between align-items-center">
-                        <h4 className="p-2 text-white my-0">
-                          {part?.partName}
-                        </h4>
-                        <div className="ml-auto d-flex align-items-center pr-2">
-                          {skillType === SkillsType.Listening && (
-                            <FormGroup className="width-15rem d-flex mr-4 justify-content-between align-items-center">
-                              <label className="text-white font-10">
-                                Audio Seconds
-                              </label>
-                              <Input
-                                placeholder="Seconds"
-                                type="number"
-                                onChange={async (e) => {
-                                  let res = _.cloneDeep(partAndAudioSeconds);
-                                  res = res.map((pp) => {
-                                    if (pp.partId === p.partId) {
-                                      pp.autdioSecs = parseInt(e.target.value);
-                                    }
-                                    return pp;
-                                  });
-                                  setPartAndAudioSeconds(res);
-                                  formik.setFieldValue(
-                                    "partAndAudioSecs",
-                                    partAndAudioSeconds
-                                  );
-                                }}
-                                value={
-                                  partAndAudioSeconds[index].autdioSecs || 0
-                                }
-                                onBlur={formik.handleBlur}
-                                className={`width-7rem bg-white`}
-                              />
-                            </FormGroup>
-                          )}
-                          <FormGroup className=" d-flex mr-4 justify-content-between align-items-center">
-                            <label className="text-white font-10">Order</label>
+                const part =
+                  dataParts && dataParts.find((part) => part.id === p.partId);
+                return (
+                  <div key={index}>
+                    <li className="bg-primary d-flex justify-content-between align-items-center">
+                      <h4 className="p-2 text-white my-0">{part?.partName}</h4>
+                      <div className="ml-auto d-flex align-items-center pr-2">
+                        {skillType === SkillsType.Listening && (
+                          <FormGroup className="width-15rem d-flex mr-4 justify-content-between align-items-center">
+                            <label className="text-white font-10">
+                              Audio Seconds
+                            </label>
                             <Input
-                              placeholder="Order"
+                              placeholder="Seconds"
                               type="number"
                               onChange={async (e) => {
                                 let res = _.cloneDeep(partAndAudioSeconds);
                                 res = res.map((pp) => {
                                   if (pp.partId === p.partId) {
-                                    pp.displayOrder = parseInt(e.target.value);
+                                    pp.autdioSecs = parseInt(e.target.value);
                                   }
                                   return pp;
                                 });
@@ -218,44 +177,71 @@ const Exam: React.FC<ExamProps> = ({
                                   partAndAudioSeconds
                                 );
                               }}
-                              value={
-                                partAndAudioSeconds[index].displayOrder || 0
-                              }
+                              value={partAndAudioSeconds[index].autdioSecs || 0}
                               onBlur={formik.handleBlur}
-                              className={`ml-3 width-4rem bg-white`}
+                              className={`width-7rem bg-white`}
                             />
                           </FormGroup>
-                          <Button
-                            className="btn-icon btn-round text-center"
-                            color="danger"
-                            size="sm"
-                            type="button"
-                            onClick={async (e) => {
-                              e.preventDefault();
-                              const res = partAndAudioSeconds.filter(
-                                (pp) => pp.partId !== p.partId
-                              );
-                              setPartAndAudioSeconds(res);
-                              await questionContext.updateTestMutation({
-                                variables: {
-                                  data: {
-                                    partAndAudioSecs: res,
-                                    id: testData?.id,
-                                  },
-                                },
+                        )}
+                        <FormGroup className=" d-flex mr-4 justify-content-between align-items-center">
+                          <label className="text-white font-10">Order</label>
+                          <Input
+                            placeholder="Order"
+                            type="number"
+                            onChange={async (e) => {
+                              let res = _.cloneDeep(partAndAudioSeconds);
+                              res = res.map((pp) => {
+                                if (pp.partId === p.partId) {
+                                  pp.displayOrder = parseInt(e.target.value);
+                                }
+                                return pp;
                               });
+                              setPartAndAudioSeconds(res);
+                              formik.setFieldValue(
+                                "partAndAudioSecs",
+                                partAndAudioSeconds
+                              );
                             }}
-                          >
-                            <i className="now-ui-icons ui-1_simple-remove"></i>
-                          </Button>
-                        </div>
-                      </li>
-                      <ButtonCreateQuestion partId={p.partId!} />
-                      
-                      <ListQuestionExam questions={questions} partId={p.partId!} refetchTestQuestions={refetchTestQuestions} />
-                    </div>
-                  );
-                })}
+                            value={partAndAudioSeconds[index].displayOrder || 0}
+                            onBlur={formik.handleBlur}
+                            className={`ml-3 width-4rem bg-white`}
+                          />
+                        </FormGroup>
+                        <Button
+                          className="btn-icon btn-round text-center"
+                          color="danger"
+                          size="sm"
+                          type="button"
+                          onClick={async (e) => {
+                            e.preventDefault();
+                            const res = partAndAudioSeconds.filter(
+                              (pp) => pp.partId !== p.partId
+                            );
+                            setPartAndAudioSeconds(res);
+                            await questionContext.updateTestMutation({
+                              variables: {
+                                data: {
+                                  partAndAudioSecs: res,
+                                  id: testData?.id,
+                                },
+                              },
+                            });
+                          }}
+                        >
+                          <i className="now-ui-icons ui-1_simple-remove"></i>
+                        </Button>
+                      </div>
+                    </li>
+                    <ButtonCreateQuestion partId={p.partId!} />
+
+                    <ListQuestionExam
+                      questions={questions}
+                      partId={p.partId!}
+                      refetchTestQuestions={refetchTestQuestions}
+                    />
+                  </div>
+                );
+              })}
             <div className="mb-2 bg-primary d-flex justify-content-between align-items-center pl-2">
               <ButtonAddPart />
             </div>
