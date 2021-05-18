@@ -54,16 +54,14 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
       }
     }
   };
-  const lengthOfGroups = (question as QuestionFragment).questionGroups?.length;
-  const [indexState] = React.useState(index + lengthOfGroups);
-  const indexes = index + indexState;
-
+  const isQuestionGroup = (question as QuestionFragment).questionGroups?.length > 0;
+  const description = isQuestionGroup ? question.questionGroupDescription : question.description;
   return (
     <div className="mb-3" id={"question" + question.id}>
       <div className="d-flex justify-content-between align-items-center flex-wrap">
         {question && (
           <h5 className="font-weight-bold">
-            {lengthOfGroups > 0
+            {isQuestionGroup
               ? question.questionGroupName
               : question.questionName}
           </h5>
@@ -104,29 +102,36 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
           />
         </CardBody>
       </Collapse>
-      {question.description && (
-        <p>
+      {description && (
+        <p className='question-description'>
           <i
             dangerouslySetInnerHTML={{
-              __html: question.description || "",
+              __html: description || "",
             }}
             className="font-weight-normal"
           />
         </p>
       )}
 
-      <div
-        className="font-11 text-black font-weight-normal d-flex flex-wrap"
-        dangerouslySetInnerHTML={{ __html: question.content || "" }}
-      />
-
       {question.image && (
         <div className="img">
           <img src={config.PATH_IMAGE + question.image} />
         </div>
       )}
-      {lengthOfGroups > 0 && (
+      {isQuestionGroup && (
+        <>
         <h5 className="font-weight-bold">{question.questionName}</h5>
+        {question.description && (
+          <p className='question-description'>
+            <i
+              dangerouslySetInnerHTML={{
+                __html: question.description || "",
+              }}
+              className="font-weight-normal"
+            />
+          </p>
+        )}
+        </>
       )}
       <div className="pl-4">
         {question.answers.map((ele: any, index: any) => {
@@ -134,7 +139,7 @@ const QuestionsItem: React.FC<QuestionsItemProps> = ({
           return (
             ele.answerContent && (
               <Label
-                className={`w-100 font-12 ${
+                className={`w-100 question-answers ${
                   isAnswer && isSuccessful && "text-warning font-weight-bold"
                 }`}
                 key={index}

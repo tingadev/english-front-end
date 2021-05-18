@@ -174,6 +174,7 @@ const ListQuestionExam: React.FC<ListQuestionExam> = ({
                           onClick={() => {
                             questionContext.setQuestionIdModal(q.question.id);
                             questionContext.setIsOpenModalCreateQuestion(true);
+                            questionContext.setPartId(partId);
                           }}
                         >
                           <i className="now-ui-icons ui-2_settings-90"></i>

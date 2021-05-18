@@ -5,6 +5,8 @@ export const QUESTION_FRAGMENT_GROUP = gql`
     id
     questionName
     questionGroupName
+    questionGroupDescription
+    questionGroupContent
     audioSec
     audioSecVN
     questionType
@@ -13,7 +15,6 @@ export const QUESTION_FRAGMENT_GROUP = gql`
         keyAnswer
         answerContent
     }
-    content
     description
     skillType
     certificateType
@@ -29,6 +30,7 @@ export const QUESTION_FRAGMENT = gql`
     id
     questionName
     questionGroupName
+    questionGroupDescription
     audioSec
     audioSecVN
     questionType
@@ -37,7 +39,6 @@ export const QUESTION_FRAGMENT = gql`
         keyAnswer
         answerContent
     }
-    content
     description
     skillType
     certificateType
@@ -48,6 +49,17 @@ export const QUESTION_FRAGMENT = gql`
     questionGroups{
       ...QuestionGroup
     }
+  }
+  ${QUESTION_FRAGMENT_GROUP}
+`;
+
+export const QUESTION_SHORT_INFO_FRAGMENT = gql`
+  fragment QuestionShortInFo on Question {
+    id
+    questionName
+    questionType
+    skillType
+    certificateType
   }
   ${QUESTION_FRAGMENT_GROUP}
 `;
@@ -83,14 +95,14 @@ export const GET_QUESTIONS = gql `
   query getQuestions($data: QuestionFilterTypeInput!) {
       questions(questionFilterType: $data) {
         questions{
-          ...Question
+          ...QuestionShortInFo
         }
         total
         nextCursor
 
       }
   }
-  ${QUESTION_FRAGMENT}
+  ${QUESTION_SHORT_INFO_FRAGMENT}
 `;
 
 export const REMOVE_QUESTION = gql `

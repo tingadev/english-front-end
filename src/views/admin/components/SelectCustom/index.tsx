@@ -11,6 +11,7 @@ export const SelectCustom: React.FC<SelectComponentsProps> = ({zIndex , ...props
         loadingIndicator: (styles) => ({ ...styles, color: "#c211a1" }),
         container: (styles) => ({ ...styles, zIndex: zIndex ? zIndex : 999})
       }}
+      classNamePrefix="react-select"
     />
   );
 };

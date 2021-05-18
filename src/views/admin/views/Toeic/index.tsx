@@ -5,7 +5,7 @@ import { capitalizeFirstLetter } from "../../utils/UppercaseFirstLetter";
 import CreateAndEditTest from "../Test/CreateAndEditTest";
 import QuestionContextProvider from "../QuestionsAndTest/QuestionContext";
 import CreateAndEditTestCategory from "../TestCategory/CreateAndEditTestCategory";
-import CreateAndEditQuestion from "../Question/CreateAndEditQuestion";
+// import CreateAndEditQuestion from "../Question/CreateAndEditQuestion";
 import CreateAndEditPart from "../Part/CreateAndEditPart";
 import TestPage from "../QuestionsAndTest";
 import { EnglishCertificateType } from "../../../../schema/schema";
@@ -40,9 +40,9 @@ const ToeicAdmin: React.FC<{}> = () => {
           <Route path={`${match.url}/create-test-toeic/:skillTypeParam/:id`}>
             <CreateAndEditTest />
           </Route>
-          <Route path={[`${match.url}/create-question-toeic`, `${match.url}/questions/:questionId/edit`]}>
+          {/* <Route path={[`${match.url}/create-question-toeic`, `${match.url}/questions/:questionId/edit`]}>
             <CreateAndEditQuestion />
-          </Route>
+          </Route> */}
           <Route path={[`${match.url}/create-part-toeic`, `${match.url}/part/:partId/edit`]}>
             <CreateAndEditPart />
           </Route>

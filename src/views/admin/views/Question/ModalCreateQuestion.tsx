@@ -20,7 +20,7 @@ const ModalCreateQuestion: React.FC<ModalCreateQuestionProps> = ({
     <>
       <Modal
         className='px-4 mw-100 w-100 '
-        contentClassName="h-100"
+        contentClassName="min-height-80vh"
         size="lg"
         centered
         isOpen={questionContext.isOpenModalCreateQuestion}
@@ -29,13 +29,12 @@ const ModalCreateQuestion: React.FC<ModalCreateQuestionProps> = ({
       >
         <div className="modal-header justify-content-center">
           <button
-            className="close"
+            className="close position-static"
             type="button"
             onClick={() => questionContext.setIsOpenModalCreateQuestion(false)}
           >
             <i className="now-ui-icons ui-1_simple-remove"></i>
           </button>
-          <h4 className="title title-up">List of Questions</h4>
         </div>
         <ModalBody>
           <CreateAndEditQuestion dataTestQuestionInput={dataTestQuestionInput} modal refetchTestQuestions={refetchTestQuestions}  skillType={skillType} />

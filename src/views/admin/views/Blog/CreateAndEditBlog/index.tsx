@@ -17,7 +17,6 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import ErrorMessage from "../../../components/Error";
 import {
-  BlogFragment,
   EnglishCertificateType,
   MediaType,
   NewBlogInput,
@@ -29,7 +28,7 @@ import {
 } from "../../../../../schema/schema";
 import { useMe } from "../../../../../hooks/useMe";
 import PanelHeader from "../../../components/PanelHeader";
-import ImageUpload from "../../../components/ImageUploader";
+import { ImageUpload } from "../../../components/ImageUploader";
 import config from "../../../../../config";
 import TinyMCETextarea from "../../../components/TinyMCETextarea";
 import { notificationAdd } from "../../../utils/Notification";

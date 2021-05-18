@@ -101,12 +101,12 @@ const TestPage: React.FC<{}> = () => {
           <Link className="btn-info btn" to={`${match.url}/create-part-toeic`}>
             Create Part
           </Link>
-          <Link
+          {/* <Link
             className="btn-info btn"
             to={`${match.url}/create-question-toeic`}
           >
             Create Question
-          </Link>
+          </Link> */}
         </div>
       </Col>
       <Col className="mt-4">

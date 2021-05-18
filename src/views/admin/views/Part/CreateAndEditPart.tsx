@@ -58,7 +58,7 @@ export const EnglishCertificateOptions: OptionsType[] = [
   },
 ];
 
-export const SkillsTypeOptions = [
+export const SkillsTypeOptions: OptionsType[] = [
   {
     value: "",
     label: "Chose type of skill",

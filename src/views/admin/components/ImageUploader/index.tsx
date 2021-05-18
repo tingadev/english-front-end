@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx, css } from "@emotion/core";
 import React from "react";
 import ImageUploader from "react-images-upload";
 import { Spinner } from "reactstrap";
@@ -14,14 +16,14 @@ interface ImageUploadProps {
   path?: string | null;
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({
+export const ImageUpload: React.FC<ImageUploadProps> = ({
   type,
   url,
   singleImage,
   setPath,
   isShowPreview = true,
   classNameContainer,
-  path
+  path,
 }) => {
   const [loading, setLoading] = React.useState(false);
   const [pathPreview, setPathPreview] = React.useState("");
@@ -39,7 +41,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     await fetch(config.UPLOAD_MEDIA + "media", {
       method: "POST",
       body: data,
-      credentials: 'same-origin',
+      credentials: "same-origin",
       headers: {
         Accept: "application/json",
       },
@@ -53,39 +55,60 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       })
     );
   };
+  
 
   return (
     <div className="w-100 text-center wrapper-input-image">
-      <ImageUploader
+     {!pathPreview && <ImageUploader
         className={`w-100 ml-auto ${classNameContainer}`}
         withIcon={false}
-        buttonText={`${path || url ? 'Edit' : 'Choose images'}`}
+        buttonText={`${path || url ? "Edit" : "Choose images"}`}
         onChange={(e, p) => {
           handleImageChange(e, p);
         }}
         imgExtension={[".jpg", ".gif", ".png", ".gif", ".jpeg"]}
         maxFileSize={5242880}
         singleImage={singleImage}
-      />
-      {isShowPreview && <React.Fragment>
-        {loading && <Spinner color="primary" />}
-        {!loading && pathPreview && (
-          <div className="position-relative wrapper-img">
-            <img className="img" src={pathPreview} alt="" />
-            <span
-              className="position-absolute"
-              onClick={() => {
-                setPathPreview("");
-                setPath && setPath("");
-              }}
-            >
-              X
-            </span>
-          </div>
-        )}
-      </React.Fragment>}
+      />}
+      {isShowPreview && (
+        <React.Fragment>
+          {loading && <Spinner color="primary" />}
+          {!loading && pathPreview && (
+            <div className="position-relative wrapper-img">
+              <img className="img" src={pathPreview} alt="" />
+              <span
+                className="position-absolute"
+                onClick={() => {
+                  setPathPreview("");
+                  setPath && setPath("");
+                }}
+              >
+                X
+              </span>
+            </div>
+          )}
+        </React.Fragment>
+      )}
     </div>
   );
 };
 
-export default ImageUpload;
+export const ImageUploadCustom: React.FC<ImageUploadProps> = (props) => {
+  return (
+    <div css={css`
+      height: 100%;
+      border: 2px dashed black;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      margin: 0 40px;
+      img{
+        max-height:350px !important;
+      }
+      padding: 20px;
+      overflow: hidden;
+    `}>
+      <ImageUpload {...props} />
+    </div>
+  );
+};

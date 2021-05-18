@@ -41,9 +41,9 @@
                 &,
                 &:focus,
                 &:hover{
-                    background-color: $dark-gray;
+                    background-color: $primary-color;
                     color: $white-color;
-                    box-shadow: 0px 5px 35px 0px rgba(0, 0, 0, 0.3);
+                    box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.3);
                 }
             }
 

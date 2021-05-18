@@ -1,5 +1,4 @@
 import { gql } from '@apollo/client';
-import { TEST_QUESTION_FRAGMENT } from './TestQuestion';
 
 
 export const TEST_FRAGMENT = gql`
@@ -16,14 +15,10 @@ export const TEST_FRAGMENT = gql`
         autdioSecs
         displayOrder
     }
-    testQuestions{
-        ...TestQuestion
-    }
     isPublished
     displayOrder
     displayOrderCategory
   }
-  ${TEST_QUESTION_FRAGMENT}
 `;
 
 export const CREATE_TEST = gql`

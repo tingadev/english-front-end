@@ -73,6 +73,12 @@ const ListQuestions: React.FC<ListQuestionsProps> = ({
         audio::-webkit-media-controls-timeline {
           color: white;
         }
+        .question-description{
+          font-size: 14px;
+        }
+        .question-answers{
+          font-size: 13px;
+        }
       `}
     >
       <Row>

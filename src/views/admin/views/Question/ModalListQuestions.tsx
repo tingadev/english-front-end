@@ -39,8 +39,7 @@ const ModalListQuestions: React.FC<ModalListQuestionsProps> = ({
   return (
     <>
       <Modal
-        className="height-modal-80vh"
-        contentClassName="h-100"
+        modalClassName="min-height-80vh"
         size="lg"
         centered
         isOpen={questionContext.isOpenModal}
